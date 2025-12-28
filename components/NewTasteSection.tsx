@@ -100,32 +100,80 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
       {/* Section Title */}
       <div className="relative z-10 pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 lg:px-0">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] from-[#181e24] leading-[0.82] not-italic text-[48px] sm:text-[56px] md:text-[64px] lg:text-[69.339px] to-[#293f55] mb-4"
-            style={{ WebkitTextFillColor: "transparent" }}
-          >
-            <p className="mb-0">NEW Taste</p>
-            <p>NEW</p>
+          <div className="flex flex-col items-center justify-center">
+            {/* First line: NEW Taste */}
+            <div
+              className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#181e24] leading-[0.82] not-italic text-[48px] sm:text-[56px] md:text-[64px] lg:text-[69.339px] to-[#293f55] mb-0"
+              style={{ WebkitTextFillColor: "transparent" }}
+            >
+              <p className="mb-0">NEW Taste</p>
+            </div>
+            {/* Second line: NEW + World */}
+            <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4">
+              <span
+                className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#181e24] leading-[0.82] not-italic text-[48px] sm:text-[56px] md:text-[64px] lg:text-[69.339px] to-[#293f55]"
+                style={{ WebkitTextFillColor: "transparent" }}
+              >
+                NEW
+              </span>
+              <span className="font-['Scribo_Pro',sans-serif] leading-[0.82] not-italic text-[50px] sm:text-[70px] md:text-[85px] lg:text-[100.746px] text-[#cc934e] text-center text-nowrap uppercase">
+                World
+              </span>
+            </div>
           </div>
-          <p className="font-['Scribo_Pro',sans-serif] leading-[0.82] not-italic text-[50px] sm:text-[70px] md:text-[85px] lg:text-[100.746px] text-[#cc934e] text-center text-nowrap uppercase">
-            World
-          </p>
         </div>
       </div>
 
       {/* Product Grid */}
       <div className="relative z-10 pb-16 px-4 sm:px-6 lg:px-0">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
-            {products.slice(0, 6).map((product) => (
-              <ProductCard
+        <div className="max-w-[1400px] mx-auto">
+          {/* First Row: 3 products + 1 empty space */}
+          <div className="grid grid-cols-4 gap-3 sm:gap-4 md:gap-5 mb-4 sm:mb-5 md:mb-6">
+            {products.slice(0, 3).map((product) => (
+              <div
                 key={product.id}
-                id={product.id}
-                image={product.image}
-                title={product.title}
-                titleThai={product.titleThai}
-                price={product.price}
-                description={product.description}
-              />
+                className="flex items-center justify-center w-full"
+              >
+                <div className="w-full max-w-[280px] sm:max-w-[300px] md:max-w-[320px]">
+                  <ProductCard
+                    id={product.id}
+                    image={product.image}
+                    title={product.title}
+                    titleThai={product.titleThai}
+                    price={product.price}
+                    description={product.description}
+                  />
+                </div>
+              </div>
+            ))}
+            {/* Empty space after first row products */}
+            <div className="flex items-center justify-center w-full">
+              {/* Empty space - transparent, same width as product card */}
+            </div>
+          </div>
+
+          {/* Second Row: 1 empty space + 3 products */}
+          <div className="grid grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+            {/* Empty space before second row products */}
+            <div className="flex items-center justify-center w-full">
+              {/* Empty space - transparent, same width as product card */}
+            </div>
+            {products.slice(3, 6).map((product) => (
+              <div
+                key={product.id}
+                className="flex items-center justify-center w-full"
+              >
+                <div className="w-full max-w-[280px] sm:max-w-[300px] md:max-w-[320px]">
+                  <ProductCard
+                    id={product.id}
+                    image={product.image}
+                    title={product.title}
+                    titleThai={product.titleThai}
+                    price={product.price}
+                    description={product.description}
+                  />
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -150,4 +198,3 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
     </div>
   );
 }
-
