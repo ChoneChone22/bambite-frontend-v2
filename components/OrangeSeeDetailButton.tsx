@@ -44,10 +44,18 @@ export default function OrangeSeeDetailButton({
   const textSize = textSizeMap[size];
   const textWidth = widthMap[size];
 
+  // Check if className includes w-full h-full to use parent dimensions
+  const useParentSize =
+    className.includes("w-full") && className.includes("h-full");
+
   const content = (
     <div
       className={`relative ${className}`}
-      style={{ width: buttonSize, height: buttonSize }}
+      style={
+        useParentSize
+          ? { width: "100%", height: "100%" }
+          : { width: buttonSize, height: buttonSize }
+      }
     >
       {/* Orange plate background */}
       <div className="absolute left-0 size-full top-0">
@@ -120,15 +128,17 @@ export default function OrangeSeeDetailButton({
       </div>
 
       {/* Text */}
-      <p
-        className="absolute font-['Space_Mono',sans-serif] font-bold leading-none left-1/2 not-italic opacity-90 text-center text-white top-[calc(50%-13px)] translate-x-[-50%] uppercase z-10 group-hover:opacity-100 transition-opacity"
-        style={{
-          fontSize: textSize,
-          width: textWidth,
-        }}
-      >
-        {text}
-      </p>
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        <p
+          className="font-['Space_Mono',sans-serif] font-bold leading-none not-italic opacity-90 text-center text-white uppercase group-hover:opacity-100 transition-opacity"
+          style={{
+            fontSize: textSize,
+            width: textWidth,
+          }}
+        >
+          {text}
+        </p>
+      </div>
     </div>
   );
 

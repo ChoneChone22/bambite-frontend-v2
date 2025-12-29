@@ -27,7 +27,7 @@ export default function DescriptionTextBox({
     >
       {/* Main box background */}
       <div
-        className="absolute border-solid h-full left-0 top-0 w-full"
+        className="absolute inset-0 border-solid"
         style={{
           backgroundColor: designTokens.colors.darkBg,
           borderColor: designTokens.colors.borderDark,
@@ -35,21 +35,20 @@ export default function DescriptionTextBox({
         }}
       />
 
-      {/* Description text */}
-      <p
-        className="absolute font-['DM_Sans',sans-serif] font-medium text-white"
-        style={{
-          left: designTokens.positions.descriptionBox.text.left,
-          top: designTokens.positions.descriptionBox.text.top,
-          width: designTokens.positions.descriptionBox.text.width,
-          fontSize: designTokens.typography.dmSans.fontSize,
-          lineHeight: designTokens.typography.dmSans.lineHeight,
-          opacity: 0.7,
-          fontVariationSettings: designTokens.typography.dmSans.fontVariationSettings,
-        }}
-      >
-        {text}
-      </p>
+      {/* Description text - using simple padding */}
+      <div className="relative p-6 sm:p-7 md:p-8">
+        <p
+          className="font-['DM_Sans',sans-serif] font-medium text-white"
+          style={{
+            fontSize: designTokens.typography.dmSans.fontSize,
+            lineHeight: designTokens.typography.dmSans.lineHeight,
+            opacity: 0.7,
+            fontVariationSettings: designTokens.typography.dmSans.fontVariationSettings,
+          }}
+        >
+          {text}
+        </p>
+      </div>
 
       {/* Silver plate decorative element */}
       {showSilverPlate && (

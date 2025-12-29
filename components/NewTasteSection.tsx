@@ -103,7 +103,7 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
           <div className="flex flex-col items-center justify-center">
             {/* First line: NEW Taste */}
             <div
-              className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#181e24] leading-[0.82] not-italic text-[48px] sm:text-[56px] md:text-[64px] lg:text-[69.339px] to-[#293f55] mb-0"
+              className="bg-clip-text bg-gradient-to-b font-[var(--font-chillax-semibold)] from-[#181e24] leading-[0.82] not-italic text-[48px] sm:text-[56px] md:text-[64px] lg:text-[69.339px] to-[#293f55] mb-0"
               style={{ WebkitTextFillColor: "transparent" }}
             >
               <p className="mb-0">NEW Taste</p>
@@ -111,12 +111,12 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
             {/* Second line: NEW + World */}
             <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4">
               <span
-                className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#181e24] leading-[0.82] not-italic text-[48px] sm:text-[56px] md:text-[64px] lg:text-[69.339px] to-[#293f55]"
+                className="bg-clip-text bg-gradient-to-b font-[var(--font-chillax-semibold)] from-[#181e24] leading-[0.82] not-italic text-[48px] sm:text-[56px] md:text-[64px] lg:text-[69.339px] to-[#293f55]"
                 style={{ WebkitTextFillColor: "transparent" }}
               >
                 NEW
               </span>
-              <span className="font-['Scribo_Pro',sans-serif] leading-[0.82] not-italic text-[50px] sm:text-[70px] md:text-[85px] lg:text-[100.746px] text-[#cc934e] text-center text-nowrap uppercase">
+              <span className="font-[var(--font-chillax-semibold)] leading-[0.82] not-italic text-[50px] sm:text-[70px] md:text-[85px] lg:text-[100.746px] text-[#cc934e] text-center text-nowrap uppercase">
                 World
               </span>
             </div>

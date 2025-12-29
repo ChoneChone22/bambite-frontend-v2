@@ -25,7 +25,10 @@ export default function HiImBamSection({
     <div className="relative w-full min-h-[816px] overflow-clip">
       {/* Background image */}
       <div className="absolute h-[815.525px] left-0 top-0 w-full">
-        <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+        >
           <Image
             src={backgroundImage}
             alt="Forest background"
@@ -63,7 +66,7 @@ export default function HiImBamSection({
 
               {/* Decorative text */}
               <div className="font-['Scribo_Pro',sans-serif] leading-[0.82] not-italic text-[#ffa953] text-[24px] sm:text-[26px] md:text-[28px] lg:text-[29.142px] text-center lg:text-left mb-6">
-                <p className="mb-0">You're about to</p>
+                <p className="mb-0">You&apos;re about to</p>
                 <p>discover more</p>
               </div>
 
@@ -77,81 +80,55 @@ export default function HiImBamSection({
                   href={ctaLink}
                   className="flex h-[50px] sm:h-[56px] md:h-[62px] items-center relative w-full max-w-[321px] group"
                 >
-                  <div className="h-full relative w-full">
-                    <div className="absolute flex inset-0 items-center justify-center">
-                      <div className="flex-none h-full rotate-180 -scale-y-100 w-full">
-                        <div className="relative size-full">
-                          <div className="absolute inset-[-1.69%_-0.33%]">
-                            <Image
-                              src="/footer-assets/rectangle-126.svg"
-                              alt=""
-                              fill
-                              sizes="321px"
-                              className="block max-w-none size-full"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Texture overlays */}
-                    <div className="absolute contents inset-[0_-0.08%_0_0]">
-                      <div className="absolute inset-[0_-0.08%_0_0.57%] mix-blend-overlay opacity-30">
+                  {/* Main Button Body */}
+                  <div
+                    className="h-full relative w-full bg-gradient-to-b from-[#074980] to-[#172743] overflow-hidden"
+                    style={{
+                      // This polygon creates the cut on the bottom-right
+                      clipPath:
+                        "polygon(0% 0%, 100% 0%, 100% 75%, 92% 100%, 0% 100%)",
+                      border: "2px solid #193551",
+                    }}
+                  >
+                    {/* 2. Texture overlays */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      {/* Metal/Grunge Texture */}
+                      <div className="absolute inset-0 mix-blend-overlay opacity-30">
                         <Image
                           src="/product-assets/metal-overlay.png"
                           alt=""
                           fill
-                          sizes="321px"
-                          className="absolute inset-0 max-w-none object-cover pointer-events-none size-full"
+                          className="object-cover"
                         />
                       </div>
-                      <div className="absolute flex inset-[0_-0.08%_0_0] items-center justify-center mix-blend-lighten">
-                        <div className="flex-none h-full -scale-y-100 w-[321.253px]">
-                          <div className="opacity-[0.34] relative size-full">
-                            <Image
-                              src="/product-assets/grunge-overlay.png"
-                              alt=""
-                              fill
-                              sizes="321px"
-                              className="absolute inset-0 max-w-none object-cover pointer-events-none size-full"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="absolute flex inset-[0_-0.08%_0_0] items-center justify-center mix-blend-soft-light">
-                        <div className="flex-none h-full rotate-180 -scale-y-100 w-[321.253px]">
-                          <div
-                            className="opacity-30 size-full"
-                            style={{
-                              backgroundImage:
-                                "linear-gradient(rgba(128, 128, 128, 0.6) 0%, rgb(128, 128, 128) 19.684%, rgba(128, 128, 128, 0.3) 70.46%, rgb(128, 128, 128) 100%)",
-                            }}
-                          />
-                        </div>
+
+                      {/* Grunge Detail */}
+                      <div className="absolute inset-0 mix-blend-lighten opacity-30">
+                        <Image
+                          src="/product-assets/grunge-overlay.png"
+                          alt=""
+                          fill
+                          className="object-cover"
+                        />
                       </div>
                     </div>
 
-                    {/* Button Content */}
-                    <div className="absolute flex items-center justify-center left-[calc(50%-43.7px)] top-[calc(50%-6.92px)] z-10">
-                      <div className="flex-none rotate-180">
-                        <p className="font-['Space_Mono',sans-serif] font-bold leading-none not-italic relative text-[11px] sm:text-[12px] md:text-[13px] lg:text-[13.484px] text-nowrap text-white uppercase group-hover:opacity-90 transition-opacity">
-                          {ctaText}
-                        </p>
-                      </div>
-                    </div>
+                    {/* 3. Button Content Wrapper */}
+                    <div className="relative z-10 flex items-center h-full px-6 sm:px-8">
+                      {/* Text */}
+                      <p className="font-['Space_Mono',sans-serif] font-bold leading-none text-[11px] sm:text-[12px] md:text-[13px] lg:text-[13.484px] text-white uppercase group-hover:opacity-90 transition-opacity">
+                        {ctaText}
+                      </p>
 
-                    {/* Decorative icon */}
-                    <div className="absolute flex h-[21.353px] items-center justify-center left-[25.15px] top-[20.14px] w-[19.142px] z-10">
-                      <div className="flex-none rotate-180">
-                        <div className="h-[21.353px] relative w-[19.142px]">
-                          <Image
-                            src="/footer-assets/group-177.svg"
-                            alt=""
-                            width={19}
-                            height={21}
-                            className="block max-w-none size-full"
-                          />
-                        </div>
+                      {/* Decorative Arrow (Positioned to the right) */}
+                      <div className="ml-auto">
+                        <Image
+                          src="/footer-assets/group-177.svg"
+                          alt=""
+                          width={20}
+                          height={20}
+                          className="block transition-transform group-hover:translate-x-1"
+                        />
                       </div>
                     </div>
                   </div>
@@ -164,4 +141,3 @@ export default function HiImBamSection({
     </div>
   );
 }
-

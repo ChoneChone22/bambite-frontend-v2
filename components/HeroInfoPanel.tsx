@@ -1,8 +1,6 @@
 // Hero Info Panel component
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import BluePlate from "./BluePlate";
 import GradientText from "./GradientText";
 
@@ -27,7 +25,7 @@ export default function HeroInfoPanel({
   const secondLine = titleParts[1] ? `your ${titleParts[1]}` : "your stress";
 
   return (
-    <div className="absolute left-1/2 md:left-[calc(62.5%+17.75px)] top-[400px] sm:top-[450px] md:top-[475px] translate-x-[-50%] md:translate-x-0 z-10 w-[340px] sm:w-[380px] md:w-[400px] lg:w-[444px]">
+    <div className="relative z-10 w-full max-w-[340px] sm:max-w-[380px] md:max-w-[400px] lg:max-w-[444px]">
       <BluePlate
         width="100%"
         height="185px"
@@ -37,8 +35,8 @@ export default function HeroInfoPanel({
         showDecorativeText={true}
         className="w-full"
       >
-        {/* Title text - split into two lines, positioned on the left with gradient */}
-        <div className="absolute left-[20px] sm:left-[25px] md:left-[30px] top-[30px] sm:top-[35px] md:top-[40px] z-10">
+        {/* Title text - split into two lines, using simple padding */}
+        <div className="relative z-10 p-5 sm:p-6 md:p-8">
           <GradientText
             text={firstLine}
             fontSize="28px"
@@ -54,4 +52,3 @@ export default function HeroInfoPanel({
     </div>
   );
 }
-

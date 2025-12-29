@@ -6,6 +6,69 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
 
+// Decorative wing tip component (replaces vector-196 and vector-197)
+function WingTip({ mirrored = false }: { mirrored?: boolean }) {
+  // Clip-path creates a trapezoid: narrow at top/bottom, wider in middle
+  // Based on vector-196: M0 34.3991L0.114406 0H35.762L35.6477 70.0467L0 34.3991Z
+  // Points: (0, 34.3991), (0.114406, 0), (35.762, 0), (35.6477, 70.0467), (0, 34.3991)
+  // Converted to percentages: (0%, 49.1%), (0.32%, 0%), (100%, 0%), (99.68%, 100%), (0%, 49.1%)
+  // Left side: point on left at middle, narrow top, wide right, narrow bottom, back to left point
+  // Right side (mirrored): point on right at middle, narrow top, wide left, narrow bottom, back to right point
+  // Original path creates: left point (0% 49.1%) -> narrow top-left (0.32% 0%) -> wide top-right (100% 0%) -> narrow bottom-right (99.68% 100%) -> back to left point
+  // Mirrored: right point (100% 49.1%) -> narrow top-right (99.68% 0%) -> wide top-left (0.32% 0%) -> narrow bottom-left (0.32% 100%) -> back to right point
+  const clipPath = mirrored
+    ? "polygon(100% 49.1%, 99.68% 0%, 0.32% 0%, 0.32% 100%, 100% 49.1%)"
+    : "polygon(0% 49.1%, 0.32% 0%, 100% 0%, 99.68% 100%, 0% 49.1%)";
+
+  return (
+    <div
+      className="h-[70.047px] relative shrink-0 w-0 sm:w-[20px] md:w-[35.762px] hidden sm:block"
+      style={{
+        filter: mirrored
+          ? "drop-shadow(3px 0px 0.317px rgba(226, 239, 255, 0.15)) drop-shadow(0px 4px 8px rgba(255, 138, 0, 0.3)) drop-shadow(0px 2px 4px rgba(255, 138, 0, 0.2))"
+          : "drop-shadow(-3px 0px 0.317px rgba(226, 239, 255, 0.15)) drop-shadow(0px 4px 8px rgba(255, 138, 0, 0.3)) drop-shadow(0px 2px 4px rgba(255, 138, 0, 0.2))",
+      }}
+    >
+      <div
+        className="w-full h-full bg-[#181e24]"
+        style={{
+          clipPath: clipPath,
+        }}
+      />
+    </div>
+  );
+}
+
+// Connector triangle component (replaces frame-265 and frame-266)
+function ConnectorTriangle({ mirrored = false }: { mirrored?: boolean }) {
+  // Based on frame-265: M18.9612 70.2015V63.9612L0 45V70.2015H18.9612Z
+  // Points: (18.9612, 70.2015), (18.9612, 63.9612), (0, 45), (0, 70.2015), (18.9612, 70.2015)
+  // Converted to percentages: (100%, 100%), (100%, 91.1%), (0%, 64.1%), (0%, 100%), (100%, 100%)
+  // Left side (non-mirrored): right edge vertical, left edge angled
+  // Right side (mirrored): left edge vertical, right edge angled (sloping down from top-right to bottom-right)
+  const clipPath = mirrored
+    ? "polygon(0% 91.1%, 100% 64.1%, 100% 100%, 0% 100%)"
+    : "polygon(100% 100%, 100% 91.1%, 0% 64.1%, 0% 100%)";
+
+  return (
+    <div
+      className="h-[70px] relative shrink-0 w-0 sm:w-[12px] md:w-[19px] hidden sm:block"
+      style={{
+        filter: mirrored
+          ? "drop-shadow(1px -3px 0.317px rgba(226, 239, 255, 0.15)) drop-shadow(0px 4px 8px rgba(255, 138, 0, 0.3)) drop-shadow(0px 2px 4px rgba(255, 138, 0, 0.2))"
+          : "drop-shadow(-1px -3px 0.317px rgba(226, 239, 255, 0.15)) drop-shadow(0px 4px 8px rgba(255, 138, 0, 0.3)) drop-shadow(0px 2px 4px rgba(255, 138, 0, 0.2))",
+      }}
+    >
+      <div
+        className="w-full h-full bg-[#181e24]"
+        style={{
+          clipPath: clipPath,
+        }}
+      />
+    </div>
+  );
+}
+
 type NavItemProps = {
   className?: string;
   navLabel?: string;
@@ -113,17 +176,15 @@ function GlobalNavV2({ className, onBackground = "OnDark" }: GlobalNavV2Props) {
       }`}
     >
       {/* Left Section: About, Career, Contact */}
-      <div className="flex flex-nowrap h-[70.047px] items-center min-w-0 relative shrink-0">
+      <div
+        className="flex flex-nowrap h-[70.047px] items-center min-w-0 relative shrink-0"
+        style={{
+          filter:
+            "drop-shadow(0px 4px 12px rgba(255, 138, 0, 0.25)) drop-shadow(0px 2px 6px rgba(255, 138, 0, 0.15))",
+        }}
+      >
         {/* Left decorative element - hidden on mobile */}
-        <div className="h-[70.047px] relative shrink-0 w-0 sm:w-[20px] md:w-[35.762px] hidden sm:block">
-          <Image
-            src="/navbar-assets/vector-196.svg"
-            alt=""
-            width={36}
-            height={70}
-            className="block max-w-none w-full h-full object-contain"
-          />
-        </div>
+        <WingTip mirrored={false} />
 
         {/* Left nav items container */}
         <div className="bg-[#181e24] flex flex-col h-full items-start justify-center min-w-0 px-[4px] sm:px-[8px] md:px-[25px] py-[22px] relative shrink-0">
@@ -136,30 +197,20 @@ function GlobalNavV2({ className, onBackground = "OnDark" }: GlobalNavV2Props) {
         </div>
 
         {/* Left end decorative element - hidden on mobile */}
-        <div className="h-[70px] relative shrink-0 w-0 sm:w-[12px] md:w-[19px] hidden sm:block">
-          <div className="absolute inset-[0_0_-0.29%_0]">
-            <Image
-              src="/navbar-assets/frame-265.svg"
-              alt=""
-              width={19}
-              height={70}
-              className="block max-w-none w-full h-full object-contain"
-            />
-          </div>
-        </div>
+        <ConnectorTriangle mirrored={false} />
       </div>
 
       {/* Center Logo */}
-      <div className="flex flex-col items-center justify-center pb-0 pt-[13px] px-[4px] sm:px-[8px] md:px-0 relative shrink-0 w-[100px] sm:w-[140px] md:w-[254.186px] min-w-[100px] max-w-[254px]">
+      <div className="flex flex-col items-center justify-center pb-0 pt-[13px] px-[4px] sm:px-[8px] md:px-0 relative shrink-0 w-[100px] sm:w-[140px] md:w-[254.186px] min-w-[100px] max-w-[254px] overflow-visible">
         <Link
           href="/"
-          className="flex items-center justify-center w-full h-full hover:opacity-80 transition-opacity"
+          className="flex items-center justify-center w-full h-full hover:opacity-80 transition-opacity overflow-visible"
         >
           <Image
             src="/bambite-logo-white.png"
             alt="Bambite Logo"
             width={254}
-            height={58}
+            height={100}
             className="object-contain w-full h-auto"
             priority
           />
@@ -167,23 +218,15 @@ function GlobalNavV2({ className, onBackground = "OnDark" }: GlobalNavV2Props) {
       </div>
 
       {/* Right Section: Dishes, Cart */}
-      <div className="flex flex-nowrap h-[70.047px] items-center min-w-0 relative shrink-0">
+      <div
+        className="flex flex-nowrap h-[70.047px] items-center min-w-0 relative shrink-0"
+        style={{
+          filter:
+            "drop-shadow(0px 4px 12px rgba(255, 138, 0, 0.25)) drop-shadow(0px 2px 6px rgba(255, 138, 0, 0.15))",
+        }}
+      >
         {/* Right start decorative element - hidden on mobile */}
-        <div className="flex items-center justify-center relative shrink-0 w-0 sm:w-[12px] md:w-[19px] hidden sm:flex">
-          <div className="flex-none rotate-180 -scale-y-100">
-            <div className="h-[70px] relative w-full">
-              <div className="absolute inset-[0_0_-0.29%_0]">
-                <Image
-                  src="/navbar-assets/frame-266.svg"
-                  alt=""
-                  width={19}
-                  height={70}
-                  className="block max-w-none w-full h-full object-contain"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        <ConnectorTriangle mirrored={true} />
 
         {/* Right nav items container */}
         <div className="bg-[#181e24] flex flex-col h-full items-end justify-center min-w-0 px-[4px] sm:px-[8px] md:px-[25px] py-[22px] relative shrink-0">
@@ -201,19 +244,7 @@ function GlobalNavV2({ className, onBackground = "OnDark" }: GlobalNavV2Props) {
         </div>
 
         {/* Right end decorative element - hidden on mobile */}
-        <div className="flex items-center justify-center relative shrink-0 w-0 sm:w-[20px] md:w-[35.762px] hidden sm:flex">
-          <div className="flex-none rotate-180 -scale-y-100">
-            <div className="h-[70.047px] relative w-full">
-              <Image
-                src="/navbar-assets/vector-197.svg"
-                alt=""
-                width={36}
-                height={70}
-                className="block max-w-none w-full h-full object-contain"
-              />
-            </div>
-          </div>
-        </div>
+        <WingTip mirrored={true} />
       </div>
     </div>
   );
@@ -221,7 +252,7 @@ function GlobalNavV2({ className, onBackground = "OnDark" }: GlobalNavV2Props) {
 
 export default function NavbarV2() {
   return (
-    <nav className="w-full fixed top-0 left-0 right-0 z-50 overflow-hidden">
+    <nav className="w-full fixed top-0 left-0 right-0 z-50 overflow-visible">
       <div className="w-full max-w-[1440px] mx-auto">
         <GlobalNavV2 className="w-full" />
       </div>

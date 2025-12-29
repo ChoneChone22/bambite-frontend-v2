@@ -39,7 +39,11 @@ export default function BluePlate({
   return (
     <div
       className={`relative ${className}`}
-      style={{ width: responsiveWidth, height: responsiveHeight, minHeight: responsiveHeight }}
+      style={{
+        width: responsiveWidth,
+        height: responsiveHeight,
+        minHeight: responsiveHeight,
+      }}
     >
       {/* Blue plate background */}
       <div className="absolute flex inset-0 items-center justify-center">
@@ -69,9 +73,12 @@ export default function BluePlate({
               opacity: designTokens.effects.bluePlate.metalOverlay.opacity,
               WebkitMaskImage: `url('${maskAsset}')`,
               maskImage: `url('${maskAsset}')`,
-              WebkitMaskPosition: designTokens.effects.bluePlate.metalOverlay.maskPosition,
-              maskPosition: designTokens.effects.bluePlate.metalOverlay.maskPosition,
-              WebkitMaskSize: designTokens.effects.bluePlate.metalOverlay.maskSize,
+              WebkitMaskPosition:
+                designTokens.effects.bluePlate.metalOverlay.maskPosition,
+              maskPosition:
+                designTokens.effects.bluePlate.metalOverlay.maskPosition,
+              WebkitMaskSize:
+                designTokens.effects.bluePlate.metalOverlay.maskSize,
               maskSize: designTokens.effects.bluePlate.metalOverlay.maskSize,
               WebkitMaskRepeat: "no-repeat",
               maskRepeat: "no-repeat",
@@ -95,10 +102,14 @@ export default function BluePlate({
                   opacity: designTokens.effects.bluePlate.grungeOverlay.opacity,
                   WebkitMaskImage: `url('${maskAsset}')`,
                   maskImage: `url('${maskAsset}')`,
-                  WebkitMaskPosition: designTokens.effects.bluePlate.grungeOverlay.maskPosition,
-                  maskPosition: designTokens.effects.bluePlate.grungeOverlay.maskPosition,
-                  WebkitMaskSize: designTokens.effects.bluePlate.grungeOverlay.maskSize,
-                  maskSize: designTokens.effects.bluePlate.grungeOverlay.maskSize,
+                  WebkitMaskPosition:
+                    designTokens.effects.bluePlate.grungeOverlay.maskPosition,
+                  maskPosition:
+                    designTokens.effects.bluePlate.grungeOverlay.maskPosition,
+                  WebkitMaskSize:
+                    designTokens.effects.bluePlate.grungeOverlay.maskSize,
+                  maskSize:
+                    designTokens.effects.bluePlate.grungeOverlay.maskSize,
                   WebkitMaskRepeat: "no-repeat",
                   maskRepeat: "no-repeat",
                 }}
@@ -120,14 +131,19 @@ export default function BluePlate({
               <div
                 className="size-full pointer-events-none"
                 style={{
-                  opacity: designTokens.effects.bluePlate.gradientOverlay.opacity,
+                  opacity:
+                    designTokens.effects.bluePlate.gradientOverlay.opacity,
                   backgroundImage: designTokens.colors.gradientOverlay,
                   WebkitMaskImage: `url('${maskAsset}')`,
                   maskImage: `url('${maskAsset}')`,
-                  WebkitMaskPosition: designTokens.effects.bluePlate.gradientOverlay.maskPosition,
-                  maskPosition: designTokens.effects.bluePlate.gradientOverlay.maskPosition,
-                  WebkitMaskSize: designTokens.effects.bluePlate.gradientOverlay.maskSize,
-                  maskSize: designTokens.effects.bluePlate.gradientOverlay.maskSize,
+                  WebkitMaskPosition:
+                    designTokens.effects.bluePlate.gradientOverlay.maskPosition,
+                  maskPosition:
+                    designTokens.effects.bluePlate.gradientOverlay.maskPosition,
+                  WebkitMaskSize:
+                    designTokens.effects.bluePlate.gradientOverlay.maskSize,
+                  maskSize:
+                    designTokens.effects.bluePlate.gradientOverlay.maskSize,
                   WebkitMaskRepeat: "no-repeat",
                   maskRepeat: "no-repeat",
                 }}
@@ -204,9 +220,11 @@ export default function BluePlate({
             }}
           >
             <p
-              className="font-['Scribo_Pro',sans-serif] leading-[0.82] not-italic relative text-center text-nowrap uppercase"
+              className="leading-[0.82] not-italic relative text-center text-nowrap uppercase"
               style={{
+                fontFamily: designTokens.typography.scriboPro.fontFamily,
                 fontSize: designTokens.typography.scriboPro.fontSize,
+                lineHeight: designTokens.typography.scriboPro.lineHeight,
                 color: decorativeTextColor,
               }}
             >
@@ -242,7 +260,7 @@ function BluePlateSocketScrew() {
           </div>
         </div>
       </div>
-      
+
       {/* Inner icon */}
       <div className="absolute flex inset-[18.92%_18.93%_18.93%_18.91%] items-center justify-center">
         <div className="flex-none rotate-180 -scale-y-100 size-[14.001px]">
@@ -262,4 +280,3 @@ function BluePlateSocketScrew() {
     </div>
   );
 }
-

@@ -16,20 +16,20 @@ export default function MyHomeToYoursSection({
   sceneImage = "/home-assets/window-frame-assets/forest-scene.png",
 }: MyHomeToYoursSectionProps) {
   return (
-    <div className="relative w-full min-h-[854px] overflow-hidden bg-[#123659]">
+    <div className="relative w-full min-h-[600px] sm:min-h-[700px] lg:min-h-[854px] overflow-hidden bg-[#123659]">
       {/* Blue plate background */}
-      <div className="absolute bottom-0 h-[838px] left-0 overflow-clip w-full hidden lg:block">
-        <div className="absolute h-[838px] left-0 top-0 w-[2056px]">
+      <div className="absolute bottom-0 h-[70vh] sm:h-[75vh] lg:h-[838px] left-0 overflow-clip w-full hidden lg:block">
+        <div className="absolute h-full left-0 top-0 w-full max-w-[1440px]">
           <div className="absolute flex inset-0 items-center justify-center">
-            <div className="flex-none h-[838px] rotate-180 -scale-y-100 w-[2056px]">
+            <div className="flex-none h-full rotate-180 -scale-y-100 w-full">
               <div className="relative size-full">
                 <div className="absolute inset-[-0.19%_-0.08%]">
                   <Image
                     src="/home-assets/window-frame-assets/blue-plate-bg.svg"
                     alt=""
                     fill
-                    sizes="2056px"
-                    className="block max-w-none size-full"
+                    sizes="(max-width: 1440px) 100vw, 1440px"
+                    className="block max-w-none size-full object-cover"
                   />
                 </div>
               </div>
@@ -43,25 +43,25 @@ export default function MyHomeToYoursSection({
                 src="/product-assets/metal-overlay.png"
                 alt=""
                 fill
-                sizes="2056px"
+                sizes="(max-width: 1440px) 100vw, 1440px"
                 className="absolute inset-0 max-w-none object-cover pointer-events-none size-full"
               />
             </div>
             <div className="absolute flex inset-[0_-0.08%_0_0] items-center justify-center mix-blend-lighten">
-              <div className="flex-none h-[838px] -scale-y-100 w-[2057.617px]">
+              <div className="flex-none h-full -scale-y-100 w-full">
                 <div className="opacity-[0.34] relative size-full">
                   <Image
                     src="/product-assets/grunge-overlay.png"
                     alt=""
                     fill
-                    sizes="2056px"
+                    sizes="(max-width: 1440px) 100vw, 1440px"
                     className="absolute inset-0 max-w-none object-cover pointer-events-none size-full"
                   />
                 </div>
               </div>
             </div>
             <div className="absolute flex inset-[0_-0.08%_0_0] items-center justify-center mix-blend-soft-light">
-              <div className="flex-none h-[838px] rotate-180 -scale-y-100 w-[2057.617px]">
+              <div className="flex-none h-full rotate-180 -scale-y-100 w-full">
                 <div
                   className="opacity-30 size-full"
                   style={{
@@ -74,31 +74,31 @@ export default function MyHomeToYoursSection({
           </div>
 
           {/* Window Frame - Desktop only */}
-          <div className="absolute contents left-[633.46px] top-1/2 translate-y-[-50%] hidden lg:block">
+          <div className="absolute -right-40 top-1/2 -translate-y-1/2 hidden lg:block">
             <WindowFrame sceneImage={sceneImage} />
           </div>
 
           {/* Decorative image on left */}
-          <div className="absolute h-[476.508px] left-[470.1px] top-0 w-[287.212px] hidden lg:block">
+          <div className="absolute h-[33vh] sm:h-[35vh] lg:h-[476.508px] left-[32.6%] top-0 w-[20vw] max-w-[287.212px] hidden lg:block">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <Image
                 src="/home-assets/window-frame-assets/image-221.png"
                 alt=""
                 fill
-                sizes="287px"
+                sizes="(max-width: 1440px) 20vw, 287px"
                 className="absolute h-[122.7%] left-[-10.55%] max-w-none top-[-16.58%] w-[112.64%]"
               />
             </div>
           </div>
 
           {/* Decorative group on left */}
-          <div className="absolute h-[426.48px] left-[-212.1px] top-[194.18px] w-[691.227px] hidden lg:block">
+          <div className="absolute h-[30vh] sm:h-[32vh] lg:h-[426.48px] left-[-14.7%] top-[23vh] sm:top-[22vh] lg:top-[194.18px] w-[48vw] max-w-[691.227px] hidden lg:block">
             <div className="absolute inset-[-0.53%_0_-0.53%_-0.33%]">
               <Image
                 src="/footer-assets/group-140.svg"
                 alt=""
                 fill
-                sizes="691px"
+                sizes="(max-width: 1440px) 48vw, 691px"
                 className="block max-w-none"
               />
             </div>
@@ -107,28 +107,30 @@ export default function MyHomeToYoursSection({
       </div>
 
       {/* Content */}
-      <div className="relative z-10 pt-16 sm:pt-20 md:pt-24 pb-16 px-4 sm:px-6 lg:px-0 min-h-[854px] flex items-center">
+      <div className="relative z-10 pt-16 sm:pt-20 md:pt-24 pb-16 px-4 sm:px-6 lg:px-0 min-h-[600px] sm:min-h-[700px] lg:min-h-[854px] flex items-center">
         <div className="max-w-7xl mx-auto w-full">
           {/* Title */}
           <p
-            className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] from-[#f9f9f9] leading-[0.82] not-italic text-[50px] sm:text-[70px] md:text-[85px] lg:text-[100px] text-center to-[#a6b5c0] w-full max-w-[316.736px] mx-auto mb-8"
+            className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] from-[#f9f9f9] leading-[0.82] not-italic text-[40px] sm:text-[60px] md:text-[75px] lg:text-[90px] xl:text-[100px] text-left to-[#a6b5c0] w-full max-w-[316.736px] mb-6 sm:mb-8"
             style={{ WebkitTextFillColor: "transparent" }}
           >
             {title}
           </p>
 
           {/* Subtitle */}
-          <div className="flex h-[101.539px] items-center justify-center w-[178.245px] mx-auto mb-8">
+          <div className="flex h-[80px] sm:h-[90px] lg:h-[101.539px] items-center justify-center w-[150px] sm:w-[160px] lg:w-[178.245px] mx-auto mb-6 sm:mb-8">
             <div className="flex-none rotate-[340.939deg]">
-              <div className="font-['Scribo_Pro',sans-serif] leading-[0.82] not-italic relative text-[#ffa953] text-[20px] sm:text-[24px] md:text-[26px] lg:text-[29.142px] text-center text-nowrap uppercase">
-                <p className="mb-0">{subtitle.split(" ").slice(0, 3).join(" ")}</p>
+              <div className="font-['Scribo_Pro',sans-serif] leading-[0.82] not-italic relative text-[#ffa953] text-[18px] sm:text-[22px] md:text-[24px] lg:text-[27px] xl:text-[29.142px] text-center text-nowrap uppercase">
+                <p className="mb-0">
+                  {subtitle.split(" ").slice(0, 3).join(" ")}
+                </p>
                 <p>{subtitle.split(" ").slice(3).join(" ")}</p>
               </div>
             </div>
           </div>
 
           {/* Decorative "D3" text */}
-          <p className="absolute font-['Post_No_Bills_Colombo',sans-serif] leading-[0.82] not-italic right-[-202px] text-[#b9c7d6] text-[180px] sm:text-[220px] md:text-[240px] lg:text-[258.329px] text-nowrap top-[313.12px] translate-x-[100%] hidden lg:block">
+          <p className="absolute font-['Post_No_Bills_Colombo',sans-serif] leading-[0.82] not-italic right-[-15vw] sm:right-[-12vw] lg:right-[-202px] text-[#b9c7d6] text-[120px] sm:text-[160px] md:text-[200px] lg:text-[230px] xl:text-[258.329px] text-nowrap top-[25vh] sm:top-[28vh] lg:top-[313.12px] translate-x-[100%] hidden lg:block">
             D3
           </p>
         </div>
@@ -136,4 +138,3 @@ export default function MyHomeToYoursSection({
     </div>
   );
 }
-

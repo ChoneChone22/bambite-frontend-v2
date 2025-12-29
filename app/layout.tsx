@@ -7,6 +7,7 @@ import {
   Space_Mono,
   Stick_No_Bills,
 } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import NavbarV2 from "@/components/NavbarV2";
 import Footer from "@/components/Footer";
@@ -45,6 +46,13 @@ const stickNoBills = Stick_No_Bills({
   variable: "--font-stick-no-bills",
   weight: "400",
   subsets: ["latin"],
+});
+
+const chillaxSemibold = localFont({
+  src: "../fonts/Chillax-Semibold.woff2",
+  variable: "--font-chillax-semibold",
+  weight: "600",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -91,7 +99,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${notoSansThaiLooped.variable} ${dmSans.variable} ${spaceMono.variable} ${stickNoBills.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${notoSansThaiLooped.variable} ${dmSans.variable} ${spaceMono.variable} ${stickNoBills.variable} ${chillaxSemibold.variable} antialiased`}
       >
         <CartProvider>
           <NavbarV2 />

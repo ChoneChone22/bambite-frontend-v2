@@ -5,6 +5,35 @@ import Image from "next/image";
 import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
 
+// Inline Break Line Component (replaces break-line.svg)
+function BreakLine() {
+  return (
+    <svg
+      width="55.645"
+      height="1.919"
+      viewBox="0 0 55.645 1.919"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <line
+        y1="0.9595"
+        x2="55.645"
+        y2="0.9595"
+        stroke="#182E44"
+        strokeWidth="1.91881"
+      />
+      <line
+        opacity="0.2"
+        y1="2.87803"
+        x2="55.645"
+        y2="2.87803"
+        stroke="white"
+        strokeWidth="1.91881"
+      />
+    </svg>
+  );
+}
+
 type ProductCardProps = {
   id: string;
   image: string;
@@ -110,7 +139,13 @@ export default function ProductCard({
       {/* Bottom Section - Blue Plate - Responsive height */}
       <div className="flex items-center justify-center relative shrink-0 w-full">
         <div className="flex-none rotate-[180deg] w-full">
-          <div className="bg-gradient-to-b border border-[#193551] border-solid content-stretch flex from-[#074980] h-[50px] sm:h-[54px] md:h-[58px] items-center relative to-[#172743] w-full rounded-b-lg overflow-hidden">
+          <div
+            className="bg-gradient-to-b content-stretch flex from-[#074980] h-[50px] sm:h-[54px] md:h-[58px] items-center relative to-[#172743] w-full overflow-hidden"
+            style={{
+              clipPath: "polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 30%)",
+              border: "5px solid #193551",
+            }}
+          >
             {/* Texture overlays */}
             <div className="absolute contents inset-[-0.5px_calc(-0.08%-0.5px)_-0.5px_-0.5px]">
               {/* Metal overlay */}
@@ -191,39 +226,23 @@ export default function ProductCard({
             {/* Break line separator */}
             <div className="flex h-[55.645px] items-center justify-center relative shrink-0 w-[1.919px] z-10">
               <div className="flex-none rotate-[90deg]">
-                <div className="h-[1.919px] relative w-[55.645px]">
-                  <div className="absolute inset-[-100%_0_0_0]">
-                    <Image
-                      src="/product-assets/break-line.svg"
-                      alt=""
-                      width={56}
-                      height={2}
-                      className="block max-w-none size-full"
-                    />
-                  </div>
-                </div>
+                <BreakLine />
               </div>
             </div>
 
             {/* Quantity selector - Responsive padding */}
             <div className="content-stretch flex gap-1 sm:gap-2 md:gap-[8px] h-full items-center justify-center px-2 sm:px-3 md:px-[14px] py-1 sm:py-2 md:py-[8px] relative shrink-0 z-10">
-              {/* Minus button */}
+              {/* Plus button */}
               <div className="flex items-center justify-center relative shrink-0">
                 <div className="flex-none rotate-[180deg]">
                   <button
-                    onClick={handleDecrement}
-                    className="content-stretch flex items-center p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors"
-                    aria-label="Decrease quantity"
+                    onClick={handleIncrement}
+                    className="content-stretch flex items-center justify-center p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors"
+                    aria-label="Increase quantity"
                   >
-                    <div className="overflow-clip relative shrink-0 size-[16px]">
-                      <Image
-                        src="/product-assets/minus-icon.svg"
-                        alt=""
-                        width={16}
-                        height={16}
-                        className="block max-w-none size-full"
-                      />
-                    </div>
+                    <p className="font-['Space_Mono',monospace] leading-none not-italic relative text-[22px] text-nowrap text-white uppercase font-bold">
+                      +
+                    </p>
                   </button>
                 </div>
               </div>
@@ -231,29 +250,23 @@ export default function ProductCard({
               {/* Quantity display */}
               <div className="flex items-center justify-center relative shrink-0">
                 <div className="flex-none rotate-[180deg]">
-                    <p className="font-['Space_Mono',monospace] leading-none not-italic relative text-[11px] sm:text-[12px] md:text-[13px] text-nowrap text-white uppercase font-bold">
-                      {quantity}
-                    </p>
+                  <p className="font-['Space_Mono',monospace] leading-none not-italic relative text-[11px] sm:text-[12px] md:text-[13px] text-nowrap text-white uppercase font-bold">
+                    {quantity}
+                  </p>
                 </div>
               </div>
 
-              {/* Plus button */}
+              {/* Minus button */}
               <div className="flex items-center justify-center relative shrink-0">
                 <div className="flex-none rotate-[180deg]">
                   <button
-                    onClick={handleIncrement}
-                    className="content-stretch flex items-center p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors"
-                    aria-label="Increase quantity"
+                    onClick={handleDecrement}
+                    className="content-stretch flex items-center justify-center p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors"
+                    aria-label="Decrease quantity"
                   >
-                    <div className="overflow-clip relative shrink-0 size-[16px]">
-                      <Image
-                        src="/product-assets/plus-icon.svg"
-                        alt=""
-                        width={16}
-                        height={16}
-                        className="block max-w-none size-full"
-                      />
-                    </div>
+                    <p className="font-['Space_Mono',monospace] leading-none not-italic relative text-[22px] text-nowrap text-white uppercase font-bold">
+                      -
+                    </p>
                   </button>
                 </div>
               </div>
@@ -267,4 +280,3 @@ export default function ProductCard({
     </div>
   );
 }
-
