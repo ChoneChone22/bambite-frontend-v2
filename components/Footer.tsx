@@ -16,6 +16,19 @@ export default function Footer() {
         />
       </div>
 
+      {/* Footer Logo - Top Left */}
+      <div className="relative z-10 mt-12 ml-[168px] lg:mt-16 lg:ml-[184px]">
+        <div className="relative w-[200px] h-[100px] lg:w-[250px] lg:h-[125px]">
+          <Image
+            src="/footer-assets/footer-logo.png"
+            alt="Bambite Logo"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      </div>
+
       {/* Footer Content - Positioned at bottom right */}
       <div className="absolute bottom-[82px] right-[282px] lg:bottom-[98px] lg:right-[298px] z-10">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 items-start lg:items-start">
