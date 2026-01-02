@@ -2,6 +2,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 type ExploreCuisineSectionProps = {
   title?: string;
@@ -15,7 +16,7 @@ export default function ExploreCuisineSection({
   decorativeText = "Everything new",
 }: ExploreCuisineSectionProps) {
   return (
-    <div className="relative w-full min-h-[508px] overflow-hidden">
+    <div className="relative w-full min-h-[508px]">
       {/* Background image with overlay */}
       <div className="absolute h-[508.262px] left-0 top-0 w-full">
         <div
@@ -65,24 +66,42 @@ export default function ExploreCuisineSection({
         </div>
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 pt-16 sm:pt-20 md:pt-24 pb-16 px-4 sm:px-6 lg:px-0 min-h-[508px] flex items-center">
+      {/* Content - Clickable container */}
+      <div className="relative z-10 pt-16 sm:pt-20 md:pt-24 pb-16 px-4 sm:px-6 lg:px-0 min-h-[508px] flex items-center overflow-visible">
         <div className="max-w-7xl mx-auto w-full">
-          <h2 className="font-['Chillax_Variable',sans-serif] leading-[0.95] not-italic text-[32px] sm:text-[44px] md:text-[52px] lg:text-[69.339px] text-white mb-8 sm:mb-12">
-            {title.includes("New Cuisine") ? (
-              <>
-                {title.replace(" New Cuisine", "")}
-                <br />
-                New Cuisine
-              </>
-            ) : (
-              <>
-                Explore All
-                <br />
-                New Cuisine
-              </>
-            )}
-          </h2>
+          <Link
+            href="/menu"
+            className="relative inline-block cursor-pointer transition-opacity duration-300 hover:opacity-90 ml-[300px] sm:ml-[320px] lg:ml-[350px]"
+            aria-label="Explore all new cuisine - Go to menu"
+          >
+            <h2 className="font-chillax-semibold leading-[0.95] not-italic text-[32px] sm:text-[44px] md:text-[52px] lg:text-[69.339px] text-white mb-8 sm:mb-12">
+              {title.includes("New Cuisine") ? (
+                <>
+                  {title.replace(" New Cuisine", "")}
+                  <br />
+                  New Cuisine
+                </>
+              ) : (
+                <>
+                  Explore All
+                  <br />
+                  New Cuisine
+                </>
+              )}
+            </h2>
+
+            {/* Arrow icon - positioned to the right in its original location */}
+            <div className="absolute top-1/2 left-[calc(100%+80px)] -translate-y-1/2 h-[108.284px] w-[119.52px] hidden lg:block">
+              <Image
+                src="/footer-assets/group-184.svg"
+                alt=""
+                fill
+                sizes="120px"
+                className="block max-w-none size-full"
+                data-node-id="609:7874"
+              />
+            </div>
+          </Link>
         </div>
       </div>
 
@@ -90,24 +109,12 @@ export default function ExploreCuisineSection({
       <div className="absolute flex h-[79.667px] items-center justify-center left-[calc(50%+101.69px)] bottom-[100px] translate-x-[-50%] w-[173.279px] hidden lg:block">
         <div className="flex-none rotate-[341deg]">
           <p
-            className="font-['Scribo_Pro',sans-serif] leading-[0.82] not-italic relative text-[#ff9e3e] text-[10px] sm:text-[14px] md:text-[20px] text-center text-nowrap uppercase"
+            className="font-indie-flower leading-[0.82] not-italic relative text-[#ff9e3e] text-[10px] sm:text-[14px] md:text-[20px] text-center text-nowrap uppercase"
             data-node-id="609:8244"
           >
             {decorativeText}
           </p>
         </div>
-      </div>
-
-      {/* Arrow icon - positioned after "Everything new" text, vertically centered */}
-      <div className="absolute top-1/2 left-[calc(50%+101.69px+173.279px+20px)] -translate-y-1/2 translate-x-[-50%] h-[108.284px] w-[119.52px] hidden lg:block pointer-events-none">
-        <Image
-          src="/footer-assets/group-184.svg"
-          alt=""
-          fill
-          sizes="120px"
-          className="block max-w-none size-full"
-          data-node-id="609:7874"
-        />
       </div>
     </div>
   );

@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* Custom font utility classes */
+.font-indie-flower {
+  font-family: var(--font-indie-flower);
+}
+
+.font-postnobills-colombo {
+  font-family: var(--font-postnobills-colombo);
+}
+
+.font-chillax-semibold {
+  font-family: var(--font-chillax-semibold);
+}
+
 /* Hide scrollbar but keep scrolling functionality */
 html {
   scrollbar-width: none; /* Firefox */
