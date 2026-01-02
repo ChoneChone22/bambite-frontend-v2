@@ -5,8 +5,7 @@ import { useState, useEffect } from "react";
 import HeroSection from "@/components/HeroSection";
 import NewTasteSection from "@/components/NewTasteSection";
 import ExploreCuisineSection from "@/components/ExploreCuisineSection";
-import MyHomeToYoursSection from "@/components/MyHomeToYoursSection";
-import HiImBamSection from "@/components/HiImBamSection";
+import PortalScrollSection from "@/components/PortalScrollSection";
 import { Product } from "@/components/MenuSection";
 import { getProducts } from "@/lib/api/products";
 import { mapApiProductsToProducts } from "@/lib/utils/productMapper";
@@ -43,11 +42,8 @@ export default function Home() {
       {/* Explore All New Cuisine Section */}
       <ExploreCuisineSection />
 
-      {/* My Home to Yours Section */}
-      <MyHomeToYoursSection />
-
-      {/* Hi, I'm Bam Section */}
-      <HiImBamSection />
+      {/* Portal Scroll-Through Animation: My Home to Yours → Hi I'm Bam */}
+      <PortalScrollSection />
     </main>
   );
 }

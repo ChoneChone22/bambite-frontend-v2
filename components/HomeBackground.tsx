@@ -14,11 +14,13 @@ export default function HomeBackground({
   className = "",
 }: HomeBackgroundProps) {
   return (
-    <div className={`relative w-full min-h-[853px] overflow-hidden ${className}`}>
+    <div
+      className={`relative w-full min-h-[853px] overflow-hidden ${className}`}
+    >
       {/* Single background image */}
       <div className="absolute h-[853.168px] left-0 top-0 w-full">
         <Image
-          src="/home-assets/hero/Bambite-background copy.webp"
+          src="/home-assets/hero/Home-Hero-img.jpg"
           alt=""
           fill
           sizes="100vw"
@@ -35,4 +37,3 @@ export default function HomeBackground({
     </div>
   );
 }
-

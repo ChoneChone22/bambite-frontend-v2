@@ -11,11 +11,11 @@ type NewTasteSectionProps = {
 
 export default function NewTasteSection({ products }: NewTasteSectionProps) {
   return (
-    <div className="relative w-full min-h-[800px] sm:min-h-[1000px] md:min-h-[1200px] lg:min-h-[1458px] bg-gradient-to-b from-[#ced8db] to-[#adbdbd] overflow-hidden">
+    <div className="relative w-full bg-gradient-to-b from-[#ced8db] to-[#adbdbd] overflow-hidden">
       {/* Base texture background */}
       <div className="absolute h-full left-0 top-0 w-full hidden lg:block">
         <div
-          className="absolute h-[1458.246px] left-[0.04%] mix-blend-soft-light opacity-80 right-0 top-[851.93px]"
+          className="absolute h-full left-[0.04%] mix-blend-soft-light opacity-80 right-0 top-0"
           style={{
             backgroundImage:
               "linear-gradient(rgb(206, 216, 219) 0%, rgb(173, 189, 190) 100%), linear-gradient(90deg, rgb(245, 245, 245) 0%, rgb(245, 245, 245) 100%)",
@@ -68,22 +68,6 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
         </div>
       </div>
 
-      {/* Decorative Vector */}
-      <div className="absolute h-[19.417px] left-[calc(37.5%+59px)] top-[20px] w-[264.506px] hidden lg:block">
-        <Image
-          src="/decorative-assets/vector-205.svg"
-          alt=""
-          fill
-          sizes="265px"
-          className="block max-w-none"
-        />
-      </div>
-
-      {/* Decorative "C4" text */}
-      <p className="absolute font-['Post_No_Bills_Colombo',sans-serif] leading-[0.82] left-[calc(12.5%-99.2px)] not-italic text-[120px] sm:text-[160px] md:text-[200px] lg:text-[258.329px] text-[#8fa5ae] text-nowrap top-[50%] translate-y-[-50%] opacity-20 sm:opacity-30 md:opacity-40 lg:opacity-100 hidden md:block">
-        C4
-      </p>
-
       {/* Vertical separator line */}
       <div className="absolute h-full left-[calc(12.5%+42.3px)] top-0 w-[2.018px] hidden lg:block">
         <div className="absolute inset-[0_-99.13%_0_0]">
@@ -116,7 +100,7 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
               >
                 NEW
               </span>
-              <span className="font-[var(--font-chillax-semibold)] leading-[0.82] not-italic text-[50px] sm:text-[70px] md:text-[85px] lg:text-[100.746px] text-[#cc934e] text-center text-nowrap uppercase">
+              <span className="font-indie-flower leading-[0.82] not-italic text-[28px] sm:text-[38px] md:text-[50px] lg:text-[60px] text-[#cc934e] text-center text-nowrap uppercase">
                 World
               </span>
             </div>
@@ -146,17 +130,37 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
                 </div>
               </div>
             ))}
-            {/* Empty space after first row products */}
+            {/* Blue rectangle decorative box after first row products */}
             <div className="flex items-center justify-center w-full">
-              {/* Empty space - transparent, same width as product card */}
+              <div className="w-full max-w-[280px] sm:max-w-[300px] md:max-w-[320px] h-[300px] sm:h-[320px] md:h-[360px] flex items-center justify-center bg-transparent rounded-lg">
+                <div className="relative w-[60%] h-[60%]">
+                  <Image
+                    src="/home-assets/decorative-elements/blue-rectangle.webp"
+                    alt="Decorative blue rectangle"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 200px"
+                    className="object-contain"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Second Row: 1 empty space + 3 products */}
+          {/* Second Row: 1 decorative image + 3 products */}
           <div className="grid grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-            {/* Empty space before second row products */}
+            {/* Decorative C4 image at the start of second row */}
             <div className="flex items-center justify-center w-full">
-              {/* Empty space - transparent, same width as product card */}
+              <div className="w-full max-w-[280px] sm:max-w-[300px] md:max-w-[320px] h-[300px] sm:h-[320px] md:h-[360px] flex items-center justify-center bg-transparent rounded-lg">
+                <div className="relative w-[60%] h-[60%]">
+                  <Image
+                    src="/home-assets/decorative-elements/home-c4.webp"
+                    alt="Decorative C4 element"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 200px"
+                    className="object-contain"
+                  />
+                </div>
+              </div>
             </div>
             {products.slice(3, 6).map((product) => (
               <div
@@ -176,23 +180,6 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Decorative text elements - hidden on mobile for cleaner look */}
-      <div className="absolute flex h-[79.667px] items-center justify-center left-[calc(50%+101.69px)] bottom-[200px] translate-x-[-50%] w-[173.279px] hidden lg:block">
-        <div className="flex-none rotate-[341deg]">
-          <p className="font-['Scribo_Pro',sans-serif] leading-[0.82] not-italic relative text-[#ff9e3e] text-[20px] sm:text-[24px] md:text-[29.142px] text-center text-nowrap uppercase">
-            Everything new
-          </p>
-        </div>
-      </div>
-
-      <div className="absolute flex h-[43.397px] items-center justify-center left-[calc(81.25%+76.24px)] top-[40%] translate-x-[-50%] w-[137.056px] hidden lg:block">
-        <div className="flex-none rotate-[351.629deg]">
-          <p className="font-['Scribo_Pro',sans-serif] leading-[0.82] not-italic relative text-[#bb7b37] text-[20px] sm:text-[24px] md:text-[29.142px] text-center text-nowrap uppercase">
-            Delicious xP
-          </p>
         </div>
       </div>
     </div>

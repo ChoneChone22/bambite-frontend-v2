@@ -6,6 +6,7 @@ import {
   DM_Sans,
   Space_Mono,
   Stick_No_Bills,
+  Indie_Flower,
 } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -48,9 +49,23 @@ const stickNoBills = Stick_No_Bills({
   subsets: ["latin"],
 });
 
+const indieFlower = Indie_Flower({
+  variable: "--font-indie-flower",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
+
 const chillaxSemibold = localFont({
   src: "../fonts/Chillax-Semibold.woff2",
   variable: "--font-chillax-semibold",
+  weight: "600",
+  display: "swap",
+});
+
+const postNoBillsColombo = localFont({
+  src: "../fonts/postnobillscolombo-semibold.ttf",
+  variable: "--font-postnobills-colombo",
   weight: "600",
   display: "swap",
 });
@@ -99,7 +114,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="overflow-x-hidden">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${notoSansThaiLooped.variable} ${dmSans.variable} ${spaceMono.variable} ${stickNoBills.variable} ${chillaxSemibold.variable} antialiased overflow-x-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} ${notoSansThaiLooped.variable} ${dmSans.variable} ${spaceMono.variable} ${stickNoBills.variable} ${indieFlower.variable} ${chillaxSemibold.variable} ${postNoBillsColombo.variable} antialiased overflow-x-hidden`}
       >
         <CartProvider>
           <NavbarV2 />
