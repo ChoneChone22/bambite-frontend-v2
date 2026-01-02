@@ -84,7 +84,7 @@ export default function DescriptionTextBox({
             }}
           >
             <Image
-              src="/product-assets/metal-overlay.png"
+              src="/product-assets/metal-overlay.webp"
               alt=""
               fill
               sizes={designTokens.sizes.silverPlate.width}

@@ -305,7 +305,7 @@ export default function ApplicationFormPage() {
                     <div className="absolute contents inset-[-0.5px_calc(-0.08%-0.5px)_calc(0%-0.5px)_-0.5px]">
                       <div className="absolute inset-[0_-0.08%_0_0.57%] mix-blend-overlay opacity-30">
                         <Image
-                          src="/product-assets/metal-overlay.png"
+                          src="/product-assets/metal-overlay.webp"
                           alt=""
                           fill
                           sizes="600px"
@@ -316,7 +316,7 @@ export default function ApplicationFormPage() {
                         <div className="flex-none h-[58px] scale-y-[-100%] w-full">
                           <div className="opacity-[0.34] relative size-full">
                             <Image
-                              src="/product-assets/grunge-overlay.png"
+                              src="/product-assets/grunge-overlay.webp"
                               alt=""
                               fill
                               sizes="600px"

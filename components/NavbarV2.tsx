@@ -189,7 +189,7 @@ function GlobalNavV2({ className, onBackground = "OnDark" }: GlobalNavV2Props) {
         {/* Left nav items container */}
         <div className="bg-[#181e24] flex flex-col h-full items-start justify-center min-w-0 px-[4px] sm:px-[8px] md:px-[25px] py-[22px] relative shrink-0">
           <div className="flex flex-nowrap gap-[4px] sm:gap-[8px] md:gap-[40px] items-center relative shrink-0">
-            <NavItem navLabel="About" no="C1" href="/" />
+            <NavItem navLabel="About" no="C1" href="/about" />
             <NavItem navLabel="Career" no="C2" href="/career" />
             <NavItem navLabel="Contact" no="C3" href="/contact" />
           </div>
@@ -207,7 +207,7 @@ function GlobalNavV2({ className, onBackground = "OnDark" }: GlobalNavV2Props) {
           className="flex items-center justify-center w-full h-full hover:opacity-80 transition-opacity overflow-visible"
         >
           <Image
-            src="/bambite-logo-white.png"
+            src="/bambite-logo-blue.webp"
             alt="Bambite Logo"
             width={254}
             height={100}
@@ -231,7 +231,17 @@ function GlobalNavV2({ className, onBackground = "OnDark" }: GlobalNavV2Props) {
         {/* Right nav items container */}
         <div className="bg-[#181e24] flex flex-col h-full items-end justify-center min-w-0 px-[4px] sm:px-[8px] md:px-[25px] py-[22px] relative shrink-0">
           <div className="flex flex-nowrap gap-[4px] sm:gap-[8px] md:gap-[40px] items-center relative shrink-0">
-            <NavItem navLabel="Story" no="C6" href="/story" />
+            {/* Empty space where Story link was */}
+            <div className="flex gap-[3px] sm:gap-[5px] md:gap-[7px] items-start px-0 py-[7px] relative shrink-0 whitespace-nowrap">
+              <p className="font-['Space_Mono',monospace] leading-none not-italic relative shrink-0 text-[#b9c7d6] text-[10px] sm:text-[11px] md:text-[12px] text-nowrap uppercase whitespace-nowrap opacity-0">
+                C6
+              </p>
+              <div className="flex gap-[4px] sm:gap-[6px] md:gap-[8px] items-center justify-center relative shrink-0">
+                <p className="font-['Chillax_Variable',sans-serif] leading-[0.82] not-italic relative shrink-0 text-[#b9c7d6] text-[12px] sm:text-[14px] md:text-[20px] text-nowrap font-semibold whitespace-nowrap opacity-0">
+                  Story
+                </p>
+              </div>
+            </div>
             <NavItem navLabel="Dishes" no="C4" href="/menu" />
             <NavItem
               iconBack={true}

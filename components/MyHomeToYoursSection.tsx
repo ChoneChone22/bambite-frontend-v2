@@ -13,7 +13,7 @@ type MyHomeToYoursSectionProps = {
 export default function MyHomeToYoursSection({
   title = "My Home to Yours",
   subtitle = "You're about to discover more",
-  sceneImage = "/home-assets/window-frame-assets/forest-scene.png",
+  sceneImage = "/home-assets/window-frame-assets/forest-scene.webp",
 }: MyHomeToYoursSectionProps) {
   return (
     <div className="relative w-full min-h-[600px] sm:min-h-[700px] lg:min-h-[854px] overflow-hidden bg-[#123659]">
@@ -40,7 +40,7 @@ export default function MyHomeToYoursSection({
           <div className="absolute contents inset-[0_-0.08%_0_0]">
             <div className="absolute inset-[0_-0.08%_0_0.57%] mix-blend-overlay opacity-30">
               <Image
-                src="/product-assets/metal-overlay.png"
+                src="/product-assets/metal-overlay.webp"
                 alt=""
                 fill
                 sizes="(max-width: 1440px) 100vw, 1440px"
@@ -51,7 +51,7 @@ export default function MyHomeToYoursSection({
               <div className="flex-none h-full -scale-y-100 w-full">
                 <div className="opacity-[0.34] relative size-full">
                   <Image
-                    src="/product-assets/grunge-overlay.png"
+                    src="/product-assets/grunge-overlay.webp"
                     alt=""
                     fill
                     sizes="(max-width: 1440px) 100vw, 1440px"
@@ -82,7 +82,7 @@ export default function MyHomeToYoursSection({
           <div className="absolute h-[33vh] sm:h-[35vh] lg:h-[476.508px] left-[32.6%] -top-14 w-[20vw] max-w-[287.212px] hidden lg:block">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <Image
-                src="/home-assets/window-frame-assets/image-221.png"
+                src="/home-assets/window-frame-assets/image-221.webp"
                 alt=""
                 fill
                 sizes="(max-width: 1440px) 20vw, 287px"
@@ -95,7 +95,7 @@ export default function MyHomeToYoursSection({
           <div className="absolute -right-28 top-1 w-[20vw] max-w-[287.212px] hidden lg:block pointer-events-none">
             <div className="relative w-full" style={{ aspectRatio: "auto" }}>
               <Image
-                src="/home-assets/window-frame-assets/vine3-hello.png"
+                src="/home-assets/window-frame-assets/vine3-hello.webp"
                 alt=""
                 width={287}
                 height={477}

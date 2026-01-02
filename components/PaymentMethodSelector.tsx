@@ -58,7 +58,7 @@ export default function PaymentMethodSelector({
           <div className="h-[24px] relative shrink-0 w-[23.958px]">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <Image
-                src="/checkout-assets/qr-icon.png"
+                src="/checkout-assets/qr-icon.webp"
                 alt="QR Code"
                 fill
                 sizes="24px"

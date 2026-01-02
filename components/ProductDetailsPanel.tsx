@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
 import SizeSelector from "./SizeSelector";
 import FAQAccordion from "./FAQAccordion";
@@ -48,7 +49,8 @@ export default function ProductDetailsPanel({
 }: ProductDetailsPanelProps) {
   const [selectedSize, setSelectedSize] = useState(sizes[0]?.id || "");
   const [quantity, setQuantity] = useState(1);
-  const { addItem } = useCart();
+  const { addItem, closeCart } = useCart();
+  const router = useRouter();
 
   const handleIncrement = () => {
     setQuantity((prev) => prev + 1);
@@ -67,7 +69,7 @@ export default function ProductDetailsPanel({
       title,
       titleThai,
       price,
-      image: image || "/product-images/product-1.png",
+      image: image || "/product-images/product-1.webp",
       size: sizeLabel,
     });
     // If quantity > 1, add additional items
@@ -77,14 +79,18 @@ export default function ProductDetailsPanel({
         title,
         titleThai,
         price,
-        image: image || "/product-images/product-1.png",
+        image: image || "/product-images/product-1.webp",
         size: sizeLabel,
       });
     }
+    // Close cart drawer immediately (addItem opens it automatically)
+    closeCart();
     // Also call optional callback if provided
     if (onAddToCart) {
       onAddToCart(quantity, selectedSize);
     }
+    // Redirect to coming-soon page
+    router.push("/coming-soon");
   };
 
   const handleBuyNow = () => {
@@ -94,30 +100,39 @@ export default function ProductDetailsPanel({
   };
 
   return (
-    <div className="content-stretch flex flex-col gap-[56px] items-center w-full max-w-[520px]">
+    <div className="content-stretch flex flex-col gap-[36px] items-center w-full max-w-[380px]">
       {/* Product Info */}
-      <div className="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-full">
-        <div className="content-stretch flex flex-col gap-[8px] items-start leading-[0.82] relative shrink-0 w-full">
-          <p className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] from-[#f9f9f9] not-italic relative shrink-0 text-[32px] sm:text-[36px] md:text-[40px] to-[#a6b5c0] w-full">
+      <div className="content-stretch flex flex-col gap-[16px] items-start relative shrink-0 w-full">
+        <div className="content-stretch flex flex-col gap-[6px] items-start leading-[0.82] relative shrink-0 w-full">
+          <p
+            className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#f9f9f9] not-italic relative shrink-0 text-[40px] to-[#a6b5c0] w-full"
+            style={{ WebkitTextFillColor: "transparent" }}
+          >
             {title}
           </p>
-          <p className="font-['Noto_Sans_Thai_Looped',sans-serif] font-medium relative shrink-0 text-[15px] sm:text-[17px] text-[rgba(255,255,255,0.75)] w-full">
-            {titleThai}
-          </p>
+          {/* titleThai commented out - API doesn't provide it */}
+          {titleThai && (
+            <p className="font-['Noto_Sans_Thai_Looped',sans-serif] font-medium relative shrink-0 text-[12px] sm:text-[14px] text-[rgba(255,255,255,0.75)] w-full">
+              {titleThai}
+            </p>
+          )}
         </div>
-        <div className="bg-gradient-to-b content-stretch flex from-[rgba(255,255,255,0.1)] items-center justify-center pb-[7px] pt-[5px] px-[10px] relative rounded-[7px] shrink-0">
-          <p className="font-['Space_Mono',sans-serif] font-bold leading-[1.2] not-italic relative shrink-0 text-[18px] sm:text-[20px] text-[#489adc] text-nowrap">
+        <div className="bg-gradient-to-b content-stretch flex from-[rgba(255,255,255,0.1)] items-center justify-center pb-[5px] pt-[3px] px-[8px] relative rounded-[5px] shrink-0">
+          <p className="font-['Space_Mono',sans-serif] font-bold leading-[1.2] not-italic relative shrink-0 text-[14px] sm:text-[16px] text-[#489adc] text-nowrap">
             {price} {currency}
           </p>
         </div>
-        <p className="font-['DM_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-[15px] sm:text-[17px] text-[rgba(255,255,255,0.55)] w-full">
+        <p className="font-['DM_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-[12px] sm:text-[14px] text-[rgba(255,255,255,0.55)] w-full">
           {description}
         </p>
       </div>
 
       {/* Size Selector */}
-      <div className="content-stretch flex flex-col gap-[20px] items-start relative shrink-0 w-full">
-        <p className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] from-[#f9f9f9] leading-[0.82] not-italic relative shrink-0 text-[18px] sm:text-[20px] to-[#a6b5c0] w-full">
+      <div className="content-stretch flex flex-col gap-[14px] items-start relative shrink-0 w-full">
+        <p
+          className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#f9f9f9] leading-[0.82] not-italic relative shrink-0 text-[16px] to-[#a6b5c0] w-full"
+          style={{ WebkitTextFillColor: "transparent" }}
+        >
           Size
         </p>
         <SizeSelector
@@ -128,15 +143,15 @@ export default function ProductDetailsPanel({
       </div>
 
       {/* Add to Cart Section */}
-      <div className="content-stretch flex flex-col gap-[10px] items-start relative shrink-0 w-full">
+      <div className="content-stretch flex flex-col gap-[7px] items-start relative shrink-0 w-full">
         <div className="flex items-center justify-center relative shrink-0 w-full">
           <div className="flex-none rotate-[180deg] w-full">
-            <div className="bg-gradient-to-b border border-[#193551] border-solid content-stretch flex from-[#074980] h-[50px] sm:h-[54px] md:h-[58px] items-center relative to-[#172743] w-full rounded-lg overflow-hidden">
+            <div className="bg-gradient-to-b border border-[#193551] border-solid content-stretch flex from-[#074980] h-[40px] sm:h-[42px] md:h-[44px] items-center relative to-[#172743] w-full rounded-lg overflow-hidden">
               {/* Texture overlays */}
               <div className="absolute contents inset-[-0.5px_calc(-0.08%-0.5px)_-0.5px_-0.5px]">
                 <div className="absolute inset-[0_-0.08%_0_0.57%] mix-blend-overlay opacity-30">
                   <Image
-                    src="/product-assets/metal-overlay.png"
+                    src="/product-assets/metal-overlay.webp"
                     alt=""
                     fill
                     sizes="520px"
@@ -147,7 +162,7 @@ export default function ProductDetailsPanel({
                   <div className="flex-none h-full scale-y-[-100%] w-full">
                     <div className="opacity-[0.34] relative size-full">
                       <Image
-                        src="/product-assets/grunge-overlay.png"
+                        src="/product-assets/grunge-overlay.webp"
                         alt=""
                         fill
                         sizes="520px"
@@ -172,17 +187,17 @@ export default function ProductDetailsPanel({
               {/* Add to Cart Button */}
               <button
                 onClick={handleAddToCart}
-                className="basis-0 content-stretch flex gap-[24px] grow h-full items-center min-h-px min-w-px pl-[12px] pr-[20px] py-0 relative shrink-0 z-10"
+                className="basis-0 content-stretch flex gap-[16px] grow h-full items-center min-h-px min-w-px pl-[8px] pr-[15px] py-0 relative shrink-0 z-10"
               >
                 <div className="flex items-center justify-center relative shrink-0">
                   <div className="flex-none rotate-[180deg]">
-                    <div className="content-stretch flex items-center p-[6px] relative rounded-[8px]">
-                      <div className="overflow-clip relative shrink-0 size-[24px]">
+                    <div className="content-stretch flex items-center p-[4px] relative rounded-[6px]">
+                      <div className="overflow-clip relative shrink-0 size-[18px]">
                         <Image
                           src="/product-assets/shopping-cart-icon.svg"
                           alt=""
-                          width={22}
-                          height={22}
+                          width={18}
+                          height={18}
                           className="block max-w-none"
                         />
                       </div>
@@ -191,8 +206,8 @@ export default function ProductDetailsPanel({
                 </div>
                 <div className="basis-0 flex grow items-center justify-center min-h-px min-w-px relative shrink-0">
                   <div className="flex-none rotate-[180deg] w-full">
-                    <div className="content-stretch flex gap-[16px] items-center relative w-full">
-                      <p className="font-['Space_Mono',sans-serif] font-bold leading-none not-italic relative shrink-0 text-[11px] sm:text-[12.583px] text-[rgba(255,255,255,0.9)] text-nowrap uppercase">
+                    <div className="content-stretch flex gap-[12px] items-center relative w-full">
+                      <p className="font-['Space_Mono',sans-serif] font-bold leading-none not-italic relative shrink-0 text-[9px] sm:text-[10px] text-[rgba(255,255,255,0.9)] text-nowrap uppercase">
                         add to cart
                       </p>
                     </div>
@@ -201,9 +216,9 @@ export default function ProductDetailsPanel({
               </button>
 
               {/* Separator */}
-              <div className="flex h-[55.645px] items-center justify-center relative shrink-0 w-[1.919px] z-10">
+              <div className="flex h-[40px] items-center justify-center relative shrink-0 w-[1.4px] z-10">
                 <div className="flex-none rotate-[90deg]">
-                  <div className="h-[1.919px] relative w-[55.645px]">
+                  <div className="h-[1.4px] relative w-[40px]">
                     <Image
                       src="/product-assets/break-line.svg"
                       alt=""
@@ -216,19 +231,19 @@ export default function ProductDetailsPanel({
               </div>
 
               {/* Quantity Controls */}
-              <div className="content-stretch flex gap-[4px] sm:gap-[8px] h-full items-center justify-center px-[12px] sm:px-[14px] py-[8px] relative shrink-0 z-10">
+              <div className="content-stretch flex gap-[3px] sm:gap-[6px] h-full items-center justify-center px-[8px] sm:px-[10px] py-[6px] relative shrink-0 z-10">
                 <button
                   onClick={handleDecrement}
                   className="flex items-center justify-center relative shrink-0"
                 >
                   <div className="flex-none rotate-[180deg]">
-                    <div className="content-stretch flex items-center p-[5px] sm:p-[8px] relative rounded-[3px] sm:rounded-[8px]">
-                      <div className="overflow-clip relative shrink-0 size-[16px]">
+                    <div className="content-stretch flex items-center justify-center p-[3px] sm:p-[6px] relative rounded-[3px] sm:rounded-[6px]">
+                      <div className="overflow-clip relative shrink-0 size-[18px] flex items-center justify-center">
                         <Image
-                          src="/product-assets/minus-icon.svg"
+                          src="/product-assets/minus.svg"
                           alt="Decrease quantity"
-                          width={16}
-                          height={16}
+                          width={18}
+                          height={18}
                           className="block max-w-none"
                         />
                       </div>
@@ -237,7 +252,7 @@ export default function ProductDetailsPanel({
                 </button>
                 <div className="flex items-center justify-center relative shrink-0">
                   <div className="flex-none rotate-[180deg]">
-                    <p className="font-['Space_Mono',sans-serif] font-bold leading-none not-italic relative text-[14px] sm:text-[16px] text-nowrap text-white uppercase">
+                    <p className="font-['Space_Mono',sans-serif] font-bold leading-none not-italic relative text-[11px] sm:text-[13px] text-nowrap text-white uppercase">
                       {quantity}
                     </p>
                   </div>
@@ -247,13 +262,13 @@ export default function ProductDetailsPanel({
                   className="flex items-center justify-center relative shrink-0"
                 >
                   <div className="flex-none rotate-[180deg]">
-                    <div className="content-stretch flex items-center p-[5px] sm:p-[8px] relative rounded-[3px] sm:rounded-[8px]">
-                      <div className="overflow-clip relative shrink-0 size-[16px]">
+                    <div className="content-stretch flex items-center justify-center p-[3px] sm:p-[6px] relative rounded-[3px] sm:rounded-[6px]">
+                      <div className="overflow-clip relative shrink-0 size-[14px] flex items-center justify-center">
                         <Image
                           src="/product-assets/plus-icon.svg"
                           alt="Increase quantity"
-                          width={16}
-                          height={16}
+                          width={14}
+                          height={14}
                           className="block max-w-none"
                         />
                       </div>
@@ -272,13 +287,13 @@ export default function ProductDetailsPanel({
           <div className="flex-none rotate-[180deg] w-full">
             <button
               onClick={handleBuyNow}
-              className="bg-gradient-to-b border border-[#070f17] border-solid content-stretch flex from-[#171e24] h-[50px] sm:h-[54px] md:h-[58px] items-center relative to-[#1b2229] w-full rounded-lg overflow-hidden"
+              className="bg-gradient-to-b border border-[#070f17] border-solid content-stretch flex from-[#171e24] h-[40px] sm:h-[42px] md:h-[44px] items-center relative to-[#1b2229] w-full rounded-lg overflow-hidden"
             >
               {/* Texture overlays */}
               <div className="absolute contents inset-[-0.5px_calc(-0.08%-0.5px)_calc(0%-0.5px)_-0.5px]">
                 <div className="absolute inset-[0_-0.08%_0_0.57%] mix-blend-overlay opacity-30">
                   <Image
-                    src="/product-assets/metal-overlay.png"
+                    src="/product-assets/metal-overlay.webp"
                     alt=""
                     fill
                     sizes="520px"
@@ -289,7 +304,7 @@ export default function ProductDetailsPanel({
                   <div className="flex-none h-full scale-y-[-100%] w-full">
                     <div className="opacity-[0.34] relative size-full">
                       <Image
-                        src="/product-assets/grunge-overlay.png"
+                        src="/product-assets/grunge-overlay.webp"
                         alt=""
                         fill
                         sizes="520px"
@@ -312,12 +327,16 @@ export default function ProductDetailsPanel({
               </div>
 
               {/* Button Content */}
-              <div className="basis-0 content-stretch flex gap-[24px] grow h-full items-center min-h-px min-w-px pl-[12px] pr-[20px] py-0 relative shrink-0 z-10">
+              <div className="basis-0 content-stretch flex gap-[16px] grow h-full items-center min-h-px min-w-px pl-[8px] pr-[15px] py-0 relative shrink-0 z-10">
                 <div className="basis-0 flex grow items-center justify-center min-h-px min-w-px relative shrink-0">
                   <div className="flex-none rotate-[180deg] w-full">
-                    <div className="content-stretch flex font-['Space_Mono',sans-serif] items-center justify-between leading-none not-italic relative text-[11px] sm:text-[12.583px] text-nowrap uppercase w-full">
-                      <p className="relative shrink-0 text-[rgba(255,255,255,0.9)]">Buy Now</p>
-                      <p className="relative shrink-0 text-white">{price} {currency}</p>
+                    <div className="content-stretch flex font-['Space_Mono',sans-serif] items-center justify-between leading-none not-italic relative text-[9px] sm:text-[10px] text-nowrap uppercase w-full">
+                      <p className="relative shrink-0 text-[rgba(255,255,255,0.9)]">
+                        Buy Now
+                      </p>
+                      <p className="relative shrink-0 text-white">
+                        {price} {currency}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -334,4 +353,3 @@ export default function ProductDetailsPanel({
     </div>
   );
 }
-

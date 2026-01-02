@@ -29,7 +29,7 @@ export default function FilterPanel({
       </div>
 
       {/* Border rectangle */}
-      <div className="absolute h-full sm:h-[395.524px] left-[-13px] top-[-13px] w-[calc(100%+26px)] sm:w-[308.088px]">
+      {/* <div className="absolute h-full sm:h-[395.524px] left-[-13px] top-[-13px] w-[calc(100%+26px)] sm:w-[308.088px]">
         <div className="absolute inset-[0_0_-0.76%_0]">
           <Image
             src="/filter-assets/rectangle-312.svg"
@@ -40,7 +40,7 @@ export default function FilterPanel({
             style={{ stroke: "rgba(143, 165, 174, 1)" }}
           />
         </div>
-      </div>
+      </div> */}
 
       {/* Filter title */}
       <p className="absolute font-['Space_Mono',monospace] leading-none left-[20px] sm:left-[30.64px] not-italic opacity-90 text-[13px] text-white top-[24px] sm:top-[36.26px] uppercase font-bold z-10">
@@ -50,7 +50,8 @@ export default function FilterPanel({
       {/* Category list */}
       <div className="absolute content-stretch flex flex-col gap-[8px] items-start left-[20px] sm:left-[30.64px] top-[60px] sm:top-[74.27px] w-auto sm:w-[84.74px] z-10">
         {categories.map((category) => {
-          const isActive = category.toLowerCase() === activeCategory.toLowerCase();
+          const isActive =
+            category.toLowerCase() === activeCategory.toLowerCase();
           return (
             <div
               key={category}
@@ -108,4 +109,3 @@ export default function FilterPanel({
     </div>
   );
 }
-

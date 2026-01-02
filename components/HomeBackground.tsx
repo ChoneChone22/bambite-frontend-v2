@@ -18,7 +18,7 @@ export default function HomeBackground({
       {/* Single background image */}
       <div className="absolute h-[853.168px] left-0 top-0 w-full">
         <Image
-          src="/home-assets/hero/Bambite-background copy.jpg"
+          src="/home-assets/hero/Bambite-background copy.webp"
           alt=""
           fill
           sizes="100vw"

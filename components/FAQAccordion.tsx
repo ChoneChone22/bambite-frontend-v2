@@ -27,13 +27,13 @@ export default function FAQAccordion({ faqs }: FAQAccordionProps) {
   };
 
   return (
-    <div className="content-stretch flex flex-col gap-[15px] items-start justify-center relative shrink-0 w-full">
+    <div className="content-stretch flex flex-col gap-[11px] items-start justify-center relative shrink-0 w-full">
       {faqs.map((faq) => {
         const isOpen = openIds.has(faq.id);
         return (
           <div
             key={faq.id}
-            className={`border-2 border-solid content-stretch flex flex-col gap-[20px] items-start px-[23px] py-[16px] sm:py-[20px] relative rounded-[32px] shrink-0 w-full transition-all ${
+            className={`border-2 border-solid content-stretch flex flex-col gap-[14px] items-start px-[16px] py-[12px] sm:py-[15px] relative rounded-[24px] shrink-0 w-full transition-all ${
               isOpen
                 ? "border-[rgba(255,255,255,0.3)]"
                 : "border-[rgba(255,255,255,0.1)]"
@@ -43,15 +43,18 @@ export default function FAQAccordion({ faqs }: FAQAccordionProps) {
               onClick={() => toggleFAQ(faq.id)}
               className="content-stretch flex items-center justify-between relative shrink-0 w-full"
             >
-              <p className="basis-0 bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] from-[#f9f9f9] grow leading-[0.82] min-h-px min-w-px not-italic relative shrink-0 text-[18px] sm:text-[20px] text-left to-[#a6b5c0]">
+              <p
+                className="basis-0 bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#f9f9f9] grow leading-[0.82] min-h-px min-w-px not-italic relative shrink-0 text-[20px] text-left to-[#a6b5c0]"
+                style={{ WebkitTextFillColor: "transparent" }}
+              >
                 {faq.question}
               </p>
-              <div className="content-stretch flex items-center p-[6px] relative rounded-[8px] shrink-0">
-                <div className="relative shrink-0 size-[24px]">
+              <div className="content-stretch flex items-center p-[4px] relative rounded-[6px] shrink-0">
+                <div className="relative shrink-0 size-[18px]">
                   {isOpen ? (
                     <svg
-                      width="24"
-                      height="24"
+                      width="18"
+                      height="18"
                       viewBox="0 0 24 24"
                       fill="none"
                       className="text-white"
@@ -66,8 +69,8 @@ export default function FAQAccordion({ faqs }: FAQAccordionProps) {
                     </svg>
                   ) : (
                     <svg
-                      width="24"
-                      height="24"
+                      width="18"
+                      height="18"
                       viewBox="0 0 24 24"
                       fill="none"
                       className="text-white"
@@ -85,7 +88,7 @@ export default function FAQAccordion({ faqs }: FAQAccordionProps) {
               </div>
             </button>
             {isOpen && (
-              <p className="font-['DM_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-[15px] sm:text-[17px] text-[rgba(255,255,255,0.55)] w-full">
+              <p className="font-['DM_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-[12px] sm:text-[14px] text-[rgba(255,255,255,0.55)] w-full">
                 {faq.answer}
               </p>
             )}

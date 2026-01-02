@@ -52,16 +52,16 @@ export default function CareerPage() {
 
   return (
     <CareerBackground>
-      <div className="min-h-screen w-full overflow-x-hidden">
+      <div className="w-full h-screen max-h-screen overflow-hidden overflow-x-hidden pt-[70px]">
         {/* Main Content */}
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 md:pt-24 pb-8 sm:pb-12 md:pb-16">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 md:pt-12 pb-4 sm:pb-6 md:pb-8 h-[calc(100vh-70px)] overflow-y-auto">
           {/* Mission Statement */}
-          <div className="mb-6 sm:mb-8 md:mb-10">
+          <div className="mb-4 sm:mb-5 md:mb-6">
             <MissionStatement text={missionText} />
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 lg:gap-6 xl:gap-8 items-start">
             {/* Left Column - Join Bam's Team */}
             <div className="w-full lg:max-w-[273px]">
               <JoinBamsTeamSection />

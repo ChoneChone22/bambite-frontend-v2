@@ -28,7 +28,7 @@ export default function MenuBackground({
         {/* Metal 1 overlay */}
         <div className="absolute inset-0 mix-blend-soft-light opacity-80">
           <Image
-            src="/background-assets/metal-overlay-bg.png"
+            src="/background-assets/metal-overlay-bg.webp"
             alt=""
             fill
             sizes="100vw"
@@ -42,7 +42,7 @@ export default function MenuBackground({
           <div className="flex-none h-full scale-y-[-100%] w-full">
             <div className="opacity-30 relative size-full">
               <Image
-                src="/background-assets/grunge-overlay-bg.png"
+                src="/background-assets/grunge-overlay-bg.webp"
                 alt=""
                 fill
                 sizes="100vw"

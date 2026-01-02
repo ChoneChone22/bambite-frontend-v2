@@ -1,5 +1,6 @@
-// Footer component - Simplified with footer-bg.png background
+// Footer component - Simplified with footer-bg.webp background
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -7,7 +8,7 @@ export default function Footer() {
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full">
         <Image
-          src="/footer-assets/footer-bg.png"
+          src="/footer-assets/footer-bg.webp"
           alt=""
           fill
           sizes="100vw"
@@ -20,7 +21,7 @@ export default function Footer() {
       <div className="relative z-10 mt-12 ml-[168px] lg:mt-16 lg:ml-[184px]">
         <div className="relative w-[200px] h-[100px] lg:w-[250px] lg:h-[125px]">
           <Image
-            src="/footer-assets/footer-logo.png"
+            src="/footer-assets/footer-logo.webp"
             alt="Bambite Logo"
             fill
             className="object-contain"
@@ -38,18 +39,24 @@ export default function Footer() {
               Links
             </p>
             <div className="flex flex-col gap-[14px] text-white">
-              <p className="font-['Chillax_Variable',sans-serif] font-semibold leading-[0.82] not-italic text-[20px]">
+              <Link
+                href="/menu"
+                className="font-['Chillax_Variable',sans-serif] font-semibold leading-[0.82] not-italic text-[20px] hover:opacity-80 transition-opacity"
+              >
                 Products
-              </p>
-              <p className="font-['Chillax_Variable',sans-serif] font-semibold leading-[0.82] not-italic text-[20px]">
+              </Link>
+              <Link
+                href="/about"
+                className="font-['Chillax_Variable',sans-serif] font-semibold leading-[0.82] not-italic text-[20px] hover:opacity-80 transition-opacity"
+              >
                 About
-              </p>
-              <p className="font-['Chillax_Variable',sans-serif] font-semibold leading-[0.82] not-italic text-[20px]">
-                Blog
-              </p>
-              <p className="font-['Chillax_Variable',sans-serif] font-semibold leading-[0.82] not-italic text-[20px]">
+              </Link>
+              <Link
+                href="/contact"
+                className="font-['Chillax_Variable',sans-serif] font-semibold leading-[0.82] not-italic text-[20px] hover:opacity-80 transition-opacity"
+              >
                 Contact
-              </p>
+              </Link>
             </div>
           </div>
 
@@ -71,35 +78,50 @@ export default function Footer() {
 
         {/* Social Media Icons */}
         <div className="flex gap-[12px] items-center mt-8">
-          {/* Facebook Icon */}
-          <div className="relative size-[58px]">
+          {/* Facebook */}
+          <Link
+            href="https://www.facebook.com/share/1A1Wvjcu43/?mibextid=wwXIfr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative size-[58px] hover:opacity-80 transition-opacity"
+          >
             <Image
-              src="/footer-assets/facebook.png"
+              src="/footer-assets/facebook.webp"
               alt="Facebook"
               fill
               className="object-contain"
             />
-          </div>
+          </Link>
 
-          {/* TikTok Icon */}
-          <div className="relative size-[58px]">
+          {/* TikTok */}
+          <Link
+            href="https://www.tiktok.com/@bambite25?_r=1&_t=ZS-92g00es6bgN"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative size-[58px] hover:opacity-80 transition-opacity"
+          >
             <Image
-              src="/footer-assets/tiktok.png"
+              src="/footer-assets/tiktok.webp"
               alt="TikTok"
               fill
               className="object-contain"
             />
-          </div>
+          </Link>
 
-          {/* Instagram Icon */}
-          <div className="relative size-[58px]">
+          {/* Instagram */}
+          <Link
+            href="https://www.instagram.com/bambiteburst?igsh=MTk1cDRieXN3ZTAzbg=="
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative size-[58px] hover:opacity-80 transition-opacity"
+          >
             <Image
-              src="/footer-assets/instagram.png"
+              src="/footer-assets/instagram.webp"
               alt="Instagram"
               fill
               className="object-contain"
             />
-          </div>
+          </Link>
         </div>
 
         {/* Copyright */}

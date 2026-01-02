@@ -22,7 +22,7 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
           }}
         >
           <Image
-            src="/product-assets/metal-overlay.png"
+            src="/product-assets/metal-overlay.webp"
             alt=""
             fill
             sizes="100vw"
@@ -35,7 +35,7 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
       <div className="absolute contents left-0 right-0 top-0 hidden lg:block">
         <div className="absolute h-full left-[0.04%] mix-blend-soft-light opacity-80 right-0 top-0">
           <Image
-            src="/product-assets/metal-overlay.png"
+            src="/product-assets/metal-overlay.webp"
             alt=""
             fill
             sizes="100vw"
@@ -46,7 +46,7 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
           <div className="flex-none h-full -scale-y-100 w-[1521.967px]">
             <div className="opacity-30 relative size-full">
               <Image
-                src="/product-assets/grunge-overlay.png"
+                src="/product-assets/grunge-overlay.webp"
                 alt=""
                 fill
                 sizes="100vw"

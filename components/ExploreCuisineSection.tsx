@@ -11,7 +11,7 @@ type ExploreCuisineSectionProps = {
 
 export default function ExploreCuisineSection({
   title = "Explore All New Cuisine",
-  image = "/home-assets/hero/explore.png",
+  image = "/home-assets/hero/explore.webp",
   decorativeText = "Everything new",
 }: ExploreCuisineSectionProps) {
   return (

@@ -22,9 +22,8 @@ export default function PaymentSuccessModal({
       }, 1000);
       return () => clearTimeout(timer);
     } else {
-      // Redirect to order status page after countdown
-      // TODO: Replace with actual order status page route
-      router.push("/");
+      // Redirect to order success page after countdown
+      router.push("/order-success");
     }
   }, [countdown, router]);
 

@@ -2,7 +2,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
 
 // Inline Break Line Component (replaces break-line.svg)
@@ -43,6 +45,7 @@ type ProductCardProps = {
   description: string;
   initialQuantity?: number;
   onAddToCart?: (quantity: number) => void;
+  size?: "default" | "small";
 };
 
 export default function ProductCard({
@@ -54,9 +57,11 @@ export default function ProductCard({
   description,
   initialQuantity = 1,
   onAddToCart,
+  size = "default",
 }: ProductCardProps) {
   const [quantity, setQuantity] = useState(initialQuantity);
-  const { addItem } = useCart();
+  const { addItem, closeCart } = useCart();
+  const router = useRouter();
 
   const handleIncrement = () => {
     setQuantity((prev) => prev + 1);
@@ -85,16 +90,34 @@ export default function ProductCard({
         image,
       });
     }
+    // Close cart drawer immediately (addItem opens it automatically)
+    closeCart();
     // Also call optional callback if provided
     if (onAddToCart) {
       onAddToCart(quantity);
     }
+    // Redirect to coming-soon page
+    router.push("/coming-soon");
   };
 
+  const isSmall = size === "small";
+  const maxWidth = isSmall ? "max-w-[280px]" : "max-w-[335px]";
+  const topHeight = isSmall ? "h-[250px] sm:h-[280px] md:h-[320px]" : "h-[300px] sm:h-[340px] md:h-[380px]";
+  const topPaddingX = isSmall ? "px-3 sm:px-5 md:px-[26px]" : "px-4 sm:px-6 md:px-[31px]";
+  const topPaddingY = isSmall ? "py-3 sm:py-4 md:py-[20px]" : "py-4 sm:py-5 md:py-[24px]";
+  const titleSize = isSmall ? "text-[14px] sm:text-[16px] md:text-[18px]" : "text-[16px] sm:text-[18px] md:text-[20px]";
+  const titleThaiSize = isSmall ? "text-[12px] sm:text-[13px] md:text-[14px]" : "text-[13px] sm:text-[14px] md:text-[15px]";
+  const priceSize = isSmall ? "text-[12px] sm:text-[14px] md:text-[15px]" : "text-[14px] sm:text-[16px] md:text-[17.975px]";
+  const descSize = isSmall ? "text-[10px] sm:text-[11px] md:text-[11px]" : "text-[11px] sm:text-[12px] md:text-[12.583px]";
+  const bottomHeight = isSmall ? "h-[42px] sm:h-[46px] md:h-[50px]" : "h-[50px] sm:h-[54px] md:h-[58px]";
+
   return (
-    <div className="content-stretch flex flex-col items-center relative size-full w-full max-w-[335px] mx-auto">
+    <Link
+      href={`/products/${id}`}
+      className={`content-stretch flex flex-col items-center relative size-full w-full ${maxWidth} mx-auto no-underline`}
+    >
       {/* Top Section - Orange Plate - Responsive height */}
-      <div className="content-stretch flex flex-col gap-[8px] h-[300px] sm:h-[340px] md:h-[380px] items-start justify-end px-4 sm:px-6 md:px-[31px] py-4 sm:py-5 md:py-[24px] relative shrink-0 w-full">
+      <div className={`content-stretch flex flex-col gap-[8px] ${topHeight} items-start justify-end ${topPaddingX} ${topPaddingY} relative shrink-0 w-full`}>
         {/* Orange plate background (this IS the product image) - Responsive sizing */}
         <div className="absolute flex h-full items-center justify-center left-1/2 top-0 translate-x-[-50%] w-full max-w-[336.001px]">
           <div className="flex-none rotate-[180deg] scale-y-[-100%] w-full h-full">
@@ -115,22 +138,25 @@ export default function ProductCard({
           {/* Title and Price */}
           <div className="content-stretch flex gap-2 sm:gap-3 md:gap-[13px] items-center relative shrink-0 w-full">
             <div className="basis-0 content-stretch flex flex-col gap-2 sm:gap-[11px] grow items-start leading-[0.82] min-h-px min-w-px relative shrink-0 text-white">
-              <p className="font-['Chillax_Variable',sans-serif] not-italic relative shrink-0 text-[16px] sm:text-[18px] md:text-[20px] w-full font-semibold text-white">
+              <p className={`font-['Chillax_Variable',sans-serif] not-italic relative shrink-0 ${titleSize} w-full font-semibold text-white`}>
                 {title}
               </p>
-              <p className="font-['Noto_Sans_Thai_Looped',sans-serif] font-medium relative shrink-0 text-[13px] sm:text-[14px] md:text-[15px] w-full text-white">
-                {titleThai}
-              </p>
+              {/* titleThai commented out - API doesn't provide it */}
+              {titleThai && (
+                <p className={`font-['Noto_Sans_Thai_Looped',sans-serif] font-medium relative shrink-0 ${titleThaiSize} w-full text-white`}>
+                  {titleThai}
+                </p>
+              )}
             </div>
             <div className="bg-[#b9c7d6] content-stretch flex items-center justify-center p-1 sm:p-[4px] md:p-[5.19px] relative rounded-[3.595px] shrink-0">
-              <p className="font-['DM_Sans',sans-serif] leading-[0.82] not-italic relative shrink-0 text-[#181e24] text-[14px] sm:text-[16px] md:text-[17.975px] text-nowrap text-right font-medium">
+              <p className={`font-['DM_Sans',sans-serif] leading-[0.82] not-italic relative shrink-0 text-[#181e24] ${priceSize} text-nowrap text-right font-medium`}>
                 {price}THB
               </p>
             </div>
           </div>
 
           {/* Description */}
-          <p className="font-['DM_Sans',sans-serif] font-medium leading-[1.2] opacity-60 relative shrink-0 text-[11px] sm:text-[12px] md:text-[12.583px] text-white w-full">
+          <p className={`font-['DM_Sans',sans-serif] font-medium leading-[1.2] opacity-60 relative shrink-0 ${descSize} text-white w-full`}>
             {description}
           </p>
         </div>
@@ -140,7 +166,7 @@ export default function ProductCard({
       <div className="flex items-center justify-center relative shrink-0 w-full">
         <div className="flex-none rotate-[180deg] w-full">
           <div
-            className="bg-gradient-to-b content-stretch flex from-[#074980] h-[50px] sm:h-[54px] md:h-[58px] items-center relative to-[#172743] w-full overflow-hidden"
+            className={`bg-gradient-to-b content-stretch flex from-[#074980] ${bottomHeight} items-center relative to-[#172743] w-full overflow-hidden`}
             style={{
               clipPath: "polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 30%)",
               border: "5px solid #193551",
@@ -151,7 +177,7 @@ export default function ProductCard({
               {/* Metal overlay */}
               <div className="absolute inset-[0_-0.08%_0_0.57%] mix-blend-overlay opacity-30">
                 <Image
-                  src="/product-assets/metal-overlay.png"
+                  src="/product-assets/metal-overlay.webp"
                   alt=""
                   fill
                   sizes="336px"
@@ -163,7 +189,7 @@ export default function ProductCard({
                 <div className="flex-none h-[58px] scale-y-[-100%] w-full">
                   <div className="opacity-[0.34] relative size-full">
                     <Image
-                      src="/product-assets/grunge-overlay.png"
+                      src="/product-assets/grunge-overlay.webp"
                       alt=""
                       fill
                       sizes="336px"
@@ -212,7 +238,11 @@ export default function ProductCard({
               <div className="basis-0 flex grow items-center justify-center min-h-px min-w-px relative shrink-0">
                 <div className="flex-none rotate-[180deg] w-full">
                   <button
-                    onClick={handleAddToCart}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleAddToCart();
+                    }}
                     className="content-stretch flex gap-[16px] items-center relative w-full justify-center hover:opacity-90 transition-opacity"
                   >
                     <p className="font-['Space_Mono',monospace] leading-none not-italic relative shrink-0 text-[10px] sm:text-[11px] md:text-[12.583px] text-white text-nowrap uppercase font-bold">
@@ -236,7 +266,11 @@ export default function ProductCard({
               <div className="flex items-center justify-center relative shrink-0">
                 <div className="flex-none rotate-[180deg]">
                   <button
-                    onClick={handleIncrement}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleIncrement();
+                    }}
                     className="content-stretch flex items-center justify-center p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors"
                     aria-label="Increase quantity"
                   >
@@ -260,7 +294,11 @@ export default function ProductCard({
               <div className="flex items-center justify-center relative shrink-0">
                 <div className="flex-none rotate-[180deg]">
                   <button
-                    onClick={handleDecrement}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleDecrement();
+                    }}
                     className="content-stretch flex items-center justify-center p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors"
                     aria-label="Decrease quantity"
                   >
@@ -277,6 +315,6 @@ export default function ProductCard({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

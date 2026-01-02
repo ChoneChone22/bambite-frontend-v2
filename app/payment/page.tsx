@@ -21,7 +21,11 @@ function PaymentPageContent() {
   useEffect(() => {
     const success = searchParams?.get("success");
     if (success === "true") {
-      setShowSuccessModal(true);
+      // Use setTimeout to avoid synchronous setState in effect
+      const timer = setTimeout(() => {
+        setShowSuccessModal(true);
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [searchParams]);
 
@@ -47,33 +51,33 @@ function PaymentPageContent() {
     <CheckoutBackground>
       <div className="relative w-full min-h-screen">
         {/* Back Button */}
-        <Link
-          href="/checkout"
-          className="absolute left-4 sm:left-12 top-[158px] content-stretch flex items-center p-[6px] rounded-[8px] hover:bg-gray-200 transition-colors z-10"
+        <button
+          onClick={() => router.back()}
+          className="absolute left-4 sm:left-12 top-[158px] content-stretch flex items-center p-[6px] rounded-[8px] hover:bg-gray-200 transition-colors z-50 cursor-pointer"
         >
-          <div className="relative shrink-0 size-[24px]">
-            <div className="absolute flex inset-[15.3%_21.23%_17.98%_19.08%] items-center justify-center">
-              <div className="flex-none h-[21.353px] rotate-180 -scale-y-100 w-[19.101px]">
-                <div className="relative size-full">
-                  <div className="absolute inset-[-6.6%_-9.24%_-6.6%_0]">
+          <div className="relative shrink-0 size-[36px] pointer-events-none">
+            <div className="absolute flex inset-[15.3%_21.23%_17.98%_19.08%] items-center justify-center pointer-events-none">
+              <div className="flex-none h-[32px] -scale-y-100 w-[29px] pointer-events-none">
+                <div className="relative size-full pointer-events-none">
+                  <div className="absolute inset-[-6.6%_-9.24%_-6.6%_0] pointer-events-none">
                     <Image
-                      src="/checkout-assets/arrow-left-icon.svg"
+                      src="/checkout-assets/back-icon.svg"
                       alt="Back"
-                      width={19}
-                      height={21}
-                      className="block max-w-none size-full"
+                      width={29}
+                      height={32}
+                      className="block max-w-none size-full pointer-events-none"
                     />
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </Link>
+        </button>
 
         {/* Main Content */}
-        <div className="relative z-10 pt-[177.5px] pb-16 px-4 sm:px-6 lg:px-0">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <div className="relative z-10 pt-[177.5px] pb-16 px-4 sm:px-6 lg:px-12 xl:px-16">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 lg:justify-center">
               {/* Left Section - Payment Form */}
               <div className="w-full lg:w-[518px] flex-shrink-0 order-2 lg:order-1">
                 <div className="content-stretch flex flex-col gap-12 sm:gap-16 md:gap-[48px] items-start">
@@ -134,7 +138,7 @@ function PaymentPageContent() {
                         <div className="h-[24px] relative shrink-0 w-[23.958px]">
                           <div className="absolute inset-0 overflow-hidden pointer-events-none">
                             <Image
-                              src="/checkout-assets/qr-icon.png"
+                              src="/checkout-assets/qr-icon.webp"
                               alt="QR Code"
                               fill
                               sizes="24px"
@@ -251,7 +255,7 @@ function PaymentPageContent() {
                   {/* Terms and Order Button */}
                   <div className="content-stretch flex flex-col gap-6 sm:gap-8 md:gap-[21px] items-start relative shrink-0 w-full">
                     <p className="font-['DM_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-[12px] text-[#1e6cad] w-full">
-                      <span>By clicking 'Order', you accept </span>
+                      <span>By clicking &apos;Order&apos;, you accept </span>
                       <a
                         href="https://www.eshopworld.com/terms-and-conditions-of-sale-th/"
                         target="_blank"
@@ -275,7 +279,7 @@ function PaymentPageContent() {
                           <div className="absolute contents inset-[-0.5px_calc(-0.08%-0.5px)_calc(0%-0.5px)_-0.5px]">
                             <div className="absolute inset-[0_-0.08%_0_0.57%] mix-blend-overlay opacity-30">
                               <Image
-                                src="/product-assets/metal-overlay.png"
+                                src="/product-assets/metal-overlay.webp"
                                 alt=""
                                 fill
                                 sizes="518px"
@@ -286,7 +290,7 @@ function PaymentPageContent() {
                               <div className="flex-none h-[58px] -scale-y-100 w-full">
                                 <div className="opacity-[0.34] relative size-full">
                                   <Image
-                                    src="/product-assets/grunge-overlay.png"
+                                    src="/product-assets/grunge-overlay.webp"
                                     alt=""
                                     fill
                                     sizes="518px"
@@ -359,8 +363,8 @@ function PaymentPageContent() {
         </div>
 
         {/* Footer Copyright */}
-        <div className="relative z-10 pb-8 px-4 sm:px-6 lg:px-0">
-          <div className="max-w-7xl mx-auto">
+        <div className="relative z-10 pb-8 px-4 sm:px-6 lg:px-12 xl:px-16">
+          <div className="max-w-6xl mx-auto">
             <p className="font-['DM_Sans',sans-serif] font-normal leading-[1.2] text-[12px] text-[rgba(21,32,43,0.55)] w-full lg:w-[518px]">
               © BamBite, 2026. All rights reserved.
             </p>

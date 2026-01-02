@@ -2,13 +2,16 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import ProductDetailsBackground from "@/components/ProductDetailsBackground";
 import ProductImageGallery from "@/components/ProductImageGallery";
 import ProductDetailsPanel from "@/components/ProductDetailsPanel";
 import RelatedProductsSection from "@/components/RelatedProductsSection";
 import { Product } from "@/components/MenuSection";
+import { getProductById, getProducts } from "@/lib/api/products";
+import { mapApiProductsToProducts } from "@/lib/utils/productMapper";
 
-// Sample product data - replace with actual API call
+// Product data type for details page
 type ProductData = {
   id: string;
   title: string;
@@ -21,95 +24,77 @@ type ProductData = {
   faqs: { id: string; question: string; answer: string }[];
 };
 
-const getProduct = (id: string): ProductData | null => {
-  // This would typically be an API call
-  const products: Record<string, ProductData> = {
-    "1": {
-      id: "1",
-      title: "Bam's Bites",
-      titleThai: "ก้อนเซโมลินา",
-      price: 120,
-      currency: "THB",
-      description: "A semolina treat full of natural flavor, a little sweet, made to lift your mood.",
-      images: [
-        "/product-images/product-1.png",
-        "/product-images/product-2.png",
-        "/product-images/product-3.png",
-        "/product-images/product-4.png",
-        "/product-images/product-5.png",
-      ],
-      sizes: [
-        { id: "small", label: "Small" },
-        { id: "big", label: "Big" },
-      ],
-      faqs: [
-        {
-          id: "1",
-          question: "What is Bam's bites?",
-          answer: "Lorem ipsum dolor sit amet consectetur. Id pharetra ullamcorper odio ut arcu fermentum odio. Dolor venenatis felis elementum ac cras enim.",
-        },
-        {
-          id: "2",
-          question: "How should I store Bam's bites?",
-          answer: "Store in a cool, dry place. Best consumed within 3 days of purchase.",
-        },
-      ],
-    },
-  };
-  return products[id] || products["1"] || null;
-};
-
-const getRelatedProducts = (): Product[] => {
-  // This would typically be an API call
-  return [
-    {
-      id: "2",
-      title: "Bam's Bites",
-      titleThai: "ก้อนเซโมลินา",
-      price: 120,
-      description: "Full of natural flavor, a little sweet, made to lift your mood.",
-      image: "/product-images/product-2.png",
-      category: "noodles",
-    },
-    {
-      id: "3",
-      title: "Bam's Bites",
-      titleThai: "ก้อนเซโมลินา",
-      price: 120,
-      description: "Full of natural flavor, a little sweet, made to lift your mood.",
-      image: "/product-images/product-3.png",
-      category: "noodles",
-    },
-    {
-      id: "4",
-      title: "Bam's Bites",
-      titleThai: "ก้อนเซโมลินา",
-      price: 120,
-      description: "Full of natural flavor, a little sweet, made to lift your mood.",
-      image: "/product-images/product-4.png",
-      category: "noodles",
-    },
-  ];
-};
-
 export default function ProductDetailsPage() {
   const params = useParams();
   const id = (params?.id as string) || "";
+  const [product, setProduct] = useState<ProductData | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Use direct function calls instead of useEffect for synchronous data
-  const product = getProduct(id);
-  const relatedProducts = getRelatedProducts();
+  useEffect(() => {
+    const fetchProductData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-  if (!product) {
-    return (
-      <ProductDetailsBackground>
-        <div className="min-h-screen w-full flex items-center justify-center">
-          <div className="text-white text-xl">Product not found</div>
-        </div>
-      </ProductDetailsBackground>
-    );
-  }
+        // Fetch the product
+        const apiProduct = await getProductById(id);
+        if (!apiProduct) {
+          setError("Product not found");
+          setLoading(false);
+          return;
+        }
 
+        // Map API product to ProductData
+        const mappedProduct: ProductData = {
+          id: apiProduct.id,
+          title: apiProduct.name,
+          // titleThai: apiProduct.name, // API doesn't have titleThai, commented out for now
+          titleThai: "", // Empty string since API doesn't provide titleThai
+          price: parseFloat(apiProduct.price),
+          currency: "THB",
+          description: apiProduct.description || "",
+          images: apiProduct.imageUrls.length > 0 
+            ? apiProduct.imageUrls 
+            : ["/product-images/product-1.webp"], // Fallback image
+          sizes: [
+            { id: "small", label: "Small" },
+            { id: "big", label: "Big" },
+          ], // Default sizes - adjust if API provides sizes
+          faqs: [
+            {
+              id: "1",
+              question: "What is Bam's bites?",
+              answer: apiProduct.description || "A delicious treat from BamBite.",
+            },
+          ], // Default FAQ - adjust if API provides FAQs
+        };
+
+        setProduct(mappedProduct);
+
+        // Fetch related products (other products from same category or all products)
+        const response = await getProducts({ limit: 10 });
+        if (response.status === "success") {
+          const allProducts = mapApiProductsToProducts(response.data);
+          // Filter out current product and get up to 3 related products
+          const related = allProducts
+            .filter((p) => p.id !== id)
+            .slice(0, 3);
+          setRelatedProducts(related);
+        }
+      } catch (err) {
+        console.error("Error fetching product:", err);
+        setError(err instanceof Error ? err.message : "Failed to load product");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProductData();
+    }
+  }, [id]);
 
   const handleAddToCart = (quantity: number, sizeId: string) => {
     console.log("Add to cart:", { quantity, sizeId, productId: id });
@@ -121,12 +106,32 @@ export default function ProductDetailsPage() {
     // Implement checkout logic here
   };
 
+  if (loading) {
+    return (
+      <ProductDetailsBackground>
+        <div className="min-h-screen w-full flex items-center justify-center">
+          <div className="text-white text-xl">Loading product...</div>
+        </div>
+      </ProductDetailsBackground>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <ProductDetailsBackground>
+        <div className="min-h-screen w-full flex items-center justify-center">
+          <div className="text-white text-xl">{error || "Product not found"}</div>
+        </div>
+      </ProductDetailsBackground>
+    );
+  }
+
   return (
     <ProductDetailsBackground>
       <div className="min-h-screen w-full">
         {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 md:pt-28 pb-4 sm:pb-6 md:pb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-24 items-start">
             {/* Left Column - Image Gallery */}
             <div className="w-full">
               <ProductImageGallery
@@ -160,4 +165,3 @@ export default function ProductDetailsPage() {
     </ProductDetailsBackground>
   );
 }
-

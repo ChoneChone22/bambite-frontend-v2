@@ -21,7 +21,7 @@ export default function JobDetailsCard({ details }: JobDetailsCardProps) {
         {/* Texture overlay for mobile */}
         <div className="absolute inset-0 mix-blend-overlay opacity-30">
           <Image
-            src="/product-assets/metal-overlay.png"
+            src="/product-assets/metal-overlay.webp"
             alt=""
             fill
             sizes="298px"

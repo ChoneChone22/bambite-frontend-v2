@@ -101,8 +101,8 @@ function VerticalBarSection() {
 }
 
 export default function HeroSection({
-  title = "Made to melt your stress",
-  description = "Arcu pretium morbi nisi felis gravida aenean feugiat. Luctus nec laoreet egestas vulputate. Fringilla varius aliquam dolor sed molestie.",
+  title = "Tradition meets New Imagination",
+  description = "The authentic taste added with modern twists, creativity & the joys of Bam's little souls.",
   ctaText = "SEE MENU",
   ctaLink = "/menu",
 }: HeroSectionProps) {

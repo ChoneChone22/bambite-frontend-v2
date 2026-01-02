@@ -33,7 +33,7 @@ export default function ApplicationFormBackground({
         <div className="absolute contents left-[-4px] top-0">
           <div className="absolute h-[1823.683px] left-[4.78px] mix-blend-overlay opacity-30 top-0 w-[calc(100%-9.56px)]">
             <Image
-              src="/product-assets/metal-overlay.png"
+              src="/product-assets/metal-overlay.webp"
               alt=""
               fill
               sizes="100vw"
@@ -42,7 +42,7 @@ export default function ApplicationFormBackground({
           </div>
           <div className="absolute h-[1823.683px] left-[-4px] mix-blend-lighten opacity-[0.19] top-0 w-full">
             <Image
-              src="/product-assets/grunge-overlay.png"
+              src="/product-assets/grunge-overlay.webp"
               alt=""
               fill
               sizes="100vw"

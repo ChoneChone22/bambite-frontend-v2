@@ -22,14 +22,14 @@ export default function ProductImageGallery({
   const mainImage = images[selectedImageIndex] || images[0];
 
   return (
-    <div className="content-stretch flex gap-[21px] items-start w-full">
+    <div className="content-stretch flex gap-[14px] items-start w-full">
       {/* Thumbnail strip - Hidden on mobile, visible on larger screens */}
-      <div className="hidden md:flex content-stretch flex-col gap-[15px] items-start relative shrink-0 w-[92px]">
+      <div className="hidden md:flex content-stretch flex-col gap-[10px] items-start relative shrink-0 w-[65px]">
         {images.map((image, index) => (
           <button
             key={index}
             onClick={() => setSelectedImageIndex(index)}
-            className={`h-[115.942px] relative shrink-0 w-full transition-opacity ${
+            className={`h-[80px] relative shrink-0 w-full transition-opacity ${
               selectedImageIndex === index ? "opacity-100" : "opacity-60 hover:opacity-80"
             }`}
           >
@@ -37,7 +37,7 @@ export default function ProductImageGallery({
               src={image}
               alt={`${productName} thumbnail ${index + 1}`}
               fill
-              sizes="92px"
+              sizes="65px"
               className="object-cover rounded"
             />
             {selectedImageIndex === index && (
@@ -48,12 +48,12 @@ export default function ProductImageGallery({
       </div>
 
       {/* Main image display */}
-      <div className="h-[300px] sm:h-[400px] md:h-[500px] lg:h-[665.016px] relative shrink-0 w-full md:w-[527.688px]">
+      <div className="h-[240px] sm:h-[300px] md:h-[380px] lg:h-[480px] relative shrink-0 w-full md:w-[380px]">
         <Image
           src={mainImage}
           alt={productName}
           fill
-          sizes="(max-width: 768px) 100vw, 527px"
+          sizes="(max-width: 768px) 100vw, 380px"
           className="object-cover rounded-lg"
           priority
         />

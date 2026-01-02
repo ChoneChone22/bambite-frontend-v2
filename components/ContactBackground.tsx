@@ -14,7 +14,9 @@ export default function ContactBackground({
   className = "",
 }: ContactBackgroundProps) {
   return (
-    <div className={`relative w-full min-h-screen bg-white overflow-hidden ${className}`}>
+    <div
+      className={`relative w-full min-h-screen bg-white overflow-hidden ${className}`}
+    >
       {/* Cyan Plate Background */}
       <div className="absolute h-[2085.547px] left-0 top-0 w-full">
         <div
@@ -29,7 +31,7 @@ export default function ContactBackground({
         <div className="absolute contents inset-0">
           <div className="absolute h-full left-[0.03%] mix-blend-soft-light opacity-80 right-[0.02%] top-0">
             <Image
-              src="/product-assets/metal-overlay.png"
+              src="/product-assets/metal-overlay.webp"
               alt=""
               fill
               sizes="100vw"
@@ -39,9 +41,12 @@ export default function ContactBackground({
           <div className="absolute flex h-full items-center justify-center left-[-0.02%] mix-blend-soft-light right-[0.01%] top-0">
             <div className="flex-none h-full -scale-y-100 w-full">
               <div className="opacity-30 relative size-full">
-                <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 pointer-events-none"
+                >
                   <Image
-                    src="/product-assets/grunge-overlay.png"
+                    src="/product-assets/grunge-overlay.webp"
                     alt=""
                     fill
                     sizes="100vw"
@@ -66,55 +71,43 @@ export default function ContactBackground({
       </div>
 
       {/* Decorative Character Image */}
-      <div className="absolute h-[710.729px] left-[calc(56.25%-16.82px)] top-[227.94px] w-[805.518px] hidden lg:block">
+      <div className="absolute h-[550px] left-[calc(56.25%-16.82px)] top-[227.94px] w-[620px] hidden lg:block">
         <Image
-          src="/contact-assets/character-image.png"
+          src="/contact-assets/character-image.webp"
           alt="Contact character"
           fill
-          sizes="806px"
-          className="absolute inset-0 max-w-none object-cover pointer-events-none size-full"
+          sizes="620px"
+          className="absolute inset-0 max-w-none object-contain pointer-events-none size-full"
         />
       </div>
 
       {/* Decorative Vines */}
       <div className="absolute contents left-[calc(81.25%+37.61px)] top-[-78.19px] hidden lg:block">
-        <div className="absolute h-[358.954px] left-[calc(81.25%+37.61px)] top-[-20.1px] w-[185.869px]">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <Image
-              src="/decorative-assets/vines-1.png"
-              alt=""
-              fill
-              sizes="186px"
-              className="absolute h-[106.96%] left-[-106.56%] max-w-none top-0 w-[206.56%]"
-            />
-          </div>
-        </div>
-        <div className="absolute flex h-[357.646px] items-center justify-center left-[calc(93.75%-36.55px)] top-[-78.19px] w-[194.693px]">
-          <div className="flex-none rotate-[189.724deg] -scale-y-100">
-            <div className="h-[338.963px] relative w-[139.447px]">
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <Image
-                  src="/decorative-assets/vines-2.png"
-                  alt=""
-                  fill
-                  sizes="139px"
-                  className="absolute h-full left-[-143.08%] max-w-none top-0 w-[243.08%]"
-                />
-              </div>
+        <div className="absolute flex items-center justify-center left-[calc(93.75%-10px)] top-24">
+          <div className="flex-none rotate-[189.724deg] -scale-y-100 scale-x-[-1]">
+            <div className="relative">
+              <Image
+                src="/decorative-assets/vines-2.webp"
+                alt=""
+                width={180}
+                height={440}
+                className="object-contain w-auto h-auto"
+                style={{ maxWidth: "none", maxHeight: "none" }}
+              />
             </div>
           </div>
         </div>
       </div>
 
       {/* Decorative Image 220 */}
-      <div className="absolute h-[217.432px] left-[104.54px] shadow-[0px_8px_3px_0px_rgba(13,18,26,0.17)] top-[3.4px] w-[243.543px] hidden lg:block">
+      <div className="absolute h-[180px] left-[104.54px] top-[-20px] w-[200px] hidden lg:block">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <Image
-            src="/decorative-assets/image-220.png"
+            src="/decorative-assets/vines-1.webp"
             alt=""
             fill
-            sizes="244px"
-            className="absolute h-[140.98%] left-[-9.12%] max-w-none top-[-27.49%] w-[113.94%]"
+            sizes="200px"
+            className="absolute h-full left-0 max-w-none top-0 w-full object-contain"
           />
         </div>
       </div>
@@ -149,7 +142,7 @@ export default function ContactBackground({
       </div>
 
       {/* Decorative "C3" Text */}
-      <p className="absolute font-['Post_No_Bills_Colombo',sans-serif] leading-[0.82] left-[calc(71.88%-111.94px)] not-italic text-[120px] sm:text-[150px] md:text-[170px] lg:text-[186.464px] text-[#8fa5ae] text-nowrap top-[173.45px] hidden lg:block">
+      <p className="absolute font-['Post_No_Bills_Colombo_SemiBold',sans-serif] leading-[0.82] left-[calc(71.88%-111.94px)] not-italic text-[120px] sm:text-[150px] md:text-[170px] lg:text-[186.464px] text-[#252f3a] text-nowrap top-[120px] opacity-10 hidden lg:block pointer-events-none whitespace-nowrap">
         C3
       </p>
 
@@ -158,4 +151,3 @@ export default function ContactBackground({
     </div>
   );
 }
-

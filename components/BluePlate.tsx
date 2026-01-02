@@ -85,7 +85,7 @@ export default function BluePlate({
             }}
           >
             <Image
-              src="/product-assets/metal-overlay.png"
+              src="/product-assets/metal-overlay.webp"
               alt=""
               fill
               sizes={isResponsive ? "100vw" : width}
@@ -115,7 +115,7 @@ export default function BluePlate({
                 }}
               >
                 <Image
-                  src="/product-assets/grunge-overlay.png"
+                  src="/product-assets/grunge-overlay.webp"
                   alt=""
                   fill
                   sizes={isResponsive ? "100vw" : width}

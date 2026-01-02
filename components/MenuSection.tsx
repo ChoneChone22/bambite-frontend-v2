@@ -9,7 +9,14 @@ export type Product = {
   price: number;
   description: string;
   image: string;
-  category: "noodles" | "puddings" | "soups" | "salads";
+  category: 
+    | "Noodle"
+    | "Fried Rice"
+    | "Main Dish"
+    | "Soup"
+    | "Salad (Side Dish)"
+    | "Side Dish"
+    | "Appetizer";
 };
 
 type MenuSectionProps = {

@@ -1,85 +1,44 @@
 // Home Page
 "use client";
 
+import { useState, useEffect } from "react";
 import HeroSection from "@/components/HeroSection";
 import NewTasteSection from "@/components/NewTasteSection";
 import ExploreCuisineSection from "@/components/ExploreCuisineSection";
 import MyHomeToYoursSection from "@/components/MyHomeToYoursSection";
 import HiImBamSection from "@/components/HiImBamSection";
 import { Product } from "@/components/MenuSection";
-
-// Sample product data for New Taste section
-const sampleProducts: Product[] = [
-  {
-    id: "1",
-    title: "Bam's Bites",
-    titleThai: "ก้อนเซโมลินา",
-    price: 120,
-    description:
-      "Full of natural flavor, a little sweet, made to lift your mood.",
-    image: "/product-images/product-1.png",
-    category: "noodles",
-  },
-  {
-    id: "2",
-    title: "Bam's Bites",
-    titleThai: "ก้อนเซโมลินา",
-    price: 120,
-    description:
-      "Full of natural flavor, a little sweet, made to lift your mood.",
-    image: "/product-images/product-2.png",
-    category: "noodles",
-  },
-  {
-    id: "3",
-    title: "Bam's Bites",
-    titleThai: "ก้อนเซโมลินา",
-    price: 120,
-    description:
-      "Full of natural flavor, a little sweet, made to lift your mood.",
-    image: "/product-images/product-3.png",
-    category: "noodles",
-  },
-  {
-    id: "4",
-    title: "Bam's Bites",
-    titleThai: "ก้อนเซโมลินา",
-    price: 120,
-    description:
-      "Full of natural flavor, a little sweet, made to lift your mood.",
-    image: "/product-images/product-4.png",
-    category: "noodles",
-  },
-  {
-    id: "5",
-    title: "Bam's Bites",
-    titleThai: "ก้อนเซโมลินา",
-    price: 120,
-    description:
-      "Full of natural flavor, a little sweet, made to lift your mood.",
-    image: "/product-images/product-5.png",
-    category: "noodles",
-  },
-  {
-    id: "6",
-    title: "Bam's Bites",
-    titleThai: "ก้อนเซโมลินา",
-    price: 120,
-    description:
-      "Full of natural flavor, a little sweet, made to lift your mood.",
-    image: "/product-images/product-1.png",
-    category: "noodles",
-  },
-];
+import { getProducts } from "@/lib/api/products";
+import { mapApiProductsToProducts } from "@/lib/utils/productMapper";
 
 export default function Home() {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await getProducts({ limit: 6 }); // Fetch 6 products for home page
+        if (response.status === "success") {
+          const mappedProducts = mapApiProductsToProducts(response.data);
+          // Ensure only maximum 6 products are shown
+          setProducts(mappedProducts.slice(0, 6));
+        }
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        // Keep empty array on error, component will handle it
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <main className="w-full">
       {/* Hero Section */}
       <HeroSection />
 
       {/* New Taste Section */}
-      <NewTasteSection products={sampleProducts} />
+      <NewTasteSection products={products} />
 
       {/* Explore All New Cuisine Section */}
       <ExploreCuisineSection />

@@ -15,11 +15,11 @@ type HiImBamSectionProps = {
 
 export default function HiImBamSection({
   title = "Hi, I'm Bam",
-  description = "Arcu pretium morbi nisi felis gravida aenean feugiat. Luctus nec laoreet egestas vulputate. Fringilla varius aliquam dolor sed molestie.",
+  description = "Welcome from my imaginative little world. This is a place where Tradition meets tech, Old flavours meet new imagination, Every bite becomes a joyful adventure. It's my way of connecting generations, cultures, and even worlds through flavour and fun.",
   ctaText = "INTERESTED? MORE OF ME",
   ctaLink = "/about",
-  mascotImage = "/home-assets/hero/mascot-3d.png",
-  backgroundImage = "/home-assets/hero/forest-bg.png",
+  mascotImage = "/home-assets/hero/mascot-3d.webp",
+  backgroundImage = "/home-assets/hero/compressed_hi-section-bg.webp",
 }: HiImBamSectionProps) {
   return (
     <div className="relative w-full min-h-[816px] overflow-clip bg-[#202730]">
@@ -46,15 +46,18 @@ export default function HiImBamSection({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left side - Mascot */}
             <div className="order-2 lg:order-1">
-              <div className="relative h-[500px] sm:h-[600px] md:h-[700px] lg:h-[789.168px] w-full">
-                <Image
-                  src={mascotImage}
-                  alt="Bam mascot"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-contain"
-                  priority
-                />
+              <div className="relative h-[500px] sm:h-[600px] md:h-[700px] lg:h-[789.168px] w-full overflow-hidden">
+                <div className="absolute w-full left-0 right-0 -top-[400px] bottom-0">
+                  <Image
+                    src={mascotImage}
+                    alt="Bam mascot"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-contain"
+                    style={{ objectPosition: "bottom center" }}
+                    priority
+                  />
+                </div>
               </div>
             </div>
 
@@ -95,7 +98,7 @@ export default function HiImBamSection({
                       {/* Metal/Grunge Texture */}
                       <div className="absolute inset-0 mix-blend-overlay opacity-30">
                         <Image
-                          src="/product-assets/metal-overlay.png"
+                          src="/product-assets/metal-overlay.webp"
                           alt=""
                           fill
                           className="object-cover"
@@ -105,7 +108,7 @@ export default function HiImBamSection({
                       {/* Grunge Detail */}
                       <div className="absolute inset-0 mix-blend-lighten opacity-30">
                         <Image
-                          src="/product-assets/grunge-overlay.png"
+                          src="/product-assets/grunge-overlay.webp"
                           alt=""
                           fill
                           className="object-cover"

@@ -16,7 +16,7 @@ export default function ProductDetailsBackground({
       {/* Base black texture background */}
       <div className="absolute h-[1068.73px] left-0 top-0 w-full">
         <Image
-          src="/product-details-assets/black-texture-bg-1.png"
+          src="/product-details-assets/black-texture-bg-1.webp"
           alt=""
           fill
           sizes="100vw"

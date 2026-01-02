@@ -86,7 +86,7 @@ export default function OrangeSeeDetailButton({
             }}
           >
             <Image
-              src="/product-assets/metal-overlay.png"
+              src="/product-assets/metal-overlay.webp"
               alt=""
               fill
               sizes={`${buttonSize}`}
@@ -103,7 +103,7 @@ export default function OrangeSeeDetailButton({
             }}
           >
             <Image
-              src="/product-assets/grunge-overlay.png"
+              src="/product-assets/grunge-overlay.webp"
               alt=""
               fill
               sizes={`${buttonSize}`}

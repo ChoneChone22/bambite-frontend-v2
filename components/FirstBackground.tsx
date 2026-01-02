@@ -8,7 +8,7 @@ type FirstBackgroundProps = {
 };
 
 export default function FirstBackground({
-  imageUrl = "/home-first-section-bg.png",
+  imageUrl = "/home-first-section-bg.webp",
   children,
   className = "",
 }: FirstBackgroundProps) {

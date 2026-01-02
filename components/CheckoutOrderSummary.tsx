@@ -13,7 +13,11 @@ export default function CheckoutOrderSummary() {
   useEffect(() => {
     // TODO: Calculate delivery fee based on address
     // For now, set a default fee if address is provided
-    setDeliveryFee(null);
+    // Use setTimeout to avoid synchronous setState in effect
+    const timer = setTimeout(() => {
+      setDeliveryFee(null);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const subtotal = getTotal();
@@ -90,7 +94,7 @@ export default function CheckoutOrderSummary() {
                                 <div className="content-stretch flex items-center p-[8px] relative rounded-[8px] hover:bg-gray-200 transition-colors">
                                   <div className="overflow-clip relative shrink-0 size-[16px]">
                                     <Image
-                                      src="/product-assets/minus-icon.svg"
+                                      src="/product-assets/minus.svg"
                                       alt="Decrease quantity"
                                       width={16}
                                       height={16}

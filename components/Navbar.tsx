@@ -75,7 +75,7 @@ function GlobalNav({ className }: GlobalNavProps) {
       <div className="content-stretch flex flex-col items-start pb-0 pt-[13px] px-0 relative shrink-0 w-[254.186px]">
         <div className="flex items-center justify-center w-full h-full">
           <Image
-            src="/bambite-logo-white.png"
+            src="/bambite-logo-blue.webp"
             alt="Bambite Logo"
             width={254}
             height={58}

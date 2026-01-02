@@ -10,7 +10,7 @@ type WindowFrameProps = {
 };
 
 export default function WindowFrame({
-  sceneImage = "/home-assets/window-frame-assets/forest-scene.png",
+  sceneImage = "/home-assets/window-frame-assets/forest-scene.webp",
   label = "BAm's spaceship 320",
   className = "",
 }: WindowFrameProps) {
@@ -73,7 +73,7 @@ export default function WindowFrame({
       >
         <div className="absolute inset-[-31.56%_-17.01%]">
           <Image
-            src="/home-assets/window-frame-assets/glow-light.png"
+            src="/home-assets/window-frame-assets/glow-light.webp"
             alt=""
             fill
             sizes="995px"
