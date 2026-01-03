@@ -162,10 +162,14 @@ export default function PortalScrollSection({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-screen overflow-hidden"
+      className="relative w-full h-screen bg-[#0a0f1a] overflow-clip"
+      style={{ margin: 0, padding: 0, display: "block" }}
     >
       {/* Main container - fills full viewport */}
-      <div className="relative h-full w-full overflow-hidden">
+      <div
+        className="relative h-full w-full overflow-clip"
+        style={{ margin: 0, padding: 0 }}
+      >
         {/* Background Scene - Jungle background behind window */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center origin-center"
@@ -217,11 +221,11 @@ export default function PortalScrollSection({
             willChange: "opacity, transform",
           }}
         >
-          <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pointer-events-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pointer-events-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 2xl:gap-20 items-center max-w-[1800px] mx-auto">
               {/* Left side - Mascot */}
               <div className="order-2 lg:order-1">
-                <div className="relative h-[550px] sm:h-[650px] md:h-[750px] lg:h-[850px] w-full overflow-visible ml-8 sm:ml-12 lg:ml-16">
+                <div className="relative h-[550px] sm:h-[650px] md:h-[750px] lg:h-[850px] xl:h-[900px] 2xl:h-[950px] w-full overflow-visible ml-8 sm:ml-12 lg:ml-16 xl:ml-20 2xl:ml-24">
                   <div
                     className="absolute inset-x-0"
                     style={{

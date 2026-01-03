@@ -11,6 +11,7 @@ import {
 import localFont from "next/font/local";
 import "./globals.css";
 import NavbarV2 from "@/components/NavbarV2";
+import NavbarMobile from "@/components/NavbarMobile";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/contexts/CartContext";
 import CartSidebar from "@/components/CartSidebar";
@@ -117,7 +118,16 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${notoSansThaiLooped.variable} ${dmSans.variable} ${spaceMono.variable} ${stickNoBills.variable} ${indieFlower.variable} ${chillaxSemibold.variable} ${postNoBillsColombo.variable} antialiased overflow-x-hidden`}
       >
         <CartProvider>
-          <NavbarV2 />
+          {/* Mobile Navbar - shown on screens smaller than md (768px) */}
+          <div className="md:hidden">
+            <NavbarMobile />
+          </div>
+
+          {/* Desktop Navbar - shown on screens md (768px) and larger */}
+          <div className="hidden md:block">
+            <NavbarV2 />
+          </div>
+
           {children}
           <Footer />
           <CartSidebar />

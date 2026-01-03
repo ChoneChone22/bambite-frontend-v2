@@ -32,7 +32,10 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="w-full">
+    <main
+      className="w-full overflow-x-hidden"
+      style={{ margin: 0, padding: 0 }}
+    >
       {/* Hero Section */}
       <HeroSection />
 

@@ -21,16 +21,15 @@ export default function GradientText({
 }: GradientTextProps) {
   return (
     <p
-      className={`bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold leading-[0.82] not-italic relative ${className}`}
+      className={`bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold leading-[0.82] not-italic relative text-white ${className}`}
       style={{
         fontSize,
         WebkitTextFillColor: "transparent",
         backgroundImage: `linear-gradient(to bottom, ${gradientFrom}, ${gradientTo})`,
+        color: "white", // Fallback color
       }}
     >
       {text}
     </p>
   );
 }
-
-

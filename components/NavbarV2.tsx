@@ -263,7 +263,7 @@ function GlobalNavV2({ className, onBackground = "OnDark" }: GlobalNavV2Props) {
 export default function NavbarV2() {
   return (
     <nav className="w-full fixed top-0 left-0 right-0 z-50 overflow-visible">
-      <div className="w-full max-w-[1440px] mx-auto">
+      <div className="w-full">
         <GlobalNavV2 className="w-full" />
       </div>
     </nav>

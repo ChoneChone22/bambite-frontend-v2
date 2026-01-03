@@ -102,14 +102,32 @@ export default function ProductCard({
 
   const isSmall = size === "small";
   const maxWidth = isSmall ? "max-w-[280px]" : "max-w-[335px]";
-  const topHeight = isSmall ? "h-[250px] sm:h-[280px] md:h-[320px]" : "h-[300px] sm:h-[340px] md:h-[380px]";
-  const topPaddingX = isSmall ? "px-3 sm:px-5 md:px-[26px]" : "px-4 sm:px-6 md:px-[31px]";
-  const topPaddingY = isSmall ? "py-3 sm:py-4 md:py-[20px]" : "py-4 sm:py-5 md:py-[24px]";
-  const titleSize = isSmall ? "text-[14px] sm:text-[16px] md:text-[18px]" : "text-[16px] sm:text-[18px] md:text-[20px]";
-  const titleThaiSize = isSmall ? "text-[12px] sm:text-[13px] md:text-[14px]" : "text-[13px] sm:text-[14px] md:text-[15px]";
-  const priceSize = isSmall ? "text-[12px] sm:text-[14px] md:text-[15px]" : "text-[14px] sm:text-[16px] md:text-[17.975px]";
-  const descSize = isSmall ? "text-[10px] sm:text-[11px] md:text-[11px]" : "text-[11px] sm:text-[12px] md:text-[12.583px]";
-  const bottomHeight = isSmall ? "h-[42px] sm:h-[46px] md:h-[50px]" : "h-[50px] sm:h-[54px] md:h-[58px]";
+  // Mobile: 193.948px, Desktop: larger
+  const topHeight = isSmall
+    ? "h-[180px] sm:h-[250px] md:h-[280px] lg:h-[320px]"
+    : "h-[194px] sm:h-[280px] md:h-[340px] lg:h-[380px]";
+  const topPaddingX = isSmall
+    ? "px-2 sm:px-5 md:px-[26px]"
+    : "px-[10px] sm:px-6 md:px-[31px]";
+  const topPaddingY = isSmall
+    ? "py-2 sm:py-4 md:py-[20px]"
+    : "py-[12px] sm:py-5 md:py-[24px]";
+  const titleSize = isSmall
+    ? "text-[14px] sm:text-[16px] md:text-[18px]"
+    : "text-[16px] sm:text-[18px] md:text-[20px]";
+  const titleThaiSize = isSmall
+    ? "text-[10px] sm:text-[12px] md:text-[13px]"
+    : "text-[12px] sm:text-[14px] md:text-[15px]";
+  const priceSize = isSmall
+    ? "text-[9px] sm:text-[12px] md:text-[14px]"
+    : "text-[10px] sm:text-[14px] md:text-[16px] lg:text-[17.975px]";
+  const descSize = isSmall
+    ? "text-[9px] sm:text-[10px] md:text-[11px]"
+    : "text-[10px] sm:text-[11px] md:text-[12px] lg:text-[12.583px]";
+  // Mobile: 29.603px, Desktop: larger
+  const bottomHeight = isSmall
+    ? "h-[36px] sm:h-[42px] md:h-[46px] lg:h-[50px]"
+    : "h-[30px] sm:h-[46px] md:h-[54px] lg:h-[58px]";
 
   return (
     <Link
@@ -117,7 +135,9 @@ export default function ProductCard({
       className={`content-stretch flex flex-col items-center relative size-full w-full ${maxWidth} mx-auto no-underline`}
     >
       {/* Top Section - Orange Plate - Responsive height */}
-      <div className={`content-stretch flex flex-col gap-[8px] ${topHeight} items-start justify-end ${topPaddingX} ${topPaddingY} relative shrink-0 w-full`}>
+      <div
+        className={`content-stretch flex flex-col gap-[8px] ${topHeight} items-start justify-end ${topPaddingX} ${topPaddingY} relative shrink-0 w-full`}
+      >
         {/* Orange plate background (this IS the product image) - Responsive sizing */}
         <div className="absolute flex h-full items-center justify-center left-1/2 top-0 translate-x-[-50%] w-full max-w-[336.001px]">
           <div className="flex-none rotate-[180deg] scale-y-[-100%] w-full h-full">
@@ -134,29 +154,37 @@ export default function ProductCard({
         </div>
 
         {/* Product content overlay */}
-        <div className="content-stretch flex flex-col gap-3 sm:gap-4 md:gap-[19px] items-start relative shrink-0 w-full z-10">
+        <div className="content-stretch flex flex-col gap-1 sm:gap-3 md:gap-4 lg:gap-[19px] items-start relative shrink-0 w-full z-10">
           {/* Title and Price */}
-          <div className="content-stretch flex gap-2 sm:gap-3 md:gap-[13px] items-center relative shrink-0 w-full">
-            <div className="basis-0 content-stretch flex flex-col gap-2 sm:gap-[11px] grow items-start leading-[0.82] min-h-px min-w-px relative shrink-0 text-white">
-              <p className={`font-['Chillax_Variable',sans-serif] not-italic relative shrink-0 ${titleSize} w-full font-semibold text-white`}>
+          <div className="content-stretch flex gap-1 sm:gap-2 md:gap-3 lg:gap-[13px] items-center relative shrink-0 w-full">
+            <div className="basis-0 content-stretch flex flex-col gap-1 sm:gap-[11px] grow items-start leading-[0.82] min-h-px min-w-px relative shrink-0 text-white">
+              <p
+                className={`font-['Chillax_Variable',sans-serif] not-italic relative shrink-0 ${titleSize} w-full font-semibold text-white`}
+              >
                 {title}
               </p>
               {/* titleThai commented out - API doesn't provide it */}
               {titleThai && (
-                <p className={`font-['Noto_Sans_Thai_Looped',sans-serif] font-medium relative shrink-0 ${titleThaiSize} w-full text-white`}>
+                <p
+                  className={`font-['Noto_Sans_Thai_Looped',sans-serif] font-medium relative shrink-0 ${titleThaiSize} w-full text-white`}
+                >
                   {titleThai}
                 </p>
               )}
             </div>
             <div className="bg-[#b9c7d6] content-stretch flex items-center justify-center p-1 sm:p-[4px] md:p-[5.19px] relative rounded-[3.595px] shrink-0">
-              <p className={`font-['DM_Sans',sans-serif] leading-[0.82] not-italic relative shrink-0 text-[#181e24] ${priceSize} text-nowrap text-right font-medium`}>
+              <p
+                className={`font-['DM_Sans',sans-serif] leading-[0.82] not-italic relative shrink-0 text-[#181e24] ${priceSize} text-nowrap text-right font-medium`}
+              >
                 {price}THB
               </p>
             </div>
           </div>
 
-          {/* Description */}
-          <p className={`font-['DM_Sans',sans-serif] font-medium leading-[1.2] opacity-60 relative shrink-0 ${descSize} text-white w-full`}>
+          {/* Description - Hidden on mobile, visible on desktop */}
+          <p
+            className={`font-['DM_Sans',sans-serif] font-medium leading-[1.2] opacity-60 relative shrink-0 ${descSize} text-white w-full hidden md:block`}
+          >
             {description}
           </p>
         </div>
@@ -213,15 +241,15 @@ export default function ProductCard({
             </div>
 
             {/* Content area - Responsive padding and gap */}
-            <div className="basis-0 content-stretch flex gap-3 sm:gap-4 md:gap-[24px] grow h-full items-center min-h-px min-w-px pl-2 sm:pl-3 md:pl-[12px] pr-3 sm:pr-4 md:pr-[20px] py-0 relative shrink-0 z-10">
+            <div className="basis-0 content-stretch flex gap-1 sm:gap-3 md:gap-4 lg:gap-[24px] grow h-full items-center min-h-px min-w-px pl-1 sm:pl-2 md:pl-3 lg:pl-[12px] pr-2 sm:pr-3 md:pr-4 lg:pr-[20px] py-0 relative shrink-0 z-10">
               {/* Shopping cart icon button */}
               <div className="flex items-center justify-center relative shrink-0">
                 <div className="flex-none rotate-[180deg]">
                   <button
-                    className="content-stretch flex items-center p-[6px] relative rounded-[8px] hover:bg-white/10 transition-colors"
+                    className="content-stretch flex items-center p-[3px] sm:p-[6px] relative rounded-[8px] hover:bg-white/10 transition-colors"
                     aria-label="Shopping cart"
                   >
-                    <div className="overflow-clip relative shrink-0 size-[24px]">
+                    <div className="overflow-clip relative shrink-0 size-[16px] sm:size-[20px] md:size-[24px]">
                       <Image
                         src="/product-assets/shopping-cart-icon.svg"
                         alt=""
@@ -245,7 +273,7 @@ export default function ProductCard({
                     }}
                     className="content-stretch flex gap-[16px] items-center relative w-full justify-center hover:opacity-90 transition-opacity"
                   >
-                    <p className="font-['Space_Mono',monospace] leading-none not-italic relative shrink-0 text-[10px] sm:text-[11px] md:text-[12.583px] text-white text-nowrap uppercase font-bold">
+                    <p className="font-['Space_Mono',monospace] leading-none not-italic relative shrink-0 text-[6px] sm:text-[10px] md:text-[11px] lg:text-[12.583px] text-white text-nowrap uppercase font-bold">
                       add to cart
                     </p>
                   </button>
@@ -254,14 +282,14 @@ export default function ProductCard({
             </div>
 
             {/* Break line separator */}
-            <div className="flex h-[55.645px] items-center justify-center relative shrink-0 w-[1.919px] z-10">
+            <div className="flex h-[28px] sm:h-[44px] md:h-[50px] lg:h-[55.645px] items-center justify-center relative shrink-0 w-[1px] sm:w-[1.5px] md:w-[1.919px] z-10">
               <div className="flex-none rotate-[90deg]">
                 <BreakLine />
               </div>
             </div>
 
             {/* Quantity selector - Responsive padding */}
-            <div className="content-stretch flex gap-1 sm:gap-2 md:gap-[8px] h-full items-center justify-center px-2 sm:px-3 md:px-[14px] py-1 sm:py-2 md:py-[8px] relative shrink-0 z-10">
+            <div className="content-stretch flex gap-[2px] sm:gap-1 md:gap-2 lg:gap-[8px] h-full items-center justify-center px-1 sm:px-2 md:px-3 lg:px-[14px] py-[2px] sm:py-1 md:py-2 lg:py-[8px] relative shrink-0 z-10">
               {/* Plus button */}
               <div className="flex items-center justify-center relative shrink-0">
                 <div className="flex-none rotate-[180deg]">
@@ -271,10 +299,10 @@ export default function ProductCard({
                       e.stopPropagation();
                       handleIncrement();
                     }}
-                    className="content-stretch flex items-center justify-center p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors"
+                    className="content-stretch flex items-center justify-center p-[2px] sm:p-[3px] md:p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors"
                     aria-label="Increase quantity"
                   >
-                    <p className="font-['Space_Mono',monospace] leading-none not-italic relative text-[22px] text-nowrap text-white uppercase font-bold">
+                    <p className="font-['Space_Mono',monospace] leading-none not-italic relative text-[14px] sm:text-[18px] md:text-[20px] lg:text-[22px] text-nowrap text-white uppercase font-bold">
                       +
                     </p>
                   </button>
@@ -284,7 +312,7 @@ export default function ProductCard({
               {/* Quantity display */}
               <div className="flex items-center justify-center relative shrink-0">
                 <div className="flex-none rotate-[180deg]">
-                  <p className="font-['Space_Mono',monospace] leading-none not-italic relative text-[11px] sm:text-[12px] md:text-[13px] text-nowrap text-white uppercase font-bold">
+                  <p className="font-['Space_Mono',monospace] leading-none not-italic relative text-[7px] sm:text-[10px] md:text-[12px] lg:text-[13px] text-nowrap text-white uppercase font-bold">
                     {quantity}
                   </p>
                 </div>
@@ -299,10 +327,10 @@ export default function ProductCard({
                       e.stopPropagation();
                       handleDecrement();
                     }}
-                    className="content-stretch flex items-center justify-center p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors"
+                    className="content-stretch flex items-center justify-center p-[2px] sm:p-[3px] md:p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors"
                     aria-label="Decrease quantity"
                   >
-                    <p className="font-['Space_Mono',monospace] leading-none not-italic relative text-[22px] text-nowrap text-white uppercase font-bold">
+                    <p className="font-['Space_Mono',monospace] leading-none not-italic relative text-[14px] sm:text-[18px] md:text-[20px] lg:text-[22px] text-nowrap text-white uppercase font-bold">
                       -
                     </p>
                   </button>

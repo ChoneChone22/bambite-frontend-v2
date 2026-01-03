@@ -13,6 +13,31 @@
   font-family: var(--font-chillax-semibold);
 }
 
+/* Ensure full width on all screen sizes */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Only reset margin/padding on layout containers, not all elements */
+body > main,
+body > section,
+body > footer,
+main > section {
+  margin: 0;
+  padding: 0;
+}
+
 /* Hide scrollbar but keep scrolling functionality */
 html {
   scrollbar-width: none; /* Firefox */
