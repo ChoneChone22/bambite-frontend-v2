@@ -82,12 +82,12 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
       </div>
 
       {/* Section Title */}
-      <div className="relative z-10 pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 lg:px-0">
-        <div className="max-w-7xl mx-auto">
+      <div className="relative z-10 pt-12 sm:pt-16 md:pt-20 lg:pt-24 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8">
+        <div className="w-full">
           <div className="flex flex-col items-center justify-center">
             {/* First line: NEW Taste */}
             <div
-              className="bg-clip-text bg-gradient-to-b font-[var(--font-chillax-semibold)] from-[#181e24] leading-[0.82] not-italic text-[48px] sm:text-[56px] md:text-[64px] lg:text-[69.339px] to-[#293f55] mb-0"
+              className="bg-clip-text bg-gradient-to-b font-[var(--font-chillax-semibold)] from-[#181e24] leading-[0.82] not-italic text-[36px] sm:text-[48px] md:text-[56px] lg:text-[69.339px] to-[#293f55] mb-0"
               style={{ WebkitTextFillColor: "transparent" }}
             >
               <p className="mb-0">NEW Taste</p>
@@ -95,12 +95,12 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
             {/* Second line: NEW + World */}
             <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4">
               <span
-                className="bg-clip-text bg-gradient-to-b font-[var(--font-chillax-semibold)] from-[#181e24] leading-[0.82] not-italic text-[48px] sm:text-[56px] md:text-[64px] lg:text-[69.339px] to-[#293f55]"
+                className="bg-clip-text bg-gradient-to-b font-[var(--font-chillax-semibold)] from-[#181e24] leading-[0.82] not-italic text-[36px] sm:text-[48px] md:text-[56px] lg:text-[69.339px] to-[#293f55]"
                 style={{ WebkitTextFillColor: "transparent" }}
               >
                 NEW
               </span>
-              <span className="font-indie-flower leading-[0.82] not-italic text-[28px] sm:text-[38px] md:text-[50px] lg:text-[60px] text-[#cc934e] text-center text-nowrap uppercase">
+              <span className="font-indie-flower leading-[0.82] not-italic text-[24px] sm:text-[32px] md:text-[44px] lg:text-[60px] text-[#cc934e] text-center text-nowrap uppercase">
                 World
               </span>
             </div>
@@ -109,16 +109,14 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
       </div>
 
       {/* Product Grid */}
-      <div className="relative z-10 pb-16 px-4 sm:px-6 lg:px-0">
-        <div className="max-w-[1400px] mx-auto">
-          {/* First Row: 3 products + 1 empty space */}
-          <div className="grid grid-cols-4 gap-3 sm:gap-4 md:gap-5 mb-4 sm:mb-5 md:mb-6">
-            {products.slice(0, 3).map((product) => (
-              <div
-                key={product.id}
-                className="flex items-center justify-center w-full"
-              >
-                <div className="w-full max-w-[280px] sm:max-w-[300px] md:max-w-[320px]">
+      <div className="relative z-10 pb-8 md:pb-16">
+        {/* Mobile Layout (2 columns) */}
+        <div className="md:hidden px-6">
+          <div className="w-full max-w-[364px] mx-auto">
+            <div className="grid grid-cols-2 gap-4">
+              {/* Row 1: Product 0, Product 1 */}
+              {products.slice(0, 2).map((product) => (
+                <div key={product.id} className="w-[174px]">
                   <ProductCard
                     id={product.id}
                     image={product.image}
@@ -128,46 +126,47 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
                     description={product.description}
                   />
                 </div>
-              </div>
-            ))}
-            {/* Blue rectangle decorative box after first row products */}
-            <div className="flex items-center justify-center w-full">
-              <div className="w-full max-w-[280px] sm:max-w-[300px] md:max-w-[320px] h-[300px] sm:h-[320px] md:h-[360px] flex items-center justify-center bg-transparent rounded-lg">
-                <div className="relative w-[60%] h-[60%]">
+              ))}
+
+              {/* Row 2: Product 2, Blue Decorative Plate */}
+              {products.slice(2, 3).map((product) => (
+                <div key={product.id} className="w-[174px]">
+                  <ProductCard
+                    id={product.id}
+                    image={product.image}
+                    title={product.title}
+                    titleThai={product.titleThai}
+                    price={product.price}
+                    description={product.description}
+                  />
+                </div>
+              ))}
+              <div className="w-[174px] h-[224px] flex items-center justify-center">
+                <div className="relative w-[120px] h-[140px]">
                   <Image
                     src="/home-assets/decorative-elements/blue-rectangle.webp"
                     alt="Decorative blue rectangle"
                     fill
-                    sizes="(max-width: 768px) 100vw, 200px"
+                    sizes="120px"
                     className="object-contain"
                   />
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* Second Row: 1 decorative image + 3 products */}
-          <div className="grid grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-            {/* Decorative C4 image at the start of second row */}
-            <div className="flex items-center justify-center w-full">
-              <div className="w-full max-w-[280px] sm:max-w-[300px] md:max-w-[320px] h-[300px] sm:h-[320px] md:h-[360px] flex items-center justify-center bg-transparent rounded-lg">
-                <div className="relative w-[60%] h-[60%]">
+              {/* Row 3: C4 Decorative, Product 3 */}
+              <div className="w-[173px] h-[223px] flex items-center justify-center">
+                <div className="relative w-[140px] h-[180px]">
                   <Image
                     src="/home-assets/decorative-elements/home-c4.webp"
                     alt="Decorative C4 element"
                     fill
-                    sizes="(max-width: 768px) 100vw, 200px"
+                    sizes="140px"
                     className="object-contain"
                   />
                 </div>
               </div>
-            </div>
-            {products.slice(3, 6).map((product) => (
-              <div
-                key={product.id}
-                className="flex items-center justify-center w-full"
-              >
-                <div className="w-full max-w-[280px] sm:max-w-[300px] md:max-w-[320px]">
+              {products.slice(3, 4).map((product) => (
+                <div key={product.id} className="w-[174px]">
                   <ProductCard
                     id={product.id}
                     image={product.image}
@@ -177,8 +176,97 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
                     description={product.description}
                   />
                 </div>
+              ))}
+
+              {/* Row 4: Product 4, Product 5 */}
+              {products.slice(4, 6).map((product) => (
+                <div key={product.id} className="w-[174px]">
+                  <ProductCard
+                    id={product.id}
+                    image={product.image}
+                    title={product.title}
+                    titleThai={product.titleThai}
+                    price={product.price}
+                    description={product.description}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Layout (4 columns) */}
+        <div className="hidden md:block px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <div className="w-full max-w-[1600px] mx-auto">
+            {/* First Row: 3 products + 1 empty space */}
+            <div className="grid grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6 xl:gap-8 mb-4 sm:mb-5 md:mb-6">
+              {products.slice(0, 3).map((product) => (
+                <div
+                  key={product.id}
+                  className="flex items-center justify-center w-full"
+                >
+                  <div className="w-full max-w-[280px] sm:max-w-[300px] md:max-w-[320px] lg:max-w-[360px] xl:max-w-[400px]">
+                    <ProductCard
+                      id={product.id}
+                      image={product.image}
+                      title={product.title}
+                      titleThai={product.titleThai}
+                      price={product.price}
+                      description={product.description}
+                    />
+                  </div>
+                </div>
+              ))}
+              {/* Blue rectangle decorative box after first row products */}
+              <div className="flex items-center justify-center w-full">
+                <div className="w-full max-w-[280px] sm:max-w-[300px] md:max-w-[320px] lg:max-w-[360px] xl:max-w-[400px] h-[300px] sm:h-[320px] md:h-[360px] lg:h-[380px] xl:h-[400px] flex items-center justify-center bg-transparent rounded-lg">
+                  <div className="relative w-[60%] h-[60%]">
+                    <Image
+                      src="/home-assets/decorative-elements/blue-rectangle.webp"
+                      alt="Decorative blue rectangle"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 200px"
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
               </div>
-            ))}
+            </div>
+
+            {/* Second Row: 1 decorative image + 3 products */}
+            <div className="grid grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6 xl:gap-8">
+              {/* Decorative C4 image at the start of second row */}
+              <div className="flex items-center justify-center w-full">
+                <div className="w-full max-w-[280px] sm:max-w-[300px] md:max-w-[320px] lg:max-w-[360px] xl:max-w-[400px] h-[300px] sm:h-[320px] md:h-[360px] lg:h-[380px] xl:h-[400px] flex items-center justify-center bg-transparent rounded-lg">
+                  <div className="relative w-[60%] h-[60%]">
+                    <Image
+                      src="/home-assets/decorative-elements/home-c4.webp"
+                      alt="Decorative C4 element"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 200px"
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
+              </div>
+              {products.slice(3, 6).map((product) => (
+                <div
+                  key={product.id}
+                  className="flex items-center justify-center w-full"
+                >
+                  <div className="w-full max-w-[280px] sm:max-w-[300px] md:max-w-[320px] lg:max-w-[360px] xl:max-w-[400px]">
+                    <ProductCard
+                      id={product.id}
+                      image={product.image}
+                      title={product.title}
+                      titleThai={product.titleThai}
+                      price={product.price}
+                      description={product.description}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

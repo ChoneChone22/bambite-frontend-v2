@@ -108,42 +108,76 @@ export default function HeroSection({
 }: HeroSectionProps) {
   return (
     <HomeBackground>
-      <div className="w-full min-h-[600px] sm:min-h-[700px] md:min-h-[800px] lg:min-h-[853px] px-4 sm:px-6 lg:px-8 xl:px-12">
-        {/* Flexbox Layout: 2 rows, properly aligned */}
-        <div className="flex flex-col max-w-7xl mx-auto pt-8 sm:pt-12 md:pt-16 lg:pt-20 absolute right-5 top-64">
-          {/* Row 1: Hero Info Panel (left) + Vertical Bar (right) - aligned at top */}
-          <div className="flex flex-col lg:flex-row items-start">
+      {/* Container with responsive layout */}
+      <div className="w-full h-full min-h-screen md:min-h-0 flex flex-col justify-end md:justify-start md:items-end px-4 sm:px-6 lg:px-8 xl:px-12 pb-12 md:pb-0">
+        <div className="flex flex-col w-full md:w-auto md:mt-40 lg:mt-56 xl:mt-64">
+          {/* Mobile Layout: Stacked vertically */}
+          <div className="flex md:hidden flex-col items-center w-full ">
+            {/* Hero Info Panel */}
             <HeroInfoPanel
               title={title}
               description={description}
               ctaText={ctaText}
               ctaLink={ctaLink}
             />
-            <VerticalBarSection />
+
+            {/* Description and See Detail Button - Side by Side */}
+            <div className="w-full max-w-[363px] flex items-stretch">
+              {/* Description Box - Left side */}
+              <div className="flex-1 bg-[#3d4450] border-[2px] border-[#2a3442] p-4">
+                <p className="font-['DM_Sans',sans-serif] text-white text-[11px] leading-[1.5] opacity-75 font-normal">
+                  {description}
+                </p>
+              </div>
+
+              {/* See Detail Button - Right side, matches description height */}
+              <div className="shrink-0 w-[90px]">
+                <OrangeSeeDetailButton
+                  href={ctaLink}
+                  text="See Detail"
+                  size="small"
+                  className="w-full h-full"
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Row 2: See Detail Button (left) + Description Text Box (right) - aligned at center */}
-          <div className="flex flex-col lg:flex-row items-start lg:items-center ">
-            <div
-              className="shrink-0"
-              style={{
-                width: designTokens.sizes.descriptionBox.height,
-                height: designTokens.sizes.descriptionBox.height,
-              }}
-            >
-              <OrangeSeeDetailButton
-                href={ctaLink}
-                text="See Detail"
-                size="small"
-                className="w-full h-full"
+          {/* Desktop Layout: Original design */}
+          <div className="hidden md:flex flex-col">
+            {/* Row 1: Hero Info Panel + Vertical Bar */}
+            <div className="flex flex-col lg:flex-row items-start">
+              <HeroInfoPanel
+                title={title}
+                description={description}
+                ctaText={ctaText}
+                ctaLink={ctaLink}
               />
+              <VerticalBarSection />
             </div>
-            <div className="w-full max-w-[400.169px]">
-              <DescriptionTextBox
-                text={description}
-                width="100%"
-                showSilverPlate={true}
-              />
+
+            {/* Row 2: See Detail Button + Description Text Box */}
+            <div className="flex flex-col lg:flex-row items-start lg:items-center">
+              <div
+                className="shrink-0"
+                style={{
+                  width: designTokens.sizes.descriptionBox.height,
+                  height: designTokens.sizes.descriptionBox.height,
+                }}
+              >
+                <OrangeSeeDetailButton
+                  href={ctaLink}
+                  text="See Detail"
+                  size="small"
+                  className="w-full h-full"
+                />
+              </div>
+              <div className="w-full max-w-[400.169px]">
+                <DescriptionTextBox
+                  text={description}
+                  width="100%"
+                  showSilverPlate={true}
+                />
+              </div>
             </div>
           </div>
         </div>

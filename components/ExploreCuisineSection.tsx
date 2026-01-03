@@ -16,9 +16,9 @@ export default function ExploreCuisineSection({
   decorativeText = "Everything new",
 }: ExploreCuisineSectionProps) {
   return (
-    <div className="relative w-full min-h-[508px]">
+    <div className="relative w-full min-h-[296px] md:min-h-[508px] overflow-hidden">
       {/* Background image with overlay */}
-      <div className="absolute h-[508.262px] left-0 top-0 w-full">
+      <div className="absolute h-full left-0 top-0 w-full">
         <div
           aria-hidden="true"
           className="absolute inset-0 pointer-events-none"
@@ -67,14 +67,14 @@ export default function ExploreCuisineSection({
       </div>
 
       {/* Content - Clickable container */}
-      <div className="relative z-10 pt-16 sm:pt-20 md:pt-24 pb-16 px-4 sm:px-6 lg:px-0 min-h-[508px] flex items-center overflow-visible">
-        <div className="max-w-7xl mx-auto w-full">
+      <div className="relative z-10 pt-8 md:pt-16 lg:pt-20 xl:pt-24 pb-8 md:pb-16 px-6 md:px-6 lg:px-8 xl:px-12 2xl:px-16 min-h-[296px] md:min-h-[508px] flex items-center overflow-visible">
+        <div className="w-full">
           <Link
             href="/menu"
-            className="relative inline-block cursor-pointer transition-opacity duration-300 hover:opacity-90 ml-[300px] sm:ml-[320px] lg:ml-[350px]"
+            className="relative inline-block cursor-pointer transition-opacity duration-300 hover:opacity-90 ml-0 md:ml-[300px] lg:ml-[350px] xl:ml-[400px] 2xl:ml-[450px]"
             aria-label="Explore all new cuisine - Go to menu"
           >
-            <h2 className="font-chillax-semibold leading-[0.95] not-italic text-[32px] sm:text-[44px] md:text-[52px] lg:text-[69.339px] text-white mb-8 sm:mb-12">
+            <h2 className="font-chillax-semibold leading-[0.95] not-italic text-[28px] sm:text-[36px] md:text-[52px] lg:text-[69.339px] xl:text-[75px] 2xl:text-[80px] text-white mb-4 md:mb-8 lg:mb-12">
               {title.includes("New Cuisine") ? (
                 <>
                   {title.replace(" New Cuisine", "")}
@@ -90,13 +90,13 @@ export default function ExploreCuisineSection({
               )}
             </h2>
 
-            {/* Arrow icon - positioned to the right in its original location */}
-            <div className="absolute top-1/2 left-[calc(100%+80px)] -translate-y-1/2 h-[108.284px] w-[119.52px] hidden lg:block">
+            {/* Arrow icon - visible on both mobile and desktop with different positioning */}
+            <div className="absolute top-1/2 -translate-y-1/2 right-0 translate-x-[200px] md:translate-x-0 md:left-[calc(100%+80px)] md:right-auto h-[60px] w-[60px] md:h-[108.284px] md:w-[119.52px]">
               <Image
                 src="/footer-assets/group-184.svg"
                 alt=""
                 fill
-                sizes="120px"
+                sizes="(max-width: 768px) 60px, 120px"
                 className="block max-w-none size-full"
                 data-node-id="609:7874"
               />
@@ -105,11 +105,11 @@ export default function ExploreCuisineSection({
         </div>
       </div>
 
-      {/* "Everything new" decorative text - hidden on mobile for cleaner look */}
-      <div className="absolute flex h-[79.667px] items-center justify-center left-[calc(50%+101.69px)] bottom-[100px] translate-x-[-50%] w-[173.279px] hidden lg:block">
+      {/* "Everything new" decorative text - visible on both mobile and desktop */}
+      <div className="absolute flex items-center justify-center bottom-[60px] right-[100px] md:left-[calc(50%+101.69px)] md:right-auto md:bottom-[100px] md:translate-x-[-50%] h-auto md:h-[79.667px] w-auto md:w-[173.279px]">
         <div className="flex-none rotate-[341deg]">
           <p
-            className="font-indie-flower leading-[0.82] not-italic relative text-[#ff9e3e] text-[10px] sm:text-[14px] md:text-[20px] text-center text-nowrap uppercase"
+            className="font-indie-flower leading-[0.82] not-italic relative text-[#ff9e3e] text-[16px] md:text-[20px] text-center text-nowrap uppercase"
             data-node-id="609:8244"
           >
             {decorativeText}
