@@ -25,7 +25,7 @@ export default function PortalScrollSection({
   windowLabel = "BAm's spaceship 320",
   title = "Hi, I'm Bam",
   description = "Welcome from my imaginative little world. This is a place where Tradition meets tech, Old flavours meet new imagination, Every bite becomes a joyful adventure. It's my way of connecting generations, cultures, and even worlds through flavour and fun.",
-  ctaText = "INTERESTED? MORE OF ME",
+  ctaText = "MORE ABOUT BAMBITE",
   ctaLink = "/about",
   mascotImage = "/home-assets/hero/mascot-3d.webp",
   backgroundImage = "/home-assets/hero/compressed_hi-section-bg.webp",
@@ -33,6 +33,9 @@ export default function PortalScrollSection({
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollProgress = useMotionValue(0);
   const [animationComplete, setAnimationComplete] = useState(false);
+  const [delayComplete, setDelayComplete] = useState(false);
+  const delayTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isLockedRef = useRef(false); // Single source of truth for lock state
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -41,13 +44,19 @@ export default function PortalScrollSection({
       if (!containerRef.current) return;
 
       const rect = containerRef.current.getBoundingClientRect();
-      const sectionTop = rect.top;
+      const windowHeight = window.innerHeight;
 
-      // Section has reached the top of viewport
-      if (sectionTop <= 0 && sectionTop > -50 && !animationComplete) {
-        // Lock scroll position
+      // Section is "fully visible" when it occupies the entire viewport:
+      // - Top is at or very close to viewport top (within small buffer)
+      // - Section height equals or exceeds viewport height (it's h-screen, so this is always true)
+      // - Bottom is at or below viewport bottom
+      const isFullyVisible =
+        rect.top >= -50 && rect.top <= 50 && rect.bottom >= windowHeight - 50;
+
+      // Lock scroll only when section is fully visible AND lock is engaged
+      if (isFullyVisible && isLockedRef.current) {
         window.scrollTo(0, lastScrollY);
-      } else if (!animationComplete) {
+      } else {
         lastScrollY = window.scrollY;
       }
     };
@@ -56,21 +65,67 @@ export default function PortalScrollSection({
       if (!containerRef.current) return;
 
       const rect = containerRef.current.getBoundingClientRect();
-      const sectionTop = rect.top;
       const progress = scrollProgress.get();
+      const windowHeight = window.innerHeight;
 
-      // Section is at top and animation not complete
-      if (sectionTop <= 0 && sectionTop > -50 && !animationComplete) {
-        e.preventDefault();
+      // Section must be FULLY VISIBLE on screen to trigger animation:
+      // - rect.top should be at viewport top (0, with small buffer for fast scroll)
+      // - rect.bottom should be at/below viewport bottom (section fills screen)
+      // Since section is h-screen (100vh), when top=0, bottom automatically = windowHeight
+      const isFullyVisible =
+        rect.top >= -50 && rect.top <= 50 && rect.bottom >= windowHeight - 50;
 
-        const delta = e.deltaY / 1500;
-        const newProgress = Math.min(1, Math.max(0, progress + delta));
-        scrollProgress.set(newProgress);
+      // If section is not fully visible, allow normal scroll
+      if (!isFullyVisible) return;
 
-        // Mark as complete when reaches 1
-        if (newProgress >= 0.99) {
-          setAnimationComplete(true);
-        }
+      // Check exit conditions first
+      const canExitForward = e.deltaY > 0 && progress >= 0.99 && delayComplete;
+      const canExitBackward =
+        e.deltaY < 0 && progress === 0 && !isLockedRef.current;
+
+      if (canExitForward) {
+        // Allow scroll to next section
+        isLockedRef.current = false;
+        return;
+      }
+
+      if (canExitBackward) {
+        // Allow scroll to previous section
+        return;
+      }
+
+      // If we're here, lock the section and animate
+      e.preventDefault();
+      isLockedRef.current = true;
+
+      // Bidirectional animation based on scroll direction
+      const delta = e.deltaY / 1500;
+      const newProgress = Math.min(1, Math.max(0, progress + delta));
+      scrollProgress.set(newProgress);
+
+      // Clear pending delay timer
+      if (delayTimerRef.current) {
+        clearTimeout(delayTimerRef.current);
+        delayTimerRef.current = null;
+      }
+
+      // Reset completion states when scrolling backward
+      if (newProgress < 0.99) {
+        setAnimationComplete(false);
+        setDelayComplete(false);
+      }
+
+      // Unlock when reaching start (backward completion)
+      if (newProgress === 0) {
+        isLockedRef.current = false;
+      }
+
+      // Start delay timer when reaching end (forward completion)
+      if (newProgress >= 0.99 && !animationComplete) {
+        setAnimationComplete(true);
+        delayTimerRef.current = setTimeout(() => {
+          setDelayComplete(true);
+        }, 600);
       }
     };
 
@@ -80,25 +135,29 @@ export default function PortalScrollSection({
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("wheel", handleWheel);
+      // Clean up timer on unmount
+      if (delayTimerRef.current) {
+        clearTimeout(delayTimerRef.current);
+      }
     };
-  }, [scrollProgress, animationComplete]);
+  }, [scrollProgress, animationComplete, delayComplete]);
 
   // Transform scroll progress to scale (1 → 4) for window frame
   const scale = useTransform(scrollProgress, [0, 1], [1, 4]);
 
-  // Slower zoom for jungle background (0.8 → 1.0) - completes zoom earlier
+  // Slower zoom for jungle background (0.87 → 1.2) - completes zoom earlier
   const jungleScale = useTransform(scrollProgress, [0, 0.25], [0.87, 1.2]);
 
   // Fade out the window frame as we zoom
   const frameOpacity = useTransform(scrollProgress, [0, 0.5, 0.8], [1, 0.5, 0]);
 
-  // Fade in the content after zoom completes
+  // Fade in the content right after jungle completes and window fades
   const contentOpacity = useTransform(
     scrollProgress,
-    [0.6, 0.85, 1],
+    [0.3, 0.5, 0.7],
     [0, 0, 1]
   );
-  const contentY = useTransform(scrollProgress, [0.6, 1], [50, 0]);
+  const contentY = useTransform(scrollProgress, [0.3, 0.7], [50, 0]);
 
   return (
     <div
@@ -162,13 +221,13 @@ export default function PortalScrollSection({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               {/* Left side - Mascot */}
               <div className="order-2 lg:order-1">
-                <div className="relative h-[500px] sm:h-[600px] md:h-[700px] lg:h-[789.168px] w-full overflow-visible">
+                <div className="relative h-[550px] sm:h-[650px] md:h-[750px] lg:h-[850px] w-full overflow-visible ml-8 sm:ml-12 lg:ml-16">
                   <div
                     className="absolute inset-x-0"
                     style={{
                       bottom: "-100px",
-                      top: "-600px",
-                      height: "calc(100% + 700px)",
+                      top: "-900px",
+                      height: "calc(100% + 900px)",
                     }}
                   >
                     <div className="relative w-full h-full">
@@ -188,22 +247,24 @@ export default function PortalScrollSection({
 
               {/* Right side - Text and CTA */}
               <div className="order-1 lg:order-2">
-                <h2 className="font-['Chillax_Variable',sans-serif] leading-[0.82] not-italic text-[60px] sm:text-[80px] md:text-[90px] lg:text-[100px] text-center lg:text-left text-white mb-6 sm:mb-8">
-                  {title}
-                </h2>
+                <div className="max-w-[200px] lg:max-w-[280px] mx-auto">
+                  <h2 className="font-['Chillax_Variable',sans-serif] leading-[0.82] not-italic text-[60px] sm:text-[80px] md:text-[90px] lg:text-[100px] text-center text-white mb-6 sm:mb-8 break-words">
+                    {title}
+                  </h2>
+                </div>
 
-                {/* Decorative text */}
-                <div className="font-['Scribo_Pro',sans-serif] leading-[0.82] not-italic text-[#ffa953] text-[24px] sm:text-[26px] md:text-[28px] lg:text-[29.142px] text-center lg:text-left mb-6">
+                {/* Decorative text - Indie Flower Font */}
+                <div className="font-indie-flower leading-[0.82] not-italic text-[#ffa953] text-[24px] sm:text-[26px] md:text-[28px] lg:text-[29.142px] text-center mb-6">
                   <p className="mb-0">You&apos;re about to</p>
                   <p>discover more</p>
                 </div>
 
-                <p className="font-['DM_Sans',sans-serif] font-medium leading-[1.2] opacity-80 text-[12px] sm:text-[13px] md:text-[14px] text-center lg:text-left text-white mb-8 sm:mb-10 w-full max-w-[320.835px] mx-auto lg:mx-0">
+                <p className="font-['DM_Sans',sans-serif] font-medium leading-[1.2] opacity-80 text-[12px] sm:text-[13px] md:text-[14px] text-center text-white mb-8 sm:mb-10 w-full max-w-[320.835px] mx-auto">
                   {description}
                 </p>
 
                 {/* CTA Button */}
-                <div className="flex items-center justify-center lg:justify-start">
+                <div className="flex items-center justify-center">
                   <Link
                     href={ctaLink}
                     className="flex h-[50px] sm:h-[56px] md:h-[62px] items-center relative w-full max-w-[321px] group"
