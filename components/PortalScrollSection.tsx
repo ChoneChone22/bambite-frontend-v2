@@ -2,7 +2,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion, useMotionValue, useTransform, useScroll } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -34,14 +34,32 @@ export default function PortalScrollSection({
   const scrollProgress = useMotionValue(0);
   const [animationComplete, setAnimationComplete] = useState(false);
   const [delayComplete, setDelayComplete] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const delayTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isLockedRef = useRef(false); // Single source of truth for lock state
+
+  // Track screen size for responsive behavior
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const width = window.innerWidth;
+      setIsDesktop(width >= 1024);
+      setIsMobile(width <= 400);
+    };
+
+    // Check on mount
+    checkScreenSize();
+
+    // Check on resize
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
 
     const handleScroll = () => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || !isDesktop) return;
 
       const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
@@ -62,7 +80,7 @@ export default function PortalScrollSection({
     };
 
     const handleWheel = (e: WheelEvent) => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || !isDesktop) return;
 
       const rect = containerRef.current.getBoundingClientRect();
       const progress = scrollProgress.get();
@@ -140,18 +158,18 @@ export default function PortalScrollSection({
         clearTimeout(delayTimerRef.current);
       }
     };
-  }, [scrollProgress, animationComplete, delayComplete]);
+  }, [scrollProgress, animationComplete, delayComplete, isDesktop, isMobile]);
 
-  // Transform scroll progress to scale (1 → 4) for window frame
+  // Desktop: Transform scroll progress to scale (1 → 4) for window frame
   const scale = useTransform(scrollProgress, [0, 1], [1, 4]);
 
-  // Slower zoom for jungle background (0.87 → 1.2) - completes zoom earlier
+  // Desktop: Slower zoom for jungle background (0.87 → 1.2) - completes zoom earlier
   const jungleScale = useTransform(scrollProgress, [0, 0.25], [0.87, 1.2]);
 
-  // Fade out the window frame as we zoom
+  // Desktop: Fade out the window frame as we zoom
   const frameOpacity = useTransform(scrollProgress, [0, 0.5, 0.8], [1, 0.5, 0]);
 
-  // Fade in the content right after jungle completes and window fades
+  // Desktop: Fade in the content right after jungle completes and window fades
   const contentOpacity = useTransform(
     scrollProgress,
     [0.3, 0.5, 0.7],
@@ -159,30 +177,69 @@ export default function PortalScrollSection({
   );
   const contentY = useTransform(scrollProgress, [0.3, 0.7], [50, 0]);
 
+  // Mobile: Scroll-based animations (no scroll-lock)
+  const { scrollYProgress: mobileScrollProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Mobile: Zoom animations
+  const mobileJungleScale = useTransform(
+    mobileScrollProgress,
+    [0, 0.3, 0.5],
+    [0.9, 1.1, 1.15]
+  );
+  const mobileWindowScale = useTransform(
+    mobileScrollProgress,
+    [0.2, 0.5, 0.8],
+    [1, 1.8, 2.5]
+  );
+  const mobileWindowOpacity = useTransform(
+    mobileScrollProgress,
+    [0.5, 0.7, 0.9],
+    [1, 0.6, 0]
+  );
+
+  // Mobile: Content fade in (starts after window completely fades out)
+  const mobileContentOpacity = useTransform(
+    mobileScrollProgress,
+    [0.9, 0.95, 1],
+    [0, 0.5, 1]
+  );
+  const mobileContentY = useTransform(
+    mobileScrollProgress,
+    [0.9, 1],
+    [40, 0]
+  );
+
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-screen bg-[#0a0f1a] overflow-clip"
+      className="relative w-full h-auto min-h-[700px] lg:h-screen bg-[#0a0f1a] overflow-hidden"
       style={{ margin: 0, padding: 0, display: "block" }}
     >
-      {/* Main container - fills full viewport */}
+      {/* Main container - fills full viewport on desktop, auto height on mobile */}
       <div
-        className="relative h-full w-full overflow-clip"
+        className="relative min-h-[700px] lg:h-full w-full overflow-hidden"
         style={{ margin: 0, padding: 0 }}
       >
         {/* Background Scene - Jungle background behind window */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center origin-center"
           style={{
-            scale: jungleScale,
+            scale: isMobile ? mobileJungleScale : jungleScale,
             willChange: "transform",
           }}
         >
           {/* Jungle Background Image - Shows through the window */}
           <div className="absolute inset-0 w-full h-full">
             <Image
-              src="/home-assets/window-frame-assets/jungle-bg.webp"
-              alt="Jungle background scene"
+              src={
+                isMobile
+                  ? "/home-assets/window-frame-assets/mobile-scence.png"
+                  : "/home-assets/window-frame-assets/jungle-bg.webp"
+              }
+              alt="Background scene"
               fill
               sizes="100vw"
               className="object-cover"
@@ -195,14 +252,20 @@ export default function PortalScrollSection({
         <motion.div
           className="absolute inset-0 flex items-center justify-center origin-center"
           style={{
-            scale,
+            scale: isMobile ? mobileWindowScale : scale,
+            opacity: isMobile ? mobileWindowOpacity : 1,
             willChange: "transform",
           }}
+          aria-label="Window frame overlay"
         >
           {/* Inside-lab window frame overlay */}
           <div className="absolute inset-0 w-full h-full">
             <Image
-              src="/home-assets/window-frame-assets/Inside-lab.webp"
+              src={
+                isMobile
+                  ? "/home-assets/window-frame-assets/mobile-window.webp"
+                  : "/home-assets/window-frame-assets/Inside-lab.webp"
+              }
               alt="Window frame"
               fill
               sizes="100vw"
@@ -216,8 +279,8 @@ export default function PortalScrollSection({
         <motion.div
           className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
           style={{
-            opacity: contentOpacity,
-            y: contentY,
+            opacity: isMobile ? mobileContentOpacity : contentOpacity,
+            y: isMobile ? mobileContentY : contentY,
             willChange: "opacity, transform",
           }}
         >
