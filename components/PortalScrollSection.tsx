@@ -44,7 +44,7 @@ export default function PortalScrollSection({
     const checkScreenSize = () => {
       const width = window.innerWidth;
       setIsDesktop(width >= 1024);
-      setIsMobile(width <= 400);
+      setIsMobile(width <= 440);
     };
 
     // Check on mount
@@ -59,7 +59,7 @@ export default function PortalScrollSection({
     let lastScrollY = window.scrollY;
 
     const handleScroll = () => {
-      if (!containerRef.current || !isDesktop) return;
+      if (!containerRef.current || (!isDesktop && !isMobile)) return;
 
       const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
@@ -80,7 +80,7 @@ export default function PortalScrollSection({
     };
 
     const handleWheel = (e: WheelEvent) => {
-      if (!containerRef.current || !isDesktop) return;
+      if (!containerRef.current || (!isDesktop && !isMobile)) return;
 
       const rect = containerRef.current.getBoundingClientRect();
       const progress = scrollProgress.get();
@@ -206,11 +206,7 @@ export default function PortalScrollSection({
     [0.9, 0.95, 1],
     [0, 0.5, 1]
   );
-  const mobileContentY = useTransform(
-    mobileScrollProgress,
-    [0.9, 1],
-    [40, 0]
-  );
+  const mobileContentY = useTransform(mobileScrollProgress, [0.9, 1], [40, 0]);
 
   return (
     <div
