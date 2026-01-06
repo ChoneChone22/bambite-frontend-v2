@@ -91,7 +91,7 @@ export default function ExploreCuisineSection({
             </h2>
 
             {/* Arrow icon - visible on both mobile and desktop with different positioning */}
-            <div className="absolute top-1/2 -translate-y-1/2 right-0 translate-x-[200px] md:translate-x-0 md:left-[calc(100%+80px)] md:right-auto h-[60px] w-[60px] md:h-[108.284px] md:w-[119.52px]">
+            <div className="absolute top-1/2 -translate-y-1/2 right-0 max-[400px]:translate-x-[160px] translate-x-[200px] md:translate-x-0 md:left-[calc(100%+80px)] md:right-auto h-[60px] w-[60px] md:h-[108.284px] md:w-[119.52px]">
               <Image
                 src="/footer-assets/group-184.svg"
                 alt=""

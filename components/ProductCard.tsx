@@ -105,29 +105,29 @@ export default function ProductCard({
   // Mobile: 193.948px, Desktop: larger
   const topHeight = isSmall
     ? "h-[180px] sm:h-[250px] md:h-[280px] lg:h-[320px]"
-    : "h-[194px] sm:h-[280px] md:h-[340px] lg:h-[380px]";
+    : "max-[400px]:h-[156px] h-[194px] sm:h-[280px] md:h-[340px] lg:h-[380px]";
   const topPaddingX = isSmall
     ? "px-2 sm:px-5 md:px-[26px]"
-    : "px-[10px] sm:px-6 md:px-[31px]";
+    : "max-[400px]:px-[8px] px-[10px] sm:px-6 md:px-[31px]";
   const topPaddingY = isSmall
     ? "py-2 sm:py-4 md:py-[20px]"
-    : "py-[12px] sm:py-5 md:py-[24px]";
+    : "max-[400px]:py-[10px] py-[12px] sm:py-5 md:py-[24px]";
   const titleSize = isSmall
     ? "text-[14px] sm:text-[16px] md:text-[18px]"
-    : "text-[16px] sm:text-[18px] md:text-[20px]";
+    : "max-[400px]:text-[13px] text-[16px] sm:text-[18px] md:text-[20px]";
   const titleThaiSize = isSmall
     ? "text-[10px] sm:text-[12px] md:text-[13px]"
-    : "text-[12px] sm:text-[14px] md:text-[15px]";
+    : "max-[400px]:text-[10px] text-[12px] sm:text-[14px] md:text-[15px]";
   const priceSize = isSmall
     ? "text-[9px] sm:text-[12px] md:text-[14px]"
-    : "text-[10px] sm:text-[14px] md:text-[16px] lg:text-[17.975px]";
+    : "max-[400px]:text-[8px] text-[10px] sm:text-[14px] md:text-[16px] lg:text-[17.975px]";
   const descSize = isSmall
     ? "text-[9px] sm:text-[10px] md:text-[11px]"
-    : "text-[10px] sm:text-[11px] md:text-[12px] lg:text-[12.583px]";
+    : "max-[400px]:text-[8px] text-[10px] sm:text-[11px] md:text-[12px] lg:text-[12.583px]";
   // Mobile: 29.603px, Desktop: larger
   const bottomHeight = isSmall
     ? "h-[36px] sm:h-[42px] md:h-[46px] lg:h-[50px]"
-    : "h-[30px] sm:h-[46px] md:h-[54px] lg:h-[58px]";
+    : "max-[400px]:h-[24px] h-[30px] sm:h-[46px] md:h-[54px] lg:h-[58px]";
 
   return (
     <Link

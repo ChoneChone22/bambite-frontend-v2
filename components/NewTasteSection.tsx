@@ -83,11 +83,11 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
 
       {/* Section Title */}
       <div className="relative z-10 pt-12 sm:pt-16 md:pt-20 lg:pt-24 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8">
-        <div className="w-full">
-          <div className="flex flex-col items-center justify-center">
+        <div className="w-full flex justify-center">
+          <div className="flex flex-col items-start">
             {/* First line: NEW Taste */}
             <div
-              className="bg-clip-text bg-gradient-to-b font-[var(--font-chillax-semibold)] from-[#181e24] leading-[0.82] not-italic text-[36px] sm:text-[48px] md:text-[56px] lg:text-[69.339px] to-[#293f55] mb-0"
+              className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#181e24] leading-[0.82] not-italic text-[36px] sm:text-[48px] md:text-[56px] lg:text-[69.339px] to-[#293f55] mb-0"
               style={{ WebkitTextFillColor: "transparent" }}
             >
               <p className="mb-0">NEW Taste</p>
@@ -95,12 +95,12 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
             {/* Second line: NEW + World */}
             <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4">
               <span
-                className="bg-clip-text bg-gradient-to-b font-[var(--font-chillax-semibold)] from-[#181e24] leading-[0.82] not-italic text-[36px] sm:text-[48px] md:text-[56px] lg:text-[69.339px] to-[#293f55]"
+                className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#181e24] leading-[0.82] not-italic text-[36px] sm:text-[48px] md:text-[56px] lg:text-[69.339px] to-[#293f55]"
                 style={{ WebkitTextFillColor: "transparent" }}
               >
                 NEW
               </span>
-              <span className="font-indie-flower leading-[0.82] not-italic text-[24px] sm:text-[32px] md:text-[44px] lg:text-[60px] text-[#cc934e] text-center text-nowrap uppercase">
+              <span className="font-indie-flower leading-[0.82] not-italic text-[28px] sm:text-[36px] md:text-[48px] lg:text-[64px] text-[#cc934e] text-center text-nowrap uppercase">
                 World
               </span>
             </div>
@@ -116,7 +116,10 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
             <div className="grid grid-cols-2 gap-4">
               {/* Row 1: Product 0, Product 1 */}
               {products.slice(0, 2).map((product) => (
-                <div key={product.id} className="w-[174px]">
+                <div
+                  key={product.id}
+                  className="w-[174px] max-[400px]:w-[140px]"
+                >
                   <ProductCard
                     id={product.id}
                     image={product.image}
@@ -130,7 +133,10 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
 
               {/* Row 2: Product 2, Blue Decorative Plate */}
               {products.slice(2, 3).map((product) => (
-                <div key={product.id} className="w-[174px]">
+                <div
+                  key={product.id}
+                  className="w-[174px] max-[400px]:w-[140px]"
+                >
                   <ProductCard
                     id={product.id}
                     image={product.image}
@@ -141,7 +147,7 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
                   />
                 </div>
               ))}
-              <div className="w-[174px] h-[224px] flex items-center justify-center">
+              <div className="w-[174px] h-[224px] max-[400px]:w-[140px] max-[400px]:h-[180px] flex items-center justify-center">
                 <div className="relative w-[120px] h-[140px]">
                   <Image
                     src="/home-assets/decorative-elements/blue-rectangle.webp"
@@ -154,8 +160,8 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
               </div>
 
               {/* Row 3: C4 Decorative, Product 3 */}
-              <div className="w-[173px] h-[223px] flex items-center justify-center">
-                <div className="relative w-[140px] h-[180px]">
+              <div className="w-[173px] h-[223px] max-[400px]:w-[140px] max-[400px]:h-[180px] flex items-center justify-center">
+                <div className="relative w-[140px] h-[180px] max-[400px]:w-[112px] max-[400px]:h-[144px]">
                   <Image
                     src="/home-assets/decorative-elements/home-c4.webp"
                     alt="Decorative C4 element"
@@ -166,7 +172,10 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
                 </div>
               </div>
               {products.slice(3, 4).map((product) => (
-                <div key={product.id} className="w-[174px]">
+                <div
+                  key={product.id}
+                  className="w-[174px] max-[400px]:w-[140px]"
+                >
                   <ProductCard
                     id={product.id}
                     image={product.image}
@@ -180,7 +189,10 @@ export default function NewTasteSection({ products }: NewTasteSectionProps) {
 
               {/* Row 4: Product 4, Product 5 */}
               {products.slice(4, 6).map((product) => (
-                <div key={product.id} className="w-[174px]">
+                <div
+                  key={product.id}
+                  className="w-[174px] max-[400px]:w-[140px]"
+                >
                   <ProductCard
                     id={product.id}
                     image={product.image}
