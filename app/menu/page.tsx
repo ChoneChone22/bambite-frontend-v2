@@ -91,19 +91,49 @@ export default function FoodMenuPage() {
         </div>
 
         {/* Header */}
-        <div className="relative z-10 pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 lg:px-0">
+        <div className="relative z-10 pt-28 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 lg:px-0">
           <div className="max-w-7xl mx-auto relative">
-            <div
-              className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#181e24] leading-[0.82] not-italic text-[55px] to-[#293f55] ml-[350px]"
-              style={{ WebkitTextFillColor: "transparent" }}
-            >
-              <p className="mb-0">BamBite</p>
-              <p>Menu</p>
+            {/* Mobile Header */}
+            <div className="lg:hidden">
+              <div className="flex items-start justify-between mb-6">
+                <div className="font-chillax-semibold text-[#181e24] leading-[0.95]">
+                  <p className="text-[48px] mb-0">BamBite</p>
+                  <p className="text-[48px]">Menu</p>
+                </div>
+                <div className="font-['Post_No_Bills_Colombo_SemiBold',sans-serif] text-[#8fa5ae] text-[56px] sm:text-[64px] leading-none font-semibold mt-2">
+                  C4
+                </div>
+              </div>
+              <div className="text-center mb-6">
+                <div className="flex items-center justify-center">
+                  <div className="flex-none rotate-[341deg]">
+                    <p className="font-indie-flower leading-[0.82] not-italic text-[#ff9e3e] text-[16px] text-nowrap uppercase">
+                      All the best
+                      <br />
+                      in one place
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="absolute left-[550px] top-[40px] flex-none -rotate-45">
-              <div className="font-['Stick_No_Bills',sans-serif] leading-[0.82] not-italic text-[#ffa953] text-[18px] sm:text-[20px] md:text-[22px] lg:text-[24px]">
-                <p className="mb-0">All the best</p>
-                <p>in one place</p>
+
+            {/* Desktop Header */}
+            <div className="hidden lg:block">
+              <div
+                className="bg-clip-text bg-gradient-to-b font-chillax-semibold from-[#181e24] leading-[0.82] not-italic text-[55px] to-[#293f55] ml-[350px]"
+                style={{ WebkitTextFillColor: "transparent" }}
+              >
+                <p className="mb-0">BamBite</p>
+                <p>Menu</p>
+              </div>
+              <div className="absolute left-[550px] top-[40px] flex-none">
+                <div className="flex-none rotate-[341deg]">
+                  <p className="font-indie-flower leading-[0.82] not-italic text-[#ff9e3e] text-[20px] text-nowrap uppercase">
+                    All the best
+                    <br />
+                    in one place
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -111,9 +141,48 @@ export default function FoodMenuPage() {
 
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0 relative z-10">
+          {/* Mobile Horizontal Category Tabs */}
+          <div className="lg:hidden mb-8">
+            <div className="bg-[#181e24] rounded-lg py-6 px-8">
+              <div className="flex gap-6 overflow-x-auto scrollbar-hide">
+                {categories.map((category) => {
+                  const isActive =
+                    category.toLowerCase() === activeCategory.toLowerCase();
+                  return (
+                    <button
+                      key={category}
+                      onClick={() => setActiveCategory(category)}
+                      className="flex items-center gap-2 whitespace-nowrap transition-opacity hover:opacity-80"
+                    >
+                      {isActive && (
+                        <div className="relative w-[17px] h-[11px] flex-shrink-0">
+                          <Image
+                            src="/filter-assets/arrow-icon.svg"
+                            alt=""
+                            width={17}
+                            height={11}
+                          />
+                        </div>
+                      )}
+                      <span
+                        className={`font-['Space_Mono',monospace] text-[13px] font-bold uppercase ${
+                          isActive
+                            ? "text-[#489adc] opacity-90"
+                            : "text-white opacity-50"
+                        }`}
+                      >
+                        {category}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-[282px_1fr] gap-8 lg:gap-12 pb-16">
-            {/* Filter Panel */}
-            <div className="w-full lg:w-auto">
+            {/* Desktop Filter Panel */}
+            <div className="hidden lg:block w-full lg:w-auto">
               <FilterPanel
                 categories={categories}
                 activeCategory={activeCategory}
@@ -136,7 +205,7 @@ export default function FoodMenuPage() {
                   <p className="text-[#273b4f] text-lg">No products found</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
                   {products.map((product) => (
                     <ProductCard
                       key={product.id}

@@ -2,6 +2,7 @@
 "use client";
 
 import Image from "next/image";
+import AboutNavigation from "@/components/AboutNavigation";
 
 export default function AboutPage() {
   return (
@@ -134,9 +135,7 @@ export default function AboutPage() {
                     style={{ WebkitTextFillColor: "transparent" }}
                   >
                     <span className="block">This&apos;s how BamBite</span>
-                    <span className="block ml-8 sm:ml-12 md:ml-16">
-                      has started.
-                    </span>
+                    <span className="block">has started.</span>
                   </p>
                 </div>
 
@@ -280,7 +279,7 @@ export default function AboutPage() {
             alt=""
             fill
             sizes="100vw"
-            className="object-contain"
+            className="object-cover lg:object-contain"
             priority
           />
         </div>
@@ -392,9 +391,7 @@ export default function AboutPage() {
                   style={{ WebkitTextFillColor: "transparent" }}
                 >
                   <span className="block">Now, Bam&apos;s in BKK</span>
-                  <span className="block ml-8 sm:ml-12 md:ml-16">
-                    at these locations
-                  </span>
+                  <span className="block   ">at these locations</span>
                 </p>
               </div>
 
@@ -417,7 +414,32 @@ export default function AboutPage() {
                       className="object-contain"
                     />
                   </div>
-                  <div className="relative w-full max-w-[600px] h-[180px] sm:h-[240px] lg:h-[300px]">
+                  {/* Mobile Map 1 */}
+                  <div className="lg:hidden relative w-full max-w-[600px] h-[180px] sm:h-[240px]">
+                    <Image
+                      src="/about-assets/mobile-map1.png"
+                      alt="Map 1 Mobile"
+                      fill
+                      className="object-contain"
+                    />
+                    {/* Location Info Overlay - Right Side */}
+                    <div className="absolute right-[28%] top-[30%] h-full flex flex-col gap-3 p-3 pointer-events-none">
+                      <p
+                        className="text-[12px] font-['Chillax_Variable',sans-serif] font-semibold leading-[0.82] bg-clip-text bg-gradient-to-b from-[#f9f9f9] to-[#a6b5c0]"
+                        style={{ WebkitTextFillColor: "transparent" }}
+                      >
+                        Pathuwan
+                      </p>
+                      <p className="text-[6px] font-['DM_Sans',sans-serif] font-normal leading-[1] text-white/55">
+                        Location
+                      </p>
+                      <p className="text-[5px] font-['Space_Mono',sans-serif] font-bold leading-none text-white uppercase">
+                        See on map
+                      </p>
+                    </div>
+                  </div>
+                  {/* Desktop Map 1 */}
+                  <div className="hidden lg:flex lg:relative lg:w-full lg:max-w-[600px] lg:h-[300px]">
                     <Image
                       src="/about-assets/map-1.webp"
                       alt="Map 1"
@@ -437,7 +459,32 @@ export default function AboutPage() {
                       className="object-contain"
                     />
                   </div>
-                  <div className="relative w-full max-w-[600px] h-[180px] sm:h-[240px] lg:h-[300px]">
+                  {/* Mobile Map 2 */}
+                  <div className="lg:hidden relative w-full max-w-[600px] h-[180px] sm:h-[240px]">
+                    <Image
+                      src="/about-assets/mobile-map1.png"
+                      alt="Map 2 Mobile"
+                      fill
+                      className="object-contain"
+                    />
+                    {/* Location Info Overlay - Right Side */}
+                    <div className="absolute right-[28%] top-[30%] h-full flex flex-col gap-3 p-3 pointer-events-none">
+                      <p
+                        className="text-[12px] font-['Chillax_Variable',sans-serif] font-semibold leading-[0.82] bg-clip-text bg-gradient-to-b from-[#f9f9f9] to-[#a6b5c0]"
+                        style={{ WebkitTextFillColor: "transparent" }}
+                      >
+                        Pathuwan
+                      </p>
+                      <p className="text-[6px] font-['DM_Sans',sans-serif] font-normal leading-[1] text-white/55">
+                        Location
+                      </p>
+                      <p className="text-[5px] font-['Space_Mono',sans-serif] font-bold leading-none text-white uppercase">
+                        See on map
+                      </p>
+                    </div>
+                  </div>
+                  {/* Desktop Map 2 */}
+                  <div className="hidden lg:flex lg:relative lg:w-full lg:max-w-[600px] lg:h-[300px]">
                     <Image
                       src="/about-assets/map-2.webp"
                       alt="Map 2"
@@ -451,6 +498,9 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Navigation Section */}
+      <AboutNavigation />
     </div>
   );
 }

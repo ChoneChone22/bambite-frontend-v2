@@ -74,7 +74,7 @@ export default function RelatedProductsSection({
       <div className="relative z-10 w-full py-4 sm:py-6 md:py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2
-            className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#1b232a] leading-none not-italic text-[48px] to-[#315273] mb-4 sm:mb-6"
+            className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#1b232a] leading-none not-italic text-[32px] sm:text-[40px] md:text-[48px] to-[#315273] mb-4 sm:mb-6"
             style={{ WebkitTextFillColor: "transparent" }}
           >
             {title === "You may also like" ? (
@@ -87,7 +87,7 @@ export default function RelatedProductsSection({
               title
             )}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
             {products.map((product) => (
               <ProductCard
                 key={product.id}
@@ -106,4 +106,3 @@ export default function RelatedProductsSection({
     </div>
   );
 }
-
