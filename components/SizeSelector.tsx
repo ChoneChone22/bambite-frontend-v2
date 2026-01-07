@@ -1,6 +1,8 @@
 // Size Selector component
 "use client";
 
+import Image from "next/image";
+
 type SizeOption = {
   id: string;
   label: string;
@@ -33,9 +35,13 @@ export default function SizeSelector({
             </p>
             {isSelected && (
               <div className="flex h-[9px] items-center justify-center relative shrink-0 w-[18px]">
-                <div className="flex-none rotate-[153.724deg] skew-x-[31.302deg]">
-                  <div className="bg-[#1d63be] rounded-[1.3px] size-[10px]" />
-                </div>
+                <Image
+                  src="/product-details-assets/blue-dot.svg"
+                  alt="Selected"
+                  width={18}
+                  height={9}
+                  className="object-contain"
+                />
               </div>
             )}
             <div className="absolute inset-0 pointer-events-none shadow-[inset_0px_4px_4px_0px_rgba(0,0,0,0.35)]" />
