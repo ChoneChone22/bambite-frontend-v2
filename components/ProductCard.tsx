@@ -60,6 +60,7 @@ export default function ProductCard({
   size = "default",
 }: ProductCardProps) {
   const [quantity, setQuantity] = useState(initialQuantity);
+  const [isHovered, setIsHovered] = useState(false);
   const { addItem, closeCart } = useCart();
   const router = useRouter();
 
@@ -100,6 +101,13 @@ export default function ProductCard({
     router.push("/coming-soon");
   };
 
+  const truncateDescription = (text: string, wordLimit: number = 80) => {
+    if (!text) return "";
+    const words = text.split(/\s+/).filter((word) => word.length > 0);
+    if (words.length <= wordLimit) return text;
+    return words.slice(0, wordLimit).join(" ") + "...";
+  };
+
   const isSmall = size === "small";
   const maxWidth = isSmall ? "max-w-[280px]" : "max-w-[335px]";
   // Mobile: 193.948px, Desktop: larger
@@ -133,6 +141,8 @@ export default function ProductCard({
     <Link
       href={`/products/${id}`}
       className={`content-stretch flex flex-col items-center relative size-full w-full ${maxWidth} mx-auto no-underline`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Top Section - Orange Plate - Responsive height */}
       <div
@@ -181,12 +191,14 @@ export default function ProductCard({
             </div>
           </div>
 
-          {/* Description - Hidden on mobile, visible on desktop */}
-          <p
-            className={`font-['DM_Sans',sans-serif] font-medium leading-[1.2] opacity-60 relative shrink-0 ${descSize} text-white w-full hidden md:block`}
-          >
-            {description}
-          </p>
+          {/* Description - Hidden on mobile/tablet, visible on hover in desktop */}
+          {isHovered && (
+            <p
+              className={`font-['DM_Sans',sans-serif] font-medium leading-[1.2] opacity-60 relative shrink-0 ${descSize} text-white w-full hidden md:block`}
+            >
+              {truncateDescription(description, 13)}
+            </p>
+          )}
         </div>
       </div>
 
@@ -242,13 +254,20 @@ export default function ProductCard({
 
             {/* Content area - Responsive padding and gap */}
             <div className="basis-0 content-stretch flex gap-1 sm:gap-3 md:gap-4 lg:gap-[24px] grow h-full items-center min-h-px min-w-px pl-1 sm:pl-2 md:pl-3 lg:pl-[12px] pr-2 sm:pr-3 md:pr-4 lg:pr-[20px] py-0 relative shrink-0 z-10">
-              {/* Shopping cart icon button */}
-              <div className="flex items-center justify-center relative shrink-0">
-                <div className="flex-none rotate-[180deg]">
+              {/* Combined Add to cart button with icon */}
+              <div className="flex items-center justify-center relative shrink-0 w-full">
+                <div className="flex-none rotate-[180deg] w-full">
                   <button
-                    className="content-stretch flex items-center p-[3px] sm:p-[6px] relative rounded-[8px] hover:bg-white/10 transition-colors"
-                    aria-label="Shopping cart"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      router.push("/coming-soon");
+                    }}
+                    className="content-stretch flex items-center relative w-full justify-between hover:opacity-90 transition-opacity cursor-pointer"
                   >
+                    <p className="font-['Space_Mono',monospace] leading-none not-italic relative shrink-0 text-[6px] sm:text-[10px] md:text-[11px] lg:text-[12.583px] text-white text-nowrap uppercase font-bold">
+                      add to cart
+                    </p>
                     <div className="overflow-clip relative shrink-0 size-[16px] sm:size-[20px] md:size-[24px]">
                       <Image
                         src="/product-assets/shopping-cart-icon.svg"
@@ -258,24 +277,6 @@ export default function ProductCard({
                         className="block max-w-none size-full"
                       />
                     </div>
-                  </button>
-                </div>
-              </div>
-
-              {/* Add to cart button */}
-              <div className="basis-0 flex grow items-center justify-center min-h-px min-w-px relative shrink-0">
-                <div className="flex-none rotate-[180deg] w-full">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleAddToCart();
-                    }}
-                    className="content-stretch flex gap-[16px] items-center relative w-full justify-center hover:opacity-90 transition-opacity"
-                  >
-                    <p className="font-['Space_Mono',monospace] leading-none not-italic relative shrink-0 text-[6px] sm:text-[10px] md:text-[11px] lg:text-[12.583px] text-white text-nowrap uppercase font-bold">
-                      add to cart
-                    </p>
                   </button>
                 </div>
               </div>
@@ -290,20 +291,20 @@ export default function ProductCard({
 
             {/* Quantity selector - Responsive padding */}
             <div className="content-stretch flex gap-[2px] sm:gap-1 md:gap-2 lg:gap-[8px] h-full items-center justify-center px-1 sm:px-2 md:px-3 lg:px-[14px] py-[2px] sm:py-1 md:py-2 lg:py-[8px] relative shrink-0 z-10">
-              {/* Plus button */}
+              {/* Minus button */}
               <div className="flex items-center justify-center relative shrink-0">
                 <div className="flex-none rotate-[180deg]">
                   <button
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      handleIncrement();
+                      handleDecrement();
                     }}
-                    className="content-stretch flex items-center justify-center p-[2px] sm:p-[3px] md:p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors"
-                    aria-label="Increase quantity"
+                    className="content-stretch flex items-center justify-center p-[2px] sm:p-[3px] md:p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors cursor-pointer"
+                    aria-label="Decrease quantity"
                   >
                     <p className="font-['Space_Mono',monospace] leading-none not-italic relative text-[14px] sm:text-[18px] md:text-[20px] lg:text-[22px] text-nowrap text-white uppercase font-bold">
-                      +
+                      -
                     </p>
                   </button>
                 </div>
@@ -318,20 +319,20 @@ export default function ProductCard({
                 </div>
               </div>
 
-              {/* Minus button */}
+              {/* Plus button */}
               <div className="flex items-center justify-center relative shrink-0">
                 <div className="flex-none rotate-[180deg]">
                   <button
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      handleDecrement();
+                      handleIncrement();
                     }}
-                    className="content-stretch flex items-center justify-center p-[2px] sm:p-[3px] md:p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors"
-                    aria-label="Decrease quantity"
+                    className="content-stretch flex items-center justify-center p-[2px] sm:p-[3px] md:p-[5px] relative rounded-[3px] hover:bg-white/10 transition-colors cursor-pointer"
+                    aria-label="Increase quantity"
                   >
                     <p className="font-['Space_Mono',monospace] leading-none not-italic relative text-[14px] sm:text-[18px] md:text-[20px] lg:text-[22px] text-nowrap text-white uppercase font-bold">
-                      -
+                      +
                     </p>
                   </button>
                 </div>

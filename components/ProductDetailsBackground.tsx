@@ -14,7 +14,7 @@ export default function ProductDetailsBackground({
   return (
     <div className={`relative w-full min-h-screen bg-[#123659] ${className}`}>
       {/* Base black texture background */}
-      <div className="absolute h-[1068.73px] left-0 top-0 w-full">
+      <div className="absolute inset-0 w-full h-full min-h-screen">
         <Image
           src="/product-details-assets/black-texture-bg-1.webp"
           alt=""
@@ -64,4 +64,3 @@ export default function ProductDetailsBackground({
     </div>
   );
 }
-

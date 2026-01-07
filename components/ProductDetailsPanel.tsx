@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
 import SizeSelector from "./SizeSelector";
+import SpiceLevelSelector from "./SpiceLevelSelector";
 import FAQAccordion from "./FAQAccordion";
 
 type SizeOption = {
@@ -48,6 +49,7 @@ export default function ProductDetailsPanel({
   onBuyNow,
 }: ProductDetailsPanelProps) {
   const [selectedSize, setSelectedSize] = useState(sizes[0]?.id || "");
+  const [selectedSpiceLevel, setSelectedSpiceLevel] = useState("normal");
   const [quantity, setQuantity] = useState(1);
   const { addItem, closeCart } = useCart();
   const router = useRouter();
@@ -130,9 +132,9 @@ export default function ProductDetailsPanel({
       </div>
 
       {/* Size Selector */}
-      <div className="content-stretch flex flex-col gap-[14px] items-start relative shrink-0 w-full">
+      <div className="content-stretch flex flex-col gap-[14px] items-start relative shrink-0 w-full mt-4 pt-2">
         <p
-          className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#f9f9f9] leading-[0.82] not-italic relative shrink-0 text-[16px] to-[#a6b5c0] w-full"
+          className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#f9f9f9] leading-[0.82] not-italic relative shrink-0 text-[16px] to-[#a6b5c0] w-full pt-1"
           style={{ WebkitTextFillColor: "transparent" }}
         >
           Size
@@ -141,6 +143,19 @@ export default function ProductDetailsPanel({
           options={sizes}
           selectedSize={selectedSize}
           onSizeChange={setSelectedSize}
+        />
+      </div>
+
+      {/* Spice Level Selector */}
+      <div className="w-full pt-2">
+        <SpiceLevelSelector
+          options={[
+            { id: "less", label: "Less" },
+            { id: "normal", label: "Normal" },
+            { id: "more", label: "More" },
+          ]}
+          selectedLevel={selectedSpiceLevel}
+          onLevelChange={setSelectedSpiceLevel}
         />
       </div>
 
@@ -189,7 +204,7 @@ export default function ProductDetailsPanel({
               {/* Add to Cart Button */}
               <button
                 onClick={handleAddToCart}
-                className="basis-0 content-stretch flex gap-[16px] grow h-full items-center min-h-px min-w-px pl-[8px] pr-[15px] py-0 relative shrink-0 z-10"
+                className="basis-0 content-stretch flex gap-[16px] grow h-full items-center min-h-px min-w-px pl-[8px] pr-[15px] py-0 relative shrink-0 z-10 cursor-pointer"
               >
                 <div className="flex items-center justify-center relative shrink-0">
                   <div className="flex-none rotate-[180deg]">
@@ -236,7 +251,7 @@ export default function ProductDetailsPanel({
               <div className="content-stretch flex gap-[3px] sm:gap-[6px] h-full items-center justify-center px-[8px] sm:px-[10px] py-[6px] relative shrink-0 z-10">
                 <button
                   onClick={handleDecrement}
-                  className="flex items-center justify-center relative shrink-0"
+                  className="flex items-center justify-center relative shrink-0 cursor-pointer"
                 >
                   <div className="flex-none rotate-[180deg]">
                     <div className="content-stretch flex items-center justify-center p-[3px] sm:p-[6px] relative rounded-[3px] sm:rounded-[6px]">
@@ -261,7 +276,7 @@ export default function ProductDetailsPanel({
                 </div>
                 <button
                   onClick={handleIncrement}
-                  className="flex items-center justify-center relative shrink-0"
+                  className="flex items-center justify-center relative shrink-0 cursor-pointer"
                 >
                   <div className="flex-none rotate-[180deg]">
                     <div className="content-stretch flex items-center justify-center p-[3px] sm:p-[6px] relative rounded-[3px] sm:rounded-[6px]">
@@ -289,7 +304,7 @@ export default function ProductDetailsPanel({
           <div className="flex-none rotate-[180deg] w-full">
             <button
               onClick={handleBuyNow}
-              className="bg-gradient-to-b border border-[#070f17] border-solid content-stretch flex from-[#171e24] h-[40px] sm:h-[42px] md:h-[44px] items-center relative to-[#1b2229] w-full rounded-lg overflow-hidden"
+              className="bg-gradient-to-b border border-[#070f17] border-solid content-stretch flex from-[#171e24] h-[40px] sm:h-[42px] md:h-[44px] items-center relative to-[#1b2229] w-full rounded-lg overflow-hidden cursor-pointer"
             >
               {/* Texture overlays */}
               <div className="absolute contents inset-[-0.5px_calc(-0.08%-0.5px)_calc(0%-0.5px)_-0.5px]">
@@ -337,7 +352,7 @@ export default function ProductDetailsPanel({
                         Buy Now
                       </p>
                       <p className="relative shrink-0 text-white">
-                        {(price * quantity)} {currency}
+                        {price * quantity} {currency}
                       </p>
                     </div>
                   </div>
