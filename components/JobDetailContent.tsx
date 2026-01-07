@@ -35,10 +35,10 @@ export default function JobDetailContent({ job }: JobDetailContentProps) {
           <p className="font-['Space_Mono',sans-serif] font-bold leading-none not-italic relative shrink-0 text-[11px] sm:text-[12px] md:text-[13px] uppercase w-full">
             Tasks to be Performed
           </p>
-          <ul className="block font-['DM_Sans',sans-serif] font-normal leading-[0] relative shrink-0 text-[15px] sm:text-[16px] md:text-[17px] w-full space-y-2">
+          <ul className="list-disc font-['DM_Sans',sans-serif] font-normal relative shrink-0 text-[15px] sm:text-[16px] md:text-[17px] w-full space-y-2 pl-5">
             {job.tasks.map((task, index) => (
-              <li key={index} className="mb-0 ms-[25.5px]">
-                <span className="leading-[1.2]">{task}</span>
+              <li key={index} className="leading-[1.2]">
+                {task}
               </li>
             ))}
           </ul>
@@ -49,10 +49,10 @@ export default function JobDetailContent({ job }: JobDetailContentProps) {
           <p className="font-['Space_Mono',sans-serif] font-bold leading-none not-italic relative shrink-0 text-[11px] sm:text-[12px] md:text-[13px] uppercase w-full">
             Required Qualifications
           </p>
-          <ul className="block font-['DM_Sans',sans-serif] font-normal leading-[0] relative shrink-0 text-[15px] sm:text-[16px] md:text-[17px] w-full space-y-2">
+          <ul className="list-disc font-['DM_Sans',sans-serif] font-normal relative shrink-0 text-[15px] sm:text-[16px] md:text-[17px] w-full space-y-2 pl-5">
             {job.qualifications.map((qualification, index) => (
-              <li key={index} className="mb-0 ms-[25.5px]">
-                <span className="leading-[1.2]">{qualification}</span>
+              <li key={index} className="leading-[1.2]">
+                {qualification}
               </li>
             ))}
           </ul>
@@ -61,4 +61,3 @@ export default function JobDetailContent({ job }: JobDetailContentProps) {
     </div>
   );
 }
-

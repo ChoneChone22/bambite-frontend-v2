@@ -12,11 +12,13 @@ export default function JobDetailBackground({
   className = "",
 }: JobDetailBackgroundProps) {
   return (
-    <div className={`relative w-full min-h-screen bg-white ${className}`}>
+    <div
+      className={`relative w-full min-h-screen bg-white overflow-hidden overflow-x-hidden ${className}`}
+    >
       {/* Dark blue plate background */}
-      <div className="absolute h-[1040.093px] left-[-4px] top-0 w-full">
+      <div className="absolute inset-0 w-full h-full min-h-screen overflow-hidden">
         <div className="absolute flex inset-0 items-center justify-center">
-          <div className="flex-none h-[1040.093px] rotate-[180deg] scale-y-[-100%] w-full">
+          <div className="flex-none h-full min-h-[1040.093px] rotate-[180deg] scale-y-[-100%] w-full">
             <div className="relative size-full">
               <Image
                 src="/career-assets/rectangle-121.svg"
@@ -77,7 +79,7 @@ export default function JobDetailBackground({
       </div>
 
       {/* Vertical separator lines */}
-      <div className="absolute flex h-[2.018px] items-center justify-center left-[-4.95px] top-[171.71px] w-[1776.572px] hidden lg:block">
+      <div className="absolute flex h-[2.018px] items-center justify-center left-0 top-[171.71px] w-[100vh] max-w-[1776.572px] hidden lg:block overflow-hidden">
         <div className="flex-none rotate-[90deg]">
           <div className="h-[1776.572px] relative w-[2.018px]">
             <Image
@@ -106,4 +108,3 @@ export default function JobDetailBackground({
     </div>
   );
 }
-

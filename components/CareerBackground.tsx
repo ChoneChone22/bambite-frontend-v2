@@ -12,9 +12,14 @@ export default function CareerBackground({
   className = "",
 }: CareerBackgroundProps) {
   return (
-    <div className={`relative w-full h-screen max-h-screen bg-white overflow-hidden overflow-x-hidden ${className}`}>
+    <div
+      className={`relative w-full bg-white overflow-x-hidden ${className} lg:h-screen lg:max-h-screen lg:overflow-hidden`}
+    >
       {/* Dark blue plate background */}
-      <div className="absolute left-0 top-0 w-full" style={{ height: '100%', minHeight: '100vh' }}>
+      <div
+        className="absolute left-0 top-0 w-full"
+        style={{ height: "100%", minHeight: "100vh" }}
+      >
         <div className="absolute flex inset-0 items-center justify-center">
           <div className="flex-none h-full rotate-[180deg] scale-y-[-100%] w-full">
             <div className="relative size-full">
@@ -111,4 +116,3 @@ export default function CareerBackground({
     </div>
   );
 }
-

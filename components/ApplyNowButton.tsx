@@ -25,12 +25,14 @@ export default function ApplyNowButton({
     }
   };
   return (
-    <div className={`flex h-[58px] items-center justify-center w-full max-w-[600px] mx-auto ${className}`}>
+    <div
+      className={`flex h-[58px] items-center justify-center w-full max-w-[600px] mx-auto ${className}`}
+    >
       <div className="flex-none rotate-[180deg] w-full">
         <button
           type="button"
           onClick={handleClick}
-          className="bg-gradient-to-b border border-[#193551] border-solid content-stretch flex from-[#074980] h-[58px] items-center relative to-[#172743] w-full overflow-hidden"
+          className="bg-gradient-to-b border border-[#193551] border-solid content-stretch flex from-[#074980] h-[58px] items-center relative to-[#172743] w-full overflow-hidden cursor-pointer"
         >
           {/* Texture overlays */}
           <div className="absolute contents inset-[-0.5px_calc(-0.08%-0.5px)_calc(0%-0.5px)_-0.5px]">
@@ -88,4 +90,3 @@ export default function ApplyNowButton({
     </div>
   );
 }
-
