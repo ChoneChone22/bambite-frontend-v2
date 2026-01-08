@@ -3,6 +3,7 @@
 
 import Image from "next/image";
 import WindowFrame from "./WindowFrame";
+import { useRef, useEffect, useState, useCallback } from "react";
 
 type MyHomeToYoursSectionProps = {
   title?: string;
@@ -15,8 +16,78 @@ export default function MyHomeToYoursSection({
   subtitle = "You're about to discover more",
   sceneImage = "/home-assets/window-frame-assets/forest-scene.webp",
 }: MyHomeToYoursSectionProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isLockedRef = useRef(false);
+  const lastScrollYRef = useRef(
+    typeof window !== "undefined" ? window.scrollY : 0
+  );
+  const [windowAnimDone, setWindowAnimDone] = useState(false);
+
+  // Callback to be passed to WindowFrame to notify when animation is done
+  const handleWindowAnimDone = useCallback(() => {
+    setWindowAnimDone(true);
+    isLockedRef.current = false;
+  }, []);
+
+  useEffect(() => {
+    // Only apply on mobile
+    const isMobile = () => window.innerWidth <= 440;
+
+    const handleScroll = () => {
+      if (!containerRef.current || !isMobile()) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const isFullyVisible =
+        rect.top >= -50 && rect.top <= 50 && rect.bottom >= windowHeight - 50;
+      if (isFullyVisible && !windowAnimDone) {
+        isLockedRef.current = true;
+        window.scrollTo(0, lastScrollYRef.current);
+      } else {
+        lastScrollYRef.current = window.scrollY;
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      if (!containerRef.current || !isMobile()) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const isFullyVisible =
+        rect.top >= -50 && rect.top <= 50 && rect.bottom >= windowHeight - 50;
+      if (!isFullyVisible) return;
+      if (!windowAnimDone) {
+        isLockedRef.current = true;
+        e.preventDefault();
+      }
+    };
+
+    // Prevent touch scroll on mobile
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!containerRef.current || !isMobile()) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const isFullyVisible =
+        rect.top >= -50 && rect.top <= 50 && rect.bottom >= windowHeight - 50;
+      if (isFullyVisible && !windowAnimDone) {
+        isLockedRef.current = true;
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: false });
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, [windowAnimDone]);
+
   return (
-    <div className="relative w-full min-h-[600px] sm:min-h-[700px] lg:min-h-[854px] overflow-hidden bg-[#123659]">
+    <div
+      ref={containerRef}
+      className="relative w-full min-h-[600px] sm:min-h-[700px] lg:min-h-[854px] overflow-hidden bg-[#123659]"
+    >
       {/* Blue plate background */}
       <div className="absolute bottom-0 h-[70vh] sm:h-[75vh] lg:h-[838px] left-0 overflow-clip w-full hidden lg:block">
         <div className="absolute h-full left-0 top-0 w-full max-w-[1440px]">
@@ -76,6 +147,13 @@ export default function MyHomeToYoursSection({
           {/* Window Frame - Desktop only */}
           <div className="absolute -right-40 top-1/2 -translate-y-1/2 hidden lg:block">
             <WindowFrame sceneImage={sceneImage} />
+          </div>
+          {/* Window Frame - Mobile (lock scroll until animation done) */}
+          <div className="block lg:hidden w-full flex justify-center items-center">
+            <WindowFrame
+              sceneImage={sceneImage}
+              onAnimDone={handleWindowAnimDone}
+            />
           </div>
 
           {/* Decorative image on left */}
