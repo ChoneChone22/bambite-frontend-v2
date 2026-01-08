@@ -9,12 +9,13 @@ type WindowFrameProps = {
   sceneImage?: string;
   label?: string;
   className?: string;
+  onAnimDone?: () => void;
 };
 
-export default function WindowFrame({
   sceneImage = "/home-assets/window-frame-assets/forest-scene.webp",
   label = "BAm's spaceship 320",
   className = "",
+  onAnimDone,
 }: WindowFrameProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -74,6 +75,9 @@ export default function WindowFrame({
         duration: 1.2,
         ease: [0.22, 1, 0.36, 1],
         delay: 0.2,
+      }}
+      onAnimationComplete={() => {
+        if (onAnimDone) onAnimDone();
       }}
     >
       {/* Outer Ring */}

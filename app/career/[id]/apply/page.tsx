@@ -177,8 +177,8 @@ export default function ApplicationFormPage() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Redirect to success page or show success message
-      router.push(`/career/${jobId}?success=true`);
+      // Redirect to new success page
+      router.push(`/career/${jobId}/apply/success?jobId=${jobId}`);
     } catch (error) {
       setSubmitError(
         error instanceof Error

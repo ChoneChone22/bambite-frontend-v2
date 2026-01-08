@@ -63,7 +63,7 @@ export default function CareerPage() {
           {/* Join Bam's Team */}
           <div className="px-5 mt-7">
             <p className="font-['Chillax_Variable',sans-serif] text-[20px] font-semibold leading-[1.1] bg-linear-to-b from-[#f9f9f9] to-[#a6b5c0] bg-clip-text text-transparent tracking-[-0.5px]">
-              Join Bam's Team
+              Join Bam&apos;s Team
             </p>
             <div className="mt-1 flex items-center w-full">
               <span
@@ -78,7 +78,10 @@ export default function CareerPage() {
           <div className="px-2 mt-7 pb-10">
             <div className="flex flex-col gap-5">
               {jobs.map((job) => (
-                <div key={job.id} className="w-full max-w-[320px] mx-auto">
+                <div
+                  key={job.id}
+                  className="w-full max-w-[320px] xl:w-[450px] mx-auto"
+                >
                   <JobCard job={job} onApply={handleApply} />
                 </div>
               ))}
