@@ -1,29 +1,31 @@
-// Window Frame component for "My Home to Yours" section
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 
 type WindowFrameProps = {
   sceneImage?: string;
-  label?: string;
-  className?: string;
   onAnimDone?: () => void;
+  startTrigger: boolean;
 };
 
+export default function WindowFrame({
   sceneImage = "/home-assets/window-frame-assets/forest-scene.webp",
-  label = "BAm's spaceship 320",
-  className = "",
   onAnimDone,
+  startTrigger,
 }: WindowFrameProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   });
 
-  // Main container transforms
+  // Parallax transforms for desktop (disabled on mobile when locked)
   const opacity = useTransform(
     scrollYProgress,
     [0, 0.2, 0.5, 0.8, 1],
@@ -34,205 +36,166 @@ type WindowFrameProps = {
     [0, 0.2, 0.5, 0.75, 1],
     [0.7, 1.05, 1, 0.95, 0.85]
   );
-  const rotateY = useTransform(
-    scrollYProgress,
-    [0, 0.3, 0.6, 1],
-    [25, 0, -8, -20]
-  );
-  const y = useTransform(scrollYProgress, [0, 0.5, 1], [100, 0, -150]);
 
-  // Layer-specific parallax
-  const sceneScale = useTransform(
-    scrollYProgress,
-    [0, 0.4, 0.7, 1],
-    [1.2, 1, 1.05, 1.1]
-  );
-  const glowOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.3, 0.6, 1],
-    [0, 0.3, 0.5, 0.2]
-  );
-  const frameRotate = useTransform(scrollYProgress, [0, 0.5, 1], [0, -2, -5]);
+  // Detect mobile on mount
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (startTrigger) {
+      setShouldAnimate(true);
+    }
+  }, [startTrigger]);
+
+  // Production-ready animation variants
+  const containerVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.8,
+      y: 60,
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        duration: shouldReduceMotion ? 0.5 : 1.5,
+        ease: [0.25, 0.46, 0.45, 0.94], // Custom easing for smooth animation
+        delayChildren: 0.3,
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: shouldReduceMotion ? 0.2 : 0.8,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    },
+  };
+
+  const sceneVariants = {
+    hidden: { opacity: 0, scale: 1.2 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: shouldReduceMotion ? 0.3 : 1,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const glowVariants = {
+    animate: {
+      opacity: shouldReduceMotion ? 0.3 : [0.2, 0.5, 0.2],
+      transition: {
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut",
+      },
+    },
+  };
+
+  // Use different styles based on device and animation state
+  // On mobile during animation, don't apply scroll-based transforms
+  const dynamicStyle = isMobile && shouldAnimate
+    ? { 
+        width: "min(900px, 90vw)", 
+        height: "min(500px, 50vh)",
+      }
+    : !isMobile
+    ? { 
+        width: "min(900px, 90vw)", 
+        height: "min(500px, 50vh)", 
+        opacity, 
+        scale 
+      }
+    : { 
+        width: "min(900px, 90vw)", 
+        height: "min(500px, 50vh)",
+      };
 
   return (
     <motion.div
       ref={containerRef}
-      className={`relative flex items-center justify-center ${className}`}
-      style={{
-        width: "994.565px",
-        height: "534.047px",
-        transform: "scale(0.80) translateX(80px)",
-        opacity,
-        scale,
-        rotateY,
-        y,
-        transformStyle: "preserve-3d",
-        perspective: "1500px",
-      }}
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{
-        duration: 1.2,
-        ease: [0.22, 1, 0.36, 1],
-        delay: 0.2,
-      }}
+      className="relative flex items-center justify-center will-change-transform"
+      style={dynamicStyle}
+      variants={containerVariants}
+      initial="hidden"
+      animate={shouldAnimate ? "visible" : "hidden"}
       onAnimationComplete={() => {
-        if (onAnimDone) onAnimDone();
+        if (shouldAnimate && onAnimDone) {
+          // Give user time to see the completed animation before unlocking
+          // Longer delay on mobile to ensure smooth experience
+          const delay = isMobile ? 800 : 500;
+          setTimeout(onAnimDone, delay);
+        }
       }}
     >
       {/* Outer Ring */}
-      <motion.div
-        className="absolute h-[534.047px] w-[994.565px] hidden lg:block"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="absolute inset-[-0.36%_-0.19%_-0.45%_-0.19%]">
-          <Image
-            src="/home-assets/window-frame-assets/outter-ring.svg"
-            alt=""
-            fill
-            sizes="995px"
-            className="block max-w-none"
-          />
-        </div>
-      </motion.div>
-
-      {/* Window Frame Border */}
-      <motion.div
-        className="absolute h-[485.975px] w-[946.492px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden lg:block"
-        style={{ marginTop: "12px", rotate: frameRotate }}
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="absolute inset-[-0.2%_-0.1%]">
-          <Image
-            src="/home-assets/window-frame-assets/window-frame.svg"
-            alt=""
-            fill
-            sizes="946px"
-            className="block max-w-none"
-          />
-        </div>
-      </motion.div>
-
-      {/* Scene Image */}
-      <motion.div
-        className="absolute h-[474.881px] w-[928.535px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden lg:block"
-        style={{ marginTop: "15px", scale: sceneScale }}
-        initial={{ scale: 1.1, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      <motion.div 
+        className="absolute inset-0"
+        variants={itemVariants}
       >
         <Image
-          src={sceneImage}
-          alt="Forest scene"
+          src="/home-assets/window-frame-assets/outter-ring.svg"
+          alt=""
           fill
-          sizes="929px"
-          className="block max-w-none object-cover"
+          className="object-contain"
+          priority
         />
       </motion.div>
 
-      {/* Glow Light Effect */}
-      <motion.div
-        className="absolute h-[536.196px] w-[994.563px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden lg:block"
-        style={{ marginTop: "-8px", opacity: glowOpacity }}
-        animate={{
-          scale: [1, 1.03, 1],
-        }}
-        transition={{
-          duration: 3.5,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
+      {/* Main Window Frame */}
+      <motion.div 
+        className="absolute inset-[5%]"
+        variants={itemVariants}
       >
-        <div className="absolute inset-[-31.56%_-17.01%]">
-          <Image
-            src="/home-assets/window-frame-assets/glow-light.webp"
-            alt=""
-            fill
-            sizes="995px"
-            className="block max-w-none object-cover"
-          />
-        </div>
+        <Image
+          src="/home-assets/window-frame-assets/window-frame.svg"
+          alt=""
+          fill
+          className="object-contain"
+          priority
+        />
       </motion.div>
 
-      {/* Label */}
-      <motion.p
-        className="absolute bg-clip-text bg-gradient-to-b font-['Space_Mono',sans-serif] from-[#ffffff] leading-none left-1/2 -translate-x-1/2 not-italic opacity-70 text-[11px] sm:text-[12px] md:text-[13px] to-[#999999] top-[calc(50%+161px)] uppercase w-[83.455px] hidden lg:block"
-        style={{ WebkitTextFillColor: "transparent" }}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 0.7, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      {/* Scene */}
+      <motion.div 
+        className="absolute inset-[10%] overflow-hidden rounded-md"
+        variants={sceneVariants}
       >
-        {label}
-      </motion.p>
+        <Image 
+          src={sceneImage} 
+          alt="Scene" 
+          fill 
+          className="object-cover" 
+          priority
+        />
+      </motion.div>
 
-      {/* Vertical separator lines */}
+      {/* Glow */}
       <motion.div
-        className="absolute h-[151.752px] left-[calc(50%+330px)] top-[0.57px] w-[3.019px] hidden lg:block"
-        initial={{ opacity: 0, scaleY: 0 }}
-        animate={{ opacity: 1, scaleY: 1 }}
-        transition={{ duration: 0.6, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute inset-0 pointer-events-none will-change-opacity"
+        variants={glowVariants}
+        animate="animate"
       >
-        <div className="absolute inset-[0_-99.37%_0_0]">
-          <Image
-            src="/career-assets/group-188.svg"
-            alt=""
-            fill
-            sizes="3px"
-            className="block max-w-none size-full"
-          />
-        </div>
-      </motion.div>
-      <motion.div
-        className="absolute h-[151.752px] left-[calc(50%+697px)] top-[0.57px] w-[3.019px] hidden lg:block"
-        initial={{ opacity: 0, scaleY: 0 }}
-        animate={{ opacity: 1, scaleY: 1 }}
-        transition={{ duration: 0.6, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="absolute inset-[0_-99.37%_0_0]">
-          <Image
-            src="/career-assets/group-188.svg"
-            alt=""
-            fill
-            sizes="3px"
-            className="block max-w-none size-full"
-          />
-        </div>
-      </motion.div>
-      <motion.div
-        className="absolute h-[153.489px] left-[calc(50%+328px)] top-[684.51px] w-[3.019px] hidden lg:block"
-        initial={{ opacity: 0, scaleY: 0 }}
-        animate={{ opacity: 1, scaleY: 1 }}
-        transition={{ duration: 0.6, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="absolute inset-[0_-99.37%_0_0]">
-          <Image
-            src="/career-assets/group-187.svg"
-            alt=""
-            fill
-            sizes="3px"
-            className="block max-w-none size-full"
-          />
-        </div>
-      </motion.div>
-      <motion.div
-        className="absolute h-[153.489px] left-[calc(50%+697px)] top-[684.51px] w-[3.019px] hidden lg:block"
-        initial={{ opacity: 0, scaleY: 0 }}
-        animate={{ opacity: 1, scaleY: 1 }}
-        transition={{ duration: 0.6, delay: 0.75, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="absolute inset-[0_-99.37%_0_0]">
-          <Image
-            src="/career-assets/group-187.svg"
-            alt=""
-            fill
-            sizes="3px"
-            className="block max-w-none size-full"
-          />
-        </div>
+        <Image
+          src="/home-assets/window-frame-assets/glow-light.webp"
+          alt=""
+          fill
+          className="object-contain"
+        />
       </motion.div>
     </motion.div>
   );
