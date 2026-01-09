@@ -17,7 +17,7 @@ export default function Home() {
     const fetchProducts = async () => {
       try {
         const response = await getProducts({ limit: 6 }); // Fetch 6 products for home page
-        if (response.status === "success") {
+        if (response.status === "success" && response.data) {
           const mappedProducts = mapApiProductsToProducts(response.data);
           // Ensure only maximum 6 products are shown
           setProducts(mappedProducts.slice(0, 6));

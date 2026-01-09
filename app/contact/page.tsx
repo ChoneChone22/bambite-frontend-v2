@@ -1,4 +1,4 @@
-// Contact Page
+// Contact Page - Production Ready with Rate Limiting
 "use client";
 
 import { useState } from "react";
@@ -6,28 +6,97 @@ import ContactBackground from "@/components/ContactBackground";
 import ContactFormInput from "@/components/ContactFormInput";
 import ContactInfoSection from "@/components/ContactInfoSection";
 import Image from "next/image";
+import { submitContactForm } from "@/lib/api/contact";
+import type { ContactFormPayload } from "@/lib/api/contact";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    reason: "",
+    reason: "" as ContactFormPayload["reason"] | "",
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [rateLimitInfo, setRateLimitInfo] = useState<{
+    isLimited: boolean;
+    retryAfter?: number;
+  }>({ isLimited: false });
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formData);
-    // TODO: Add API call to submit form
+
+    // Reset states
+    setError(null);
+    setSuccess(false);
+    setRateLimitInfo({ isLimited: false });
+
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.reason || !formData.message) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      // Submit to API
+      const response = await submitContactForm({
+        name: formData.name,
+        email: formData.email,
+        reason: formData.reason as ContactFormPayload["reason"],
+        message: formData.message,
+      });
+
+      if (response.status === "success") {
+        setSuccess(true);
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          reason: "",
+          message: "",
+        });
+
+        // Clear success message after 5 seconds
+        setTimeout(() => setSuccess(false), 5000);
+      }
+    } catch (err) {
+      const error = err as Error & { code?: string; retryAfter?: number };
+
+      // Handle rate limiting
+      if (error.code === "RATE_LIMIT_EXCEEDED") {
+        setRateLimitInfo({
+          isLimited: true,
+          retryAfter: error.retryAfter,
+        });
+        setError(error.message);
+      } else {
+        setError(error.message || "Failed to send message. Please try again.");
+      }
+
+      console.error("Contact form error:", error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
+  // Map display names to API enum values
   const contactReasons = [
-    "General Inquiry",
-    "Product Question",
-    "Collaboration",
-    "Feedback",
-    "Other",
+    { label: "General Inquiry", value: "general_inquiry" as const },
+    { label: "Product Question", value: "product_question" as const },
+    { label: "Collaboration", value: "collaboration" as const },
+    { label: "Feedback", value: "feedback" as const },
+    { label: "Other", value: "other" as const },
   ];
 
   return (
@@ -78,6 +147,31 @@ export default function ContactPage() {
                       Reach us here
                     </p>
 
+                    {/* Success Message */}
+                    {success && (
+                      <div className="w-full p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+                        <p className="font-medium">Message sent successfully!</p>
+                        <p className="text-sm mt-1">
+                          We&apos;ll get back to you as soon as possible.
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Error Message */}
+                    {error && (
+                      <div className="w-full p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                        <p className="font-medium">Error</p>
+                        <p className="text-sm mt-1">{error}</p>
+                        {rateLimitInfo.isLimited && rateLimitInfo.retryAfter && (
+                          <p className="text-xs mt-2 opacity-75">
+                            Please wait {rateLimitInfo.retryAfter} minute
+                            {rateLimitInfo.retryAfter > 1 ? "s" : ""} before
+                            trying again.
+                          </p>
+                        )}
+                      </div>
+                    )}
+
                     <form
                       onSubmit={handleSubmit}
                       className="content-stretch flex flex-col gap-4 md:gap-4 items-start relative shrink-0 w-full"
@@ -91,6 +185,7 @@ export default function ContactPage() {
                         onChange={(value) =>
                           setFormData({ ...formData, name: value })
                         }
+                        disabled={submitting}
                       />
 
                       <ContactFormInput
@@ -102,6 +197,7 @@ export default function ContactPage() {
                         onChange={(value) =>
                           setFormData({ ...formData, email: value })
                         }
+                        disabled={submitting}
                       />
 
                       <ContactFormInput
@@ -110,25 +206,29 @@ export default function ContactPage() {
                         required
                         type="select"
                         options={contactReasons}
-                        value={formData.reason}
+                        value={formData.reason || ""}
                         onChange={(value) =>
-                          setFormData({ ...formData, reason: value })
+                          setFormData({ ...formData, reason: value as ContactFormPayload["reason"] })
                         }
+                        disabled={submitting}
                       />
 
                       <ContactFormInput
                         label="Message"
                         placeholder="Message"
                         type="textarea"
+                        required
                         value={formData.message}
                         onChange={(value) =>
                           setFormData({ ...formData, message: value })
                         }
+                        disabled={submitting}
                       />
 
                       <button
                         type="submit"
-                        className="bg-gradient-to-b border border-[#193551] border-solid content-stretch flex from-[#074980] h-[48px] items-center relative to-[#172743] rounded-lg px-5 mt-3"
+                        disabled={submitting || rateLimitInfo.isLimited}
+                        className="bg-gradient-to-b border border-[#193551] border-solid content-stretch flex from-[#074980] h-[48px] items-center relative to-[#172743] rounded-lg px-5 mt-3 hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <div className="absolute contents inset-[-0.5px_-0.5px_calc(0%-0.5px)_-0.5px]">
                           <div className="absolute inset-[0_0_0_0.57%] mix-blend-overlay opacity-30">
@@ -142,7 +242,11 @@ export default function ContactPage() {
                           </div>
                         </div>
                         <p className="font-['Space_Mono',sans-serif] font-bold leading-none not-italic relative text-[12px] text-white uppercase z-10">
-                          Send Message
+                          {submitting
+                            ? "Sending..."
+                            : rateLimitInfo.isLimited
+                            ? "Rate Limited"
+                            : "Send Message"}
                         </p>
                       </button>
                     </form>
@@ -156,7 +260,7 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* Mobile Bottom Illustration Section (uses page background) */}
+        {/* Mobile Bottom Illustration Section */}
         <div className="relative z-10 mt-12 px-4 sm:px-6 lg:hidden">
           <div className="relative flex items-end justify-between gap-4">
             <p className="font-['Post_No_Bills_Colombo_SemiBold',sans-serif] leading-[0.82] text-[140px] sm:text-[160px] text-[#8fa5ae] opacity-60 whitespace-nowrap -translate-y-1">

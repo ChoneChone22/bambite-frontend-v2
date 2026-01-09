@@ -19,8 +19,6 @@ export default function SmoothScrollProvider({ children }: SmoothScrollProviderP
       gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1,
-      smoothTouch: false, // Disable smooth touch on mobile for better performance
-      touchMultiplier: 2,
       infinite: false,
     });
 

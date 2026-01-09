@@ -1,79 +1,104 @@
-// Food Menu Page
+// Food Menu Page - Production Ready
+// Updated to use dynamic categories and new API structure
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import MenuBackground from "@/components/MenuBackground";
 import FilterPanel from "@/components/FilterPanel";
 import { Product } from "@/components/MenuSection";
 import ProductCard from "@/components/ProductCard";
 import ProductCardSkeleton from "@/components/ProductCardSkeleton";
-import { getProducts } from "@/lib/api/products";
-import {
-  mapApiProductsToProducts,
-  mapFrontendCategoryToApiCategory,
-} from "@/lib/utils/productMapper";
-
-type ProductCategory = Product["category"];
+import { getProducts, getActiveCategories } from "@/lib/api/products";
+import { mapApiProductsToProducts } from "@/lib/utils/productMapper";
+import type { ApiCategory } from "@/lib/types/api.types";
 
 export default function FoodMenuPage() {
   const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
+  const [categories, setCategories] = useState<ApiCategory[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const categories = [
-    "All",
-    "Noodle",
-    "Fried Rice",
-    "Main Dish",
-    "Soup",
-    "Salad (Side Dish)",
-    "Side Dish",
-    "Appetizer",
-  ];
-
-  // Fetch products from API
+  // Fetch active categories from API
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchCategories = async () => {
       try {
-        setLoading(true);
-        setError(null);
+        setCategoriesLoading(true);
+        const response = await getActiveCategories();
 
-        // Build API params - include category filter if not "All"
-        const apiParams: Parameters<typeof getProducts>[0] = {
-          limit: 100, // Fetch up to 100 products
-        };
-
-        // Add category filter if a specific category is selected
-        if (activeCategory !== "All") {
-          apiParams.category = mapFrontendCategoryToApiCategory(
-            activeCategory as ProductCategory
-          );
-        }
-
-        const response = await getProducts(apiParams);
-        if (response.status === "success") {
-          const mappedProducts = mapApiProductsToProducts(response.data);
-          setProducts(mappedProducts);
-        } else {
-          setError("Failed to load products");
+        if (response.status === "success" && response.data) {
+          setCategories(response.data);
         }
       } catch (err) {
-        console.error("Error fetching products:", err);
-        const errorMessage =
-          err instanceof Error
-            ? err.message
-            : "Failed to load products. Please check if the API is running and accessible.";
-        setError(errorMessage);
+        console.error("Error fetching categories:", err);
+        // Continue with empty categories - fallback behavior
       } finally {
-        setLoading(false);
+        setCategoriesLoading(false);
       }
     };
 
+    fetchCategories();
+  }, []);
+
+  // Fetch products from API
+  const fetchProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Build API params
+      const apiParams = {
+        limit: 100, // Fetch up to 100 products
+        ...(activeCategoryId && { category: activeCategoryId }), // Use categoryId for filtering
+      };
+
+      const response = await getProducts(apiParams);
+
+      if (response.status === "success" && response.data) {
+        const mappedProducts = mapApiProductsToProducts(response.data);
+        setProducts(mappedProducts);
+      } else {
+        setError("Failed to load products");
+      }
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Failed to load products. Please check if the API is running and accessible.";
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }, [activeCategoryId]);
+
+  // Fetch products when category changes
+  useEffect(() => {
     fetchProducts();
-  }, [activeCategory]); // Re-fetch when category changes
+  }, [fetchProducts]);
+
+  // Handle category change
+  const handleCategoryChange = (category: string) => {
+    setActiveCategory(category);
+
+    if (category === "All") {
+      setActiveCategoryId(null);
+    } else {
+      // Find category ID from categories list
+      const found = categories.find((cat) => cat.name === category);
+      setActiveCategoryId(found?.id || null);
+    }
+  };
+
+  // Build category list for display
+  const displayCategories = [
+    "All",
+    ...categories.map((cat) => cat.name),
+  ];
 
   return (
     <MenuBackground>
@@ -145,50 +170,72 @@ export default function FoodMenuPage() {
           {/* Mobile Horizontal Category Tabs */}
           <div className="lg:hidden mb-8">
             <div className="bg-[#181e24] rounded-lg py-6 px-8">
-              <div className="flex gap-6 overflow-x-auto scrollbar-hide">
-                {categories.map((category) => {
-                  const isActive =
-                    category.toLowerCase() === activeCategory.toLowerCase();
-                  return (
-                    <button
-                      key={category}
-                      onClick={() => setActiveCategory(category)}
-                      className="flex items-center gap-2 whitespace-nowrap transition-opacity hover:opacity-80"
-                    >
-                      {isActive && (
-                        <div className="relative w-[17px] h-[11px] flex-shrink-0">
-                          <Image
-                            src="/filter-assets/arrow-icon.svg"
-                            alt=""
-                            width={17}
-                            height={11}
-                          />
-                        </div>
-                      )}
-                      <span
-                        className={`font-['Space_Mono',monospace] text-[13px] font-bold uppercase ${
-                          isActive
-                            ? "text-[#489adc] opacity-90"
-                            : "text-white opacity-50"
-                        }`}
+              {categoriesLoading ? (
+                <div className="flex gap-6 overflow-x-auto scrollbar-hide">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-4 w-20 bg-white/10 rounded animate-pulse"
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex gap-6 overflow-x-auto scrollbar-hide">
+                  {displayCategories.map((category) => {
+                    const isActive =
+                      category.toLowerCase() === activeCategory.toLowerCase();
+                    return (
+                      <button
+                        key={category}
+                        onClick={() => handleCategoryChange(category)}
+                        className="flex items-center gap-2 whitespace-nowrap transition-opacity hover:opacity-80"
                       >
-                        {category}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+                        {isActive && (
+                          <div className="relative w-[17px] h-[11px] flex-shrink-0">
+                            <Image
+                              src="/filter-assets/arrow-icon.svg"
+                              alt=""
+                              width={17}
+                              height={11}
+                            />
+                          </div>
+                        )}
+                        <span
+                          className={`font-['Space_Mono',monospace] text-[13px] font-bold uppercase ${
+                            isActive
+                              ? "text-[#489adc] opacity-90"
+                              : "text-white opacity-50"
+                          }`}
+                        >
+                          {category}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[282px_1fr] gap-8 lg:gap-12 pb-16">
             {/* Desktop Filter Panel */}
             <div className="hidden lg:block w-full lg:w-auto">
-              <FilterPanel
-                categories={categories}
-                activeCategory={activeCategory}
-                onCategoryChange={setActiveCategory}
-              />
+              {categoriesLoading ? (
+                <div className="w-[282px] h-[400px] bg-[#181e24] rounded-lg p-6 flex flex-col gap-4">
+                  {Array.from({ length: 7 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-8 bg-white/10 rounded animate-pulse"
+                    />
+                  ))}
+                </div>
+              ) : (
+                <FilterPanel
+                  categories={displayCategories}
+                  activeCategory={activeCategory}
+                  onCategoryChange={handleCategoryChange}
+                />
+              )}
             </div>
 
             {/* Products Grid */}
@@ -200,12 +247,20 @@ export default function FoodMenuPage() {
                   ))}
                 </div>
               ) : error ? (
-                <div className="flex items-center justify-center py-20">
-                  <p className="text-red-600 text-lg">{error}</p>
+                <div className="flex flex-col items-center justify-center py-20 gap-4">
+                  <p className="text-red-600 text-lg text-center">{error}</p>
+                  <button
+                    onClick={fetchProducts}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Retry
+                  </button>
                 </div>
               ) : products.length === 0 ? (
                 <div className="flex items-center justify-center py-20">
-                  <p className="text-[#273b4f] text-lg">No products found</p>
+                  <p className="text-[#273b4f] text-lg">
+                    No products found in this category
+                  </p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">

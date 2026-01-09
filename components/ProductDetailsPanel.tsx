@@ -1,7 +1,7 @@
-// Product Details Panel component
+// Product Details Panel component - Production Ready with Dynamic Options
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
@@ -9,10 +9,12 @@ import SizeSelector from "./SizeSelector";
 import SpiceLevelSelector from "./SpiceLevelSelector";
 import FAQAccordion from "./FAQAccordion";
 
-type SizeOption = {
+type ProductOption = {
   id: string;
-  label: string;
-  price?: number;
+  name: string;
+  displayName: string;
+  values: string[];
+  displayType: "buttons" | "dropdown";
 };
 
 type FAQ = {
@@ -24,15 +26,22 @@ type FAQ = {
 type ProductDetailsPanelProps = {
   productId: string;
   title: string;
-  titleThai: string;
+  titleThai: string | null;
   price: number;
   currency?: string;
   description: string;
+  ingredients?: string | null;
   image?: string;
-  sizes: SizeOption[];
+  options: ProductOption[];
   faqs: FAQ[];
-  onAddToCart?: (quantity: number, sizeId: string) => void;
-  onBuyNow?: (quantity: number, sizeId: string) => void;
+  onAddToCart?: (
+    quantity: number,
+    selectedOptions: Record<string, string>
+  ) => void;
+  onBuyNow?: (
+    quantity: number,
+    selectedOptions: Record<string, string>
+  ) => void;
 };
 
 export default function ProductDetailsPanel({
@@ -42,17 +51,43 @@ export default function ProductDetailsPanel({
   price,
   currency = "THB",
   description,
+  ingredients,
   image,
-  sizes,
+  options,
   faqs,
   onAddToCart,
   onBuyNow,
 }: ProductDetailsPanelProps) {
-  const [selectedSize, setSelectedSize] = useState(sizes[0]?.id || "");
-  const [selectedSpiceLevel, setSelectedSpiceLevel] = useState("normal");
+  // Initialize selected options with first value of each option
+  const getInitialOptions = () => {
+    const initialOptions: Record<string, string> = {};
+    options.forEach((option) => {
+      if (option.values.length > 0) {
+        initialOptions[option.name] = option.values[0];
+      }
+    });
+    return initialOptions;
+  };
+
+  const [selectedOptions, setSelectedOptions] =
+    useState<Record<string, string>>(getInitialOptions);
   const [quantity, setQuantity] = useState(1);
   const { addItem, closeCart } = useCart();
   const router = useRouter();
+
+  // Update selected options when options change
+  useEffect(() => {
+    const newOptions = getInitialOptions();
+    setSelectedOptions(newOptions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options]);
+
+  const handleOptionChange = (optionName: string, value: string) => {
+    setSelectedOptions((prev) => ({
+      ...prev,
+      [optionName]: value,
+    }));
+  };
 
   const handleIncrement = () => {
     setQuantity((prev) => prev + 1);
@@ -63,43 +98,52 @@ export default function ProductDetailsPanel({
   };
 
   const handleAddToCart = () => {
+    // Format options for cart display
+    const optionsString = Object.entries(selectedOptions)
+      .map(([key, value]) => {
+        const option = options.find((opt) => opt.name === key);
+        return `${option?.displayName || key}: ${value}`;
+      })
+      .join(", ");
+
     // Add to cart context
-    const sizeLabel = sizes.find((s) => s.id === selectedSize)?.label || "";
-    // Add all quantity at once (cart context will handle grouping)
     addItem({
       id: productId,
       title,
-      titleThai,
+      titleThai: titleThai || undefined,
       price,
       image: image || "/product-images/product-1.webp",
-      size: sizeLabel,
+      size: optionsString || "Default",
     });
+
     // If quantity > 1, add additional items
     for (let i = 1; i < quantity; i++) {
       addItem({
         id: productId,
         title,
-        titleThai,
+        titleThai: titleThai || undefined,
         price,
         image: image || "/product-images/product-1.webp",
-        size: sizeLabel,
+        size: optionsString || "Default",
       });
     }
-    // Close cart drawer immediately (addItem opens it automatically)
+
+    // Close cart drawer immediately
     closeCart();
-    // Also call optional callback if provided
+
+    // Call optional callback
     if (onAddToCart) {
-      onAddToCart(quantity, selectedSize);
+      onAddToCart(quantity, selectedOptions);
     }
+
     // Redirect to coming-soon page
     router.push("/coming-soon");
   };
 
   const handleBuyNow = () => {
     if (onBuyNow) {
-      onBuyNow(quantity, selectedSize);
+      onBuyNow(quantity, selectedOptions);
     }
-    // Redirect to coming-soon page
     router.push("/coming-soon");
   };
 
@@ -114,7 +158,6 @@ export default function ProductDetailsPanel({
           >
             {title}
           </p>
-          {/* titleThai commented out - API doesn't provide it */}
           {titleThai && (
             <p className="font-['Noto_Sans_Thai_Looped',sans-serif] font-medium relative shrink-0 text-[12px] sm:text-[14px] text-[rgba(255,255,255,0.75)] w-full">
               {titleThai}
@@ -129,35 +172,51 @@ export default function ProductDetailsPanel({
         <p className="font-['DM_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-[12px] sm:text-[14px] text-[rgba(255,255,255,0.55)] w-full">
           {description}
         </p>
+        {/* {ingredients && (
+          <p className="font-['DM_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-[12px] text-[rgba(255,255,255,0.45)] w-full italic">
+            Ingredients: {ingredients}
+          </p>
+        )} */}
       </div>
 
-      {/* Size Selector */}
-      <div className="content-stretch flex flex-col gap-[14px] items-start relative shrink-0 w-full mt-4 pt-2">
-        <p
-          className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#f9f9f9] leading-[0.82] not-italic relative shrink-0 text-[16px] to-[#a6b5c0] w-full pt-1"
-          style={{ WebkitTextFillColor: "transparent" }}
+      {/* Dynamic Options */}
+      {options.map((option, index) => (
+        <div
+          key={option.id}
+          className={`content-stretch flex flex-col gap-[14px] items-start relative shrink-0 w-full ${
+            index === 0 ? "mt-4 pt-2" : "mt-6"
+          }`}
         >
-          Size
-        </p>
-        <SizeSelector
-          options={sizes}
-          selectedSize={selectedSize}
-          onSizeChange={setSelectedSize}
-        />
-      </div>
+          <p
+            className="bg-clip-text bg-gradient-to-b font-['Chillax_Variable',sans-serif] font-semibold from-[#f9f9f9] leading-[0.82] not-italic relative shrink-0 text-[16px] to-[#a6b5c0] w-full pt-1"
+            style={{ WebkitTextFillColor: "transparent" }}
+          >
+            {option.displayName}
+          </p>
 
-      {/* Spice Level Selector */}
-      <div className="w-full pt-2">
-        <SpiceLevelSelector
-          options={[
-            { id: "less", label: "Less" },
-            { id: "normal", label: "Normal" },
-            { id: "more", label: "More" },
-          ]}
-          selectedLevel={selectedSpiceLevel}
-          onLevelChange={setSelectedSpiceLevel}
-        />
-      </div>
+          {option.displayType === "buttons" ? (
+            // Side-by-side buttons for ≤2 options
+            <SizeSelector
+              options={option.values.map((value) => ({
+                id: value,
+                label: value.charAt(0).toUpperCase() + value.slice(1),
+              }))}
+              selectedSize={selectedOptions[option.name] || option.values[0]}
+              onSizeChange={(value) => handleOptionChange(option.name, value)}
+            />
+          ) : (
+            // Dropdown for >2 options
+            <SpiceLevelSelector
+              options={option.values.map((value) => ({
+                id: value,
+                label: value.charAt(0).toUpperCase() + value.slice(1),
+              }))}
+              selectedLevel={selectedOptions[option.name] || option.values[0]}
+              onLevelChange={(value) => handleOptionChange(option.name, value)}
+            />
+          )}
+        </div>
+      ))}
 
       {/* Add to Cart Section */}
       <div className="content-stretch flex flex-col gap-[7px] items-start relative shrink-0 w-full">

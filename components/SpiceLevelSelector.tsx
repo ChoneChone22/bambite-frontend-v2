@@ -58,12 +58,6 @@ export default function SpiceLevelSelector({
   return (
     <div className="flex flex-col gap-[20px] w-full" ref={dropdownRef}>
       {/* Title */}
-      <p
-        className="bg-clip-text bg-gradient-to-b from-[#f9f9f9] to-[#a6b5c0] font-['Chillax_Variable',sans-serif] font-semibold leading-[0.82] text-[20px] pt-1"
-        style={{ WebkitTextFillColor: "transparent" }}
-      >
-        Spice Level
-      </p>
 
       {/* Dropdown Button */}
       <div className="relative w-full">
