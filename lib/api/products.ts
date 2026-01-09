@@ -1,94 +1,73 @@
-// Product API Service
-import axios from "axios";
-
-// API Response Types - API returns categories in this format
-export type ApiCategoryValue =
-  | "NOODLE"
-  | "FRIED_RICE"
-  | "MAIN_DISH"
-  | "SOUP"
-  | "SALAD_SIDE_DISH"
-  | "SIDE_DISH"
-  | "APPETIZER";
-
-// Frontend display category names
-export type ProductCategory =
-  | "Noodle"
-  | "Fried Rice"
-  | "Main Dish"
-  | "Soup"
-  | "Salad (Side Dish)"
-  | "Side Dish"
-  | "Appetizer";
-
-export interface ApiProduct {
-  id: string;
-  name: string;
-  description: string | null;
-  category: ApiCategoryValue; // API returns categories in uppercase with underscores
-  ingredients: string | null;
-  price: string; // Decimal string from API
-  stockQuantity: number;
-  imageUrls: string[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ProductsResponse {
-  status: "success" | "error";
-  data: ApiProduct[];
-  meta: {
-    page: number;
-    limit: number;
-    total: number;
-  };
-}
-
-export interface ErrorResponse {
-  status: "error";
-  message: string;
-}
-
-// Query Parameters
-export interface GetProductsParams {
-  page?: number;
-  limit?: number;
-  search?: string;
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
-  category?: ApiCategoryValue; // Filter by category
-}
+// Product API Service - Production Ready
+// Updated to support new category structure and error handling
+import axios, { AxiosError } from "axios";
+import type {
+  ApiProduct,
+  ProductsResponse,
+  ProductResponse,
+  CategoriesResponse,
+  ApiErrorResponse,
+  RateLimitError,
+} from "../types/api.types";
 
 // Get base URL from environment variable or use default
 const getBaseUrl = () => {
   // Check if we're in browser (client-side)
   if (typeof window !== "undefined") {
-    // Use relative URL for same-origin requests, or set NEXT_PUBLIC_API_URL
-    // If NEXT_PUBLIC_API_URL is set, use it; otherwise use relative path
     return process.env.NEXT_PUBLIC_API_URL || "";
   }
   // Server-side: use full URL or environment variable
   return process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "";
 };
 
-// Create axios instance
+// Create axios instance with production-ready configuration
 const apiClient = axios.create({
   baseURL: getBaseUrl(),
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000, // 10 seconds timeout
+  timeout: 15000, // 15 seconds timeout for production
+  withCredentials: false, // Enable if backend requires credentials
 });
+
+// Add response interceptor for better error handling
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError<ApiErrorResponse>) => {
+    // Enhanced error logging for production debugging
+    if (process.env.NODE_ENV === "development") {
+      console.error("API Error:", {
+        url: error.config?.url,
+        method: error.config?.method,
+        status: error.response?.status,
+        message: error.response?.data?.message || error.message,
+      });
+    }
+    return Promise.reject(error);
+  }
+);
+
+/**
+ * Query Parameters for getting products
+ */
+export interface GetProductsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  category?: string; // NOW: accepts categoryId (UUID) instead of enum
+}
 
 /**
  * Get all products with optional filters
+ * @throws {Error} When request fails or timeout occurs
  */
 export async function getProducts(
   params?: GetProductsParams
 ): Promise<ProductsResponse> {
   try {
     const baseURL = getBaseUrl();
-    // If baseURL already includes /api/v1, use /products, otherwise use /api/v1/products
     const endpoint =
       baseURL && baseURL.includes("/api/v1") ? "/products" : "/api/v1/products";
 
@@ -101,88 +80,128 @@ export async function getProducts(
     const response = await apiClient.get<ProductsResponse>(endpoint, {
       params,
     });
+
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      // Log error details (always log errors for debugging)
-      const errorDetails = {
-        message: error.message,
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        url: error.config?.url,
-        baseURL: error.config?.baseURL,
-      };
+      const axiosError = error as AxiosError<ApiErrorResponse>;
 
-      // Only log full details in development
-      if (process.env.NODE_ENV === "development") {
-        console.error("API Error Details:", {
-          ...errorDetails,
-          data: error.response?.data,
-        });
-      } else {
-        console.error("API Error:", errorDetails);
+      // Handle rate limiting (though products endpoint shouldn't have it)
+      if (axiosError.response?.status === 429) {
+        const rateLimitError = axiosError.response.data as RateLimitError;
+        throw new Error(
+          rateLimitError.message || "Too many requests. Please try again later."
+        );
       }
 
-      // Provide user-friendly error message
+      // User-friendly error messages
       const errorMessage =
-        error.response?.data?.message ||
-        (error.code === "ECONNABORTED"
-          ? "Request timeout. Please try again."
-          : error.message) ||
+        axiosError.response?.data?.message ||
+        (axiosError.code === "ECONNABORTED"
+          ? "Request timeout. Please check your connection."
+          : axiosError.code === "ERR_NETWORK"
+          ? "Network error. Please check your internet connection."
+          : axiosError.message) ||
         `Failed to fetch products: ${
-          error.response?.status || "Network Error"
+          axiosError.response?.status || "Unknown Error"
         }`;
 
       throw new Error(errorMessage);
     }
-    console.error("Unknown error:", error);
-    throw error;
+
+    // Unknown error type
+    console.error("Unknown error fetching products:", error);
+    throw new Error("An unexpected error occurred while fetching products.");
   }
 }
 
 /**
  * Get a single product by ID
- * Note: This endpoint is not in the provided docs, but we'll create a helper
- * that filters from getAllProducts or you can add a GET /products/:id endpoint
+ * @param id - Product UUID
+ * @returns Product or null if not found
  */
 export async function getProductById(id: string): Promise<ApiProduct | null> {
   try {
     const baseURL = getBaseUrl();
-    // If baseURL already includes /api/v1, use /products/:id, otherwise use /api/v1/products/:id
     const endpoint =
       baseURL && baseURL.includes("/api/v1")
         ? `/products/${id}`
         : `/api/v1/products/${id}`;
 
-    // If backend has GET /products/:id endpoint, use it:
-    // const response = await apiClient.get<{ status: string; data: ApiProduct }>(endpoint);
-    // return response.data.data;
+    const response = await apiClient.get<ProductResponse>(endpoint);
 
-    // Try to fetch by ID endpoint first
-    try {
-      const response = await apiClient.get<{
-        status: string;
-        data: ApiProduct;
-      }>(endpoint);
-      if (response.data.status === "success" && response.data.data) {
-        return response.data.data;
-      }
-    } catch {
-      // If endpoint doesn't exist, fall back to fetching all and filtering
-      // This is not ideal for production but works as a fallback
-      if (process.env.NODE_ENV === "development") {
-        console.warn(
-          "GET /products/:id endpoint not available, using fallback method"
-        );
-      }
+    if (response.data.status === "success" && response.data.data) {
+      return response.data.data;
     }
 
-    // Fallback: fetch all and filter (not ideal for production)
-    const response = await getProducts({ limit: 1000 });
-    const product = response.data.find((p) => p.id === id);
-    return product || null;
+    return null;
   } catch (error) {
-    console.error("Error fetching product:", error);
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError<ApiErrorResponse>;
+
+      // 404 is expected for non-existent products
+      if (axiosError.response?.status === 404) {
+        return null;
+      }
+
+      // Log other errors
+      console.error("Error fetching product by ID:", {
+        id,
+        status: axiosError.response?.status,
+        message: axiosError.response?.data?.message || axiosError.message,
+      });
+    } else {
+      console.error("Unknown error fetching product by ID:", error);
+    }
+
     return null;
   }
 }
+
+/**
+ * Get active categories for filtering
+ * @returns Array of active categories
+ */
+export async function getActiveCategories(): Promise<CategoriesResponse> {
+  try {
+    const baseURL = getBaseUrl();
+    const endpoint =
+      baseURL && baseURL.includes("/api/v1")
+        ? "/categories/active"
+        : "/api/v1/categories/active";
+
+    if (process.env.NODE_ENV === "development") {
+      console.log("Fetching active categories from:", baseURL + endpoint);
+    }
+
+    const response = await apiClient.get<CategoriesResponse>(endpoint);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError<ApiErrorResponse>;
+
+      const errorMessage =
+        axiosError.response?.data?.message ||
+        "Failed to fetch categories. Using fallback.";
+
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Categories fetch failed:", errorMessage);
+      }
+
+      // Return empty success response as fallback
+      return {
+        status: "success",
+        data: [],
+      };
+    }
+
+    // Return empty success response as fallback
+    return {
+      status: "success",
+      data: [],
+    };
+  }
+}
+
+// Export types for convenience
+export type { ApiProduct, ProductsResponse };

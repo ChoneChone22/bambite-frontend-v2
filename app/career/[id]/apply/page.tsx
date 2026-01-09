@@ -1,8 +1,8 @@
-// Application Form Page
+// Application Form Page - Production Ready with Real API Data
 "use client";
 
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
 import JobDetailBackground from "@/components/JobDetailBackground";
 import BackButton from "@/components/BackButton";
 import FormInput from "@/components/FormInput";
@@ -10,59 +10,21 @@ import FormTextarea from "@/components/FormTextarea";
 import UploadCVButton from "@/components/UploadCVButton";
 import JobDetailsCard from "@/components/JobDetailsCard";
 import Image from "next/image";
-
-// Sample job data - replace with actual API call
-const getJobById = (id: string) => {
-  const jobs: Record<
-    string,
-    {
-      id: string;
-      title: string;
-      category: string;
-      workingHours: string;
-      contract: string;
-      salary: string;
-      closeDate: string;
-    }
-  > = {
-    "1": {
-      id: "1",
-      title: "Office Staff",
-      category: "Office",
-      workingHours: "9am - 5pm",
-      contract: "No",
-      salary: "Negotiate",
-      closeDate: "18 Dec 2025",
-    },
-    "2": {
-      id: "2",
-      title: "Office Staff",
-      category: "Office",
-      workingHours: "9am - 5pm",
-      contract: "No",
-      salary: "Negotiate",
-      closeDate: "18 Dec 2025",
-    },
-    "3": {
-      id: "3",
-      title: "Office Staff",
-      category: "Office",
-      workingHours: "9am - 5pm",
-      contract: "No",
-      salary: "Negotiate",
-      closeDate: "18 Dec 2025",
-    },
-  };
-
-  return jobs[id] || jobs["1"];
-};
+import { getJobPostById } from "@/lib/api/jobPosts";
+import { submitJobApplication } from "@/lib/api/jobApplication";
+import type { ApiJobPost } from "@/lib/types/api.types";
 
 export default function ApplicationFormPage() {
   const params = useParams();
   const router = useRouter();
-  const jobId = (params?.id as string) || "1";
-  const job = getJobById(jobId);
+  const jobId = params?.id as string;
 
+  // Job data state
+  const [jobPost, setJobPost] = useState<ApiJobPost | null>(null);
+  const [jobLoading, setJobLoading] = useState(true);
+  const [jobError, setJobError] = useState<string | null>(null);
+
+  // Form state
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -74,6 +36,56 @@ export default function ApplicationFormPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Fetch job post from API
+  useEffect(() => {
+    const fetchJobPost = async () => {
+      if (!jobId) {
+        router.push("/career");
+        return;
+      }
+
+      try {
+        setJobLoading(true);
+        setJobError(null);
+
+        const data = await getJobPostById(jobId);
+
+        if (!data) {
+          setJobError("Job post not found");
+          setTimeout(() => router.push("/career"), 2000);
+          return;
+        }
+
+        setJobPost(data);
+      } catch (err) {
+        console.error("Error fetching job post:", err);
+        const errorMessage =
+          err instanceof Error
+            ? err.message
+            : "Failed to load job post. Please try again.";
+        setJobError(errorMessage);
+      } finally {
+        setJobLoading(false);
+      }
+    };
+
+    fetchJobPost();
+  }, [jobId, router]);
+
+  // Format date for display
+  const formatDate = (dateString: string): string => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+    } catch {
+      return "Until filled";
+    }
+  };
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -122,22 +134,19 @@ export default function ApplicationFormPage() {
   };
 
   const handleFileSelect = (file: File) => {
-    // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    // Validate file size (max 3MB as per backend API)
+    const maxSize = 3 * 1024 * 1024; // 3MB
     if (file.size > maxSize) {
-      setSubmitError("File size must be less than 5MB");
+      setSubmitError("File size must be less than 3MB");
       return;
     }
-    // Validate file type
-    const allowedTypes = [
-      "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ];
-    if (!allowedTypes.includes(file.type)) {
-      setSubmitError("Please upload a PDF or Word document");
+    
+    // Validate file type (PDF only as per backend API)
+    if (file.type !== "application/pdf") {
+      setSubmitError("Please upload a PDF file only");
       return;
     }
+    
     setCvFile(file);
     setSubmitError(null);
   };
@@ -153,317 +162,311 @@ export default function ApplicationFormPage() {
     setIsSubmitting(true);
 
     try {
-      // Create FormData for file upload
+      // Create FormData for API submission
+      // Backend expects: jobPostId, name, email, joiningReason, additionalQuestion, coverLetter, uploadedFile
       const submitData = new FormData();
+      submitData.append("jobPostId", jobId);
       submitData.append("name", formData.name);
       submitData.append("email", formData.email);
-      submitData.append("interest", formData.interest);
-      submitData.append("pressure", formData.pressure);
+      submitData.append("joiningReason", formData.interest); // Map interest to joiningReason
+      submitData.append("additionalQuestion", formData.pressure); // Map pressure to additionalQuestion
       submitData.append("coverLetter", formData.coverLetter);
-      submitData.append("jobId", jobId);
+      
       if (cvFile) {
-        submitData.append("cv", cvFile);
+        submitData.append("uploadedFile", cvFile); // Backend expects 'uploadedFile'
       }
 
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/career/apply', {
-      //   method: 'POST',
-      //   body: submitData,
-      // });
-      // if (!response.ok) throw new Error('Submission failed');
+      // Submit to API
+      const response = await submitJobApplication(submitData);
 
-      console.log("Form submitted:", { ...formData, cvFile, jobId });
+      console.log("Application submitted successfully:", response);
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Redirect to new success page
+      // Redirect to success page
       router.push(`/career/${jobId}/apply/success?jobId=${jobId}`);
     } catch (error) {
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : "Failed to submit application. Please try again."
-      );
+      console.error("Error submitting application:", error);
+      
+      // Handle different error types
+      const errorObj = error as Error & { code?: string; retryAfter?: number };
+      
+      if (errorObj.code === "RATE_LIMIT_EXCEEDED") {
+        const retryMinutes = Math.ceil((errorObj.retryAfter || 15) / 60);
+        setSubmitError(
+          `Too many applications submitted. Please try again in ${retryMinutes} minutes.`
+        );
+      } else {
+        setSubmitError(
+          errorObj.message || "Failed to submit application. Please try again."
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (!job) {
-    router.push("/career");
-    return null;
+  // Loading skeleton
+  if (jobLoading) {
+    return (
+      <JobDetailBackground>
+        <div className="min-h-screen w-full flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
+            <p className="text-white/70 text-lg">Loading application form...</p>
+          </div>
+        </div>
+      </JobDetailBackground>
+    );
   }
+
+  // Error state
+  if (jobError || !jobPost) {
+    return (
+      <JobDetailBackground>
+        <div className="min-h-screen w-full flex items-center justify-center px-4">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg max-w-md">
+            <p className="font-medium mb-2">Error Loading Job Post</p>
+            <p className="text-sm mb-4">{jobError || "Job post not found"}</p>
+            <button
+              onClick={() => router.push("/career")}
+              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors text-sm font-medium"
+            >
+              Back to Career Page
+            </button>
+          </div>
+        </div>
+      </JobDetailBackground>
+    );
+  }
+
+  // Map API data to component format
+  const job = {
+    id: jobPost.id,
+    title: jobPost.title,
+    category: jobPost.placeTag?.name || "Location not specified",
+    workingHours: jobPost.jobDetails.workingHours || "Flexible",
+    contract: jobPost.jobDetails.contract ? "Yes" : "No",
+    salary: jobPost.jobDetails.salary || "Negotiate",
+    closeDate: formatDate(jobPost.jobDetails.closeDate),
+  };
 
   return (
     <JobDetailBackground>
-      {/* Mobile Layout */}
-      <div className="block lg:hidden w-full min-h-screen bg-transparent pt-8 px-4 pb-8">
-        {/* Back Button at top left */}
-        <div className="mb-4">
-          <BackButton />
-        </div>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-8 w-full">
-          {/* Title and Instruction */}
-          <div className="flex flex-col gap-2 w-full">
-            <p
-              className="bg-clip-text bg-linear-to-b font-['Chillax_Variable',sans-serif] from-[#f9f9f9] to-[#a6b5c0] text-[24px] font-semibold leading-tight tracking-[-0.5px] w-full"
-              style={{ WebkitTextFillColor: "transparent" }}
-            >
-              {job.title} Application Form
-            </p>
-            <p className="font-['DM_Sans',sans-serif] text-[13px] text-[rgba(255,255,255,0.55)]">
-              Please fill in all forms.
-            </p>
+      <div
+        className="min-h-screen w-full overflow-x-hidden pb-10"
+        style={{ margin: 0, padding: 0 }}
+      >
+        {/* Mobile/Tablet Layout (hidden on lg+) */}
+        <div className="lg:hidden w-full pb-6">
+          {/* Back Button */}
+          <div className="mb-5 mt-12 px-6">
+            <BackButton />
           </div>
-          {/* Form Fields */}
-          <div className="flex flex-col gap-4 w-full">
-            <FormInput
-              label="Name"
-              name="name"
-              type="text"
-              placeholder="Name"
-              required
-              value={formData.name}
-              onChange={(value) => handleInputChange("name", value)}
-              error={errors.name}
-            />
-            <FormInput
-              label="Email"
-              name="email"
-              type="email"
-              placeholder="Email"
-              required
-              value={formData.email}
-              onChange={(value) => handleInputChange("email", value)}
-              error={errors.email}
-            />
-            <FormTextarea
-              label="Why are you interested in joining BamBite?"
-              name="interest"
-              placeholder="Your respond"
-              rows={5}
-              value={formData.interest}
-              onChange={(value) => handleInputChange("interest", value)}
-              error={errors.interest}
-            />
-            <FormTextarea
-              label="How do you handle multiple tasks or work under pressure?"
-              name="pressure"
-              placeholder="Your respond"
-              rows={5}
-              value={formData.pressure}
-              onChange={(value) => handleInputChange("pressure", value)}
-              error={errors.pressure}
-            />
-            <FormTextarea
-              label="Cover Letter"
-              name="coverLetter"
-              placeholder="Write cover letter here"
-              rows={5}
-              value={formData.coverLetter}
-              onChange={(value) => handleInputChange("coverLetter", value)}
-              error={errors.coverLetter}
-            />
-            <UploadCVButton onFileSelect={handleFileSelect} />
-            {cvFile && (
-              <p className="text-sm text-green-400">
-                CV uploaded: {cvFile.name}
+
+          {/* Form Header */}
+          <div className="flex flex-col gap-[10px] mb-10 px-6">
+            <h1 className="font-['Chillax_Variable',sans-serif] font-semibold text-[32px] leading-[0.95] bg-gradient-to-b from-[#f9f9f9] to-[#a6b5c0] bg-clip-text text-transparent">
+              {job.title}
+            </h1>
+            <div className="inline-flex bg-[#2176bb] px-[5px] py-[3px] rounded-[4px] self-start">
+              <p className="font-['Space_Mono',sans-serif] font-bold text-[13px] leading-none text-white uppercase">
+                {job.category}
               </p>
-            )}
-          </div>
-          {/* Error Message */}
-          {submitError && (
-            <div className="bg-red-500/20 border border-red-500 rounded-lg p-4">
-              <p className="text-red-400 text-sm">{submitError}</p>
             </div>
-          )}
-          {/* Apply Now Button - match /career/[id] mobile style */}
-          <div className="w-full">
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-8 px-6">
+            {/* Submit Error */}
+            {submitError && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                <span className="block sm:inline">{submitError}</span>
+              </div>
+            )}
+
+            {/* Name Field */}
+            <div>
+              <FormInput
+                label="Name"
+                name="name"
+                placeholder="Your name"
+                value={formData.name}
+                onChange={(value) => handleInputChange("name", value)}
+                error={errors.name}
+              />
+            </div>
+
+            {/* Email Field */}
+            <div>
+              <FormInput
+                label="Email"
+                name="email"
+                placeholder="Your email"
+                type="email"
+                value={formData.email}
+                onChange={(value) => handleInputChange("email", value)}
+                error={errors.email}
+              />
+            </div>
+
+            {/* Interest Field */}
+            <div>
+              <FormTextarea
+                label="Why are you interested in joining Bam's?"
+                name="interest"
+                placeholder="Tell us why you want to join our team"
+                value={formData.interest}
+                onChange={(value) => handleInputChange("interest", value)}
+                error={errors.interest}
+              />
+            </div>
+
+            {/* Pressure Field */}
+            <div>
+              <FormTextarea
+                label="How do you handle pressure and tight deadlines?"
+                name="pressure"
+                placeholder="Share your experience with handling pressure"
+                value={formData.pressure}
+                onChange={(value) => handleInputChange("pressure", value)}
+                error={errors.pressure}
+              />
+            </div>
+
+            {/* Cover Letter */}
+            <div>
+              <FormTextarea
+                label="Cover Letter"
+                name="coverLetter"
+                placeholder="Write your cover letter here"
+                value={formData.coverLetter}
+                onChange={(value) => handleInputChange("coverLetter", value)}
+                error={errors.coverLetter}
+                rows={8}
+              />
+            </div>
+
+            {/* CV Upload */}
+            <div>
+              <label className="font-['Space_Mono',sans-serif] font-bold text-[13px] leading-none text-[rgba(255,255,255,0.9)] uppercase mb-3 block">
+                Upload CV (Optional - PDF only, max 3MB)
+              </label>
+              <UploadCVButton
+                onFileSelect={handleFileSelect}
+              />
+            </div>
+
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-linear-to-b border border-[#193551] border-solid flex from-[#074980] h-13.5 items-center relative to-[#172743] overflow-hidden cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed rounded-b-lg px-2"
-              aria-label="Submit application"
+              className="w-full bg-[#2176bb] hover:bg-[#1a5f99] disabled:bg-gray-400 text-white font-['DM_Sans',sans-serif] font-bold text-[16px] py-4 px-6 rounded-lg transition-colors duration-200"
             >
-              <div className="flex flex-row justify-between items-center w-full px-2">
-                <span className="font-['Space_Mono',sans-serif] font-bold text-[13px] text-[rgba(255,255,255,0.9)] uppercase tracking-wide">
-                  {isSubmitting ? "Submitting..." : "Apply Now"}
-                </span>
-                <span className="ml-2 flex items-center">
-                  <Image
-                    src="/career-assets/arrow-left-icon.svg"
-                    alt="Arrow"
-                    width={28}
-                    height={28}
-                    className="rotate-180"
-                  />
-                </span>
-              </div>
+              {isSubmitting ? "Submitting..." : "Submit Application"}
             </button>
-          </div>
-        </form>
-        {/* Job Details Card below form for mobile */}
-        <div className="mt-8">
-          <JobDetailsCard
-            details={{
-              workingHours: job.workingHours,
-              contract: job.contract,
-              salary: job.salary,
-              closeDate: job.closeDate,
-            }}
-          />
+          </form>
         </div>
-      </div>
-      {/* Desktop Layout (unchanged) */}
-      <div className="hidden lg:block min-h-screen w-full overflow-x-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
+
+        {/* Desktop Layout (hidden on mobile/tablet) */}
+        <div className="hidden lg:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
+          {/* Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start relative pt-40 pl-44">
-            <div className="w-full lg:max-w-150 relative">
+            {/* Left Column - Form */}
+            <div className="w-full lg:max-w-[600px] relative">
+              {/* Back Button positioned at the left */}
               <div className="absolute -left-96 -top-14">
                 <BackButton />
               </div>
-              <form
-                onSubmit={handleSubmit}
-                className="content-stretch flex flex-col gap-16.25 items-start w-full"
-              >
-                <div className="content-stretch flex flex-col gap-2.5 items-start relative shrink-0 w-full">
-                  <p
-                    className="bg-clip-text bg-linear-to-b font-['Chillax_Variable',sans-serif] from-[#f9f9f9] leading-none min-w-full not-italic relative shrink-0 text-[32px] sm:text-[36px] md:text-[40px] to-[#a6b5c0] tracking-[-0.8px] w-min"
-                    style={{ WebkitTextFillColor: "transparent" }}
-                  >
-                    {job.title} Application Form
-                  </p>
-                  <p className="font-['DM_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-[12px] sm:text-[13px] md:text-[14px] text-[rgba(255,255,255,0.55)] text-nowrap">
-                    Please fill in all forms.
+
+              {/* Form Header */}
+              <div className="flex flex-col gap-[10px] mb-10">
+                <h1 className="font-['Chillax_Variable',sans-serif] font-semibold text-[48px] leading-[0.95] bg-gradient-to-b from-[#f9f9f9] to-[#a6b5c0] bg-clip-text text-transparent">
+                  {job.title}
+                </h1>
+                <div className="inline-flex bg-[#2176bb] px-[5px] py-[3px] rounded-[4px] self-start">
+                  <p className="font-['Space_Mono',sans-serif] font-bold text-[13px] leading-none text-white uppercase">
+                    {job.category}
                   </p>
                 </div>
-                <div className="content-stretch flex flex-col gap-5 items-start relative shrink-0 w-full">
-                  <FormInput
-                    label="Name"
-                    name="name"
-                    type="text"
-                    placeholder="Name"
-                    required
-                    value={formData.name}
-                    onChange={(value) => handleInputChange("name", value)}
-                    error={errors.name}
-                  />
-                  <FormInput
-                    label="Email"
-                    name="email"
-                    type="email"
-                    placeholder="Email"
-                    required
-                    value={formData.email}
-                    onChange={(value) => handleInputChange("email", value)}
-                    error={errors.email}
-                  />
-                  <FormTextarea
-                    label="Why are you interested in joining BamBite?"
-                    name="interest"
-                    placeholder="Your respond"
-                    rows={5}
-                    value={formData.interest}
-                    onChange={(value) => handleInputChange("interest", value)}
-                    error={errors.interest}
-                  />
-                  <FormTextarea
-                    label="How do you handle multiple tasks or work under pressure?"
-                    name="pressure"
-                    placeholder="Your respond"
-                    rows={5}
-                    value={formData.pressure}
-                    onChange={(value) => handleInputChange("pressure", value)}
-                    error={errors.pressure}
-                  />
-                  <FormTextarea
-                    label="Cover Letter"
-                    name="coverLetter"
-                    placeholder="Write cover letter here"
-                    rows={5}
-                    value={formData.coverLetter}
-                    onChange={(value) =>
-                      handleInputChange("coverLetter", value)
-                    }
-                    error={errors.coverLetter}
-                  />
-                  <UploadCVButton onFileSelect={handleFileSelect} />
-                  {cvFile && (
-                    <p className="text-sm text-green-400">
-                      CV uploaded: {cvFile.name}
-                    </p>
-                  )}
-                </div>
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Submit Error */}
                 {submitError && (
-                  <div className="bg-red-500/20 border border-red-500 rounded-lg p-4">
-                    <p className="text-red-400 text-sm">{submitError}</p>
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                    <span className="block sm:inline">{submitError}</span>
                   </div>
                 )}
-                <div className="w-full">
-                  <div className="flex-none rotate-180 w-full">
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full bg-linear-to-b border border-[#193551] border-solid content-stretch flex from-[#074980] h-14.5 items-center relative to-[#172743] overflow-hidden cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                      aria-label="Submit application"
-                    >
-                      {/* Texture overlays */}
-                      <div className="absolute contents inset-[-0.5px_calc(-0.08%-0.5px)_calc(0%-0.5px)_-0.5px]">
-                        <div className="absolute inset-[0_-0.08%_0_0.57%] mix-blend-overlay opacity-30">
-                          <Image
-                            src="/product-assets/metal-overlay.webp"
-                            alt=""
-                            fill
-                            sizes="600px"
-                            className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full"
-                          />
-                        </div>
-                        <div className="absolute flex inset-[0_-0.08%_0_0] items-center justify-center mix-blend-lighten">
-                          <div className="flex-none h-14.5 -scale-y-100 w-full">
-                            <div className="opacity-[0.34] relative size-full">
-                              <Image
-                                src="/product-assets/grunge-overlay.webp"
-                                alt=""
-                                fill
-                                sizes="600px"
-                                className="absolute inset-0 max-w-none object-50%-50% object-cover pointer-events-none size-full"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="absolute flex inset-[0_-0.08%_0_0] items-center justify-center mix-blend-soft-light">
-                          <div className="flex-none h-14.5 rotate-180 -scale-y-100 w-full">
-                            <div
-                              className="opacity-30 size-full"
-                              style={{
-                                backgroundImage:
-                                  "linear-gradient(rgba(128, 128, 128, 0.6) 0%, rgb(128, 128, 128) 19.684%, rgba(128, 128, 128, 0.3) 70.46%, rgb(128, 128, 128) 100%)",
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="basis-0 content-stretch flex gap-6 grow h-14.5 items-center min-h-px min-w-px pl-3 pr-5 py-0 relative shrink-0 z-10">
-                        <div className="basis-0 flex grow items-center justify-center min-h-px min-w-px relative shrink-0">
-                          <div className="flex-none rotate-180 w-full">
-                            <div className="content-stretch flex gap-4 items-center relative w-full">
-                              <p className="font-['Space_Mono',sans-serif] font-bold leading-none not-italic relative shrink-0 text-[11px] sm:text-[12px] md:text-[12.583px] text-[rgba(255,255,255,0.9)] text-nowrap uppercase">
-                                {isSubmitting ? "Submitting..." : "Apply Now"}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="absolute inset-[-0.5px] pointer-events-none shadow-[inset_3.77px_3.77px_1.153px_0px_rgba(226,239,255,0.12)]" />
-                    </button>
-                  </div>
+
+                <FormInput
+                  label="Name"
+                  name="name"
+                  placeholder="Your name"
+                  value={formData.name}
+                  onChange={(value) => handleInputChange("name", value)}
+                  error={errors.name}
+                />
+
+                <FormInput
+                  label="Email"
+                  name="email"
+                  placeholder="Your email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(value) => handleInputChange("email", value)}
+                  error={errors.email}
+                />
+
+                <FormTextarea
+                  label="Why are you interested in joining Bam's?"
+                  name="interest"
+                  placeholder="Tell us why you want to join our team"
+                  value={formData.interest}
+                  onChange={(value) => handleInputChange("interest", value)}
+                  error={errors.interest}
+                />
+
+                <FormTextarea
+                  label="How do you handle pressure and tight deadlines?"
+                  name="pressure"
+                  placeholder="Share your experience with handling pressure"
+                  value={formData.pressure}
+                  onChange={(value) => handleInputChange("pressure", value)}
+                  error={errors.pressure}
+                />
+
+                <FormTextarea
+                  label="Cover Letter"
+                  name="coverLetter"
+                  placeholder="Write your cover letter here"
+                  value={formData.coverLetter}
+                  onChange={(value) => handleInputChange("coverLetter", value)}
+                  error={errors.coverLetter}
+                  rows={8}
+                />
+
+                <div>
+                  <label className="font-['Space_Mono',sans-serif] font-bold text-[13px] leading-none text-[rgba(255,255,255,0.9)] uppercase mb-3 block">
+                    Upload CV (Optional - PDF only, max 3MB)
+                  </label>
+                  <UploadCVButton
+                    onFileSelect={handleFileSelect}
+                  />
                 </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-[#2176bb] hover:bg-[#1a5f99] disabled:bg-gray-400 text-white font-['DM_Sans',sans-serif] font-bold text-[18px] py-4 px-6 rounded-lg transition-colors duration-200"
+                >
+                  {isSubmitting ? "Submitting..." : "Submit Application"}
+                </button>
               </form>
             </div>
-            {/* Desktop Job Details Card */}
+
+            {/* Right Column - Job Details Card */}
             <div
-              className="hidden lg:block w-full lg:relative lg:max-w-74.5 lg:ml-auto bg-cover bg-center bg-no-repeat rounded-lg overflow-hidden"
+              className="w-full lg:relative lg:max-w-[298px] lg:ml-auto bg-cover bg-center bg-no-repeat rounded-lg overflow-hidden"
               style={{
                 backgroundImage: "url(/career-assets/job-detail-bg.webp)",
               }}
@@ -478,9 +481,7 @@ export default function ApplicationFormPage() {
               />
             </div>
           </div>
-          {/* Mobile Job Details Card below form */}
         </div>
-        {/* JobDetailsCard is now only visible on lg and up */}
       </div>
     </JobDetailBackground>
   );
