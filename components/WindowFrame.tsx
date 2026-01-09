@@ -64,7 +64,7 @@ export default function WindowFrame({
       y: 0,
       transition: {
         duration: shouldReduceMotion ? 0.5 : 1.5,
-        ease: [0.25, 0.46, 0.45, 0.94], // Custom easing for smooth animation
+        ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number], // Custom easing for smooth animation
         delayChildren: 0.3,
         staggerChildren: 0.2,
       },
@@ -78,7 +78,7 @@ export default function WindowFrame({
       scale: 1,
       transition: {
         duration: shouldReduceMotion ? 0.2 : 0.8,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
       },
     },
   };
@@ -90,7 +90,7 @@ export default function WindowFrame({
       scale: 1,
       transition: {
         duration: shouldReduceMotion ? 0.3 : 1,
-        ease: "easeOut",
+        ease: [0.32, 0, 0.67, 0] as [number, number, number, number], // easeOut cubic-bezier
       },
     },
   };
@@ -101,7 +101,7 @@ export default function WindowFrame({
       transition: {
         duration: 3,
         repeat: Infinity,
-        ease: "easeInOut",
+        ease: [0.42, 0, 0.58, 1] as [number, number, number, number], // easeInOut cubic-bezier
       },
     },
   };

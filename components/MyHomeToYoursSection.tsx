@@ -103,7 +103,7 @@ export default function MyHomeToYoursSection({
       y: 0,
       transition: {
         duration: shouldReduceMotion ? 0.3 : 0.8,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
       },
     },
   };
@@ -116,7 +116,7 @@ export default function MyHomeToYoursSection({
       transition: {
         duration: shouldReduceMotion ? 0.3 : 0.6,
         delay: 0.2,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
       },
     },
   };

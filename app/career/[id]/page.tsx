@@ -1,107 +1,120 @@
-// Job Detail Page
+// Job Detail Page - Production Ready with Real API Data
 "use client";
 
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import JobDetailBackground from "@/components/JobDetailBackground";
 import BackButton from "@/components/BackButton";
 import JobDetailContent from "@/components/JobDetailContent";
 import JobDetailsCard from "@/components/JobDetailsCard";
 import ApplyNowButton from "@/components/ApplyNowButton";
-
-// Sample job data - replace with actual API call
-const getJobById = (id: string) => {
-  const jobs: Record<
-    string,
-    {
-      id: string;
-      title: string;
-      category: string;
-      workingHours: string;
-      contract: string;
-      salary: string;
-      closeDate: string;
-      tasks: string[];
-      qualifications: string[];
-    }
-  > = {
-    "1": {
-      id: "1",
-      title: "Office Staff",
-      category: "Office",
-      workingHours: "9am - 5pm",
-      contract: "No",
-      salary: "Negotiate",
-      closeDate: "18 Dec 2025",
-      tasks: [
-        "Handle data entry and record keeping, maintaining important information accurately.",
-        "Manage email correspondence, scheduling, and calendar management.",
-        "Prepare documents, organize filing systems, and operate office equipment.",
-        "Provide meeting support and communication, including responding to customer inquiries.",
-        "Oversee office supplies and assist with general administrative workflows.",
-      ],
-      qualifications: [
-        "Strong computer and digital skills.",
-        "Proficiency in English and Thai; Thai language ability is an advantage.",
-        "Ability to work well with others, manage time effectively, and perform tasks with accuracy and attention to detail.",
-      ],
-    },
-    "2": {
-      id: "2",
-      title: "Office Staff",
-      category: "Office",
-      workingHours: "9am - 5pm",
-      contract: "No",
-      salary: "Negotiate",
-      closeDate: "18 Dec 2025",
-      tasks: [
-        "Handle data entry and record keeping, maintaining important information accurately.",
-        "Manage email correspondence, scheduling, and calendar management.",
-        "Prepare documents, organize filing systems, and operate office equipment.",
-        "Provide meeting support and communication, including responding to customer inquiries.",
-        "Oversee office supplies and assist with general administrative workflows.",
-      ],
-      qualifications: [
-        "Strong computer and digital skills.",
-        "Proficiency in English and Thai; Thai language ability is an advantage.",
-        "Ability to work well with others, manage time effectively, and perform tasks with accuracy and attention to detail.",
-      ],
-    },
-    "3": {
-      id: "3",
-      title: "Office Staff",
-      category: "Office",
-      workingHours: "9am - 5pm",
-      contract: "No",
-      salary: "Negotiate",
-      closeDate: "18 Dec 2025",
-      tasks: [
-        "Handle data entry and record keeping, maintaining important information accurately.",
-        "Manage email correspondence, scheduling, and calendar management.",
-        "Prepare documents, organize filing systems, and operate office equipment.",
-        "Provide meeting support and communication, including responding to customer inquiries.",
-        "Oversee office supplies and assist with general administrative workflows.",
-      ],
-      qualifications: [
-        "Strong computer and digital skills.",
-        "Proficiency in English and Thai; Thai language ability is an advantage.",
-        "Ability to work well with others, manage time effectively, and perform tasks with accuracy and attention to detail.",
-      ],
-    },
-  };
-
-  return jobs[id] || jobs["1"];
-};
+import { getJobPostById } from "@/lib/api/jobPosts";
+import type { ApiJobPost } from "@/lib/types/api.types";
 
 export default function JobDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const jobId = (params?.id as string) || "1";
-  const job = getJobById(jobId);
+  const jobId = params?.id as string;
 
-  if (!job) {
-    router.push("/career");
-    return null;
-  }
+  const [jobPost, setJobPost] = useState<ApiJobPost | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch job post from API
+  useEffect(() => {
+    const fetchJobPost = async () => {
+      if (!jobId) {
+        router.push("/career");
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        const data = await getJobPostById(jobId);
+
+        if (!data) {
+          setError("Job post not found");
+          setTimeout(() => router.push("/career"), 2000);
+          return;
+        }
+
+        setJobPost(data);
+      } catch (err) {
+        console.error("Error fetching job post:", err);
+        const errorMessage =
+          err instanceof Error
+            ? err.message
+            : "Failed to load job post. Please try again.";
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobPost();
+  }, [jobId, router]);
+
+  // Format date for display
+  const formatDate = (dateString: string): string => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+    } catch {
+      return "Until filled";
+    }
+  };
+
+  // Loading skeleton
+  const LoadingSkeleton = () => (
+    <JobDetailBackground>
+      <div className="min-h-screen w-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-white/70 text-lg">Loading job details...</p>
+        </div>
+      </div>
+    </JobDetailBackground>
+  );
+
+  // Error message
+  const ErrorMessage = () => (
+    <JobDetailBackground>
+      <div className="min-h-screen w-full flex items-center justify-center px-4">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg max-w-md">
+          <p className="font-medium mb-2">Error Loading Job Post</p>
+          <p className="text-sm mb-4">{error}</p>
+          <button
+            onClick={() => router.push("/career")}
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors text-sm font-medium"
+          >
+            Back to Career Page
+          </button>
+        </div>
+      </div>
+    </JobDetailBackground>
+  );
+
+  if (loading) return <LoadingSkeleton />;
+  if (error || !jobPost) return <ErrorMessage />;
+
+  // Map API data to component format
+  const job = {
+    id: jobPost.id,
+    title: jobPost.title,
+    category: jobPost.placeTag?.name || "Location not specified",
+    workingHours: jobPost.jobDetails.workingHours || "Flexible",
+    contract: jobPost.jobDetails.contract ? "Yes" : "No",
+    salary: jobPost.jobDetails.salary || "Negotiate",
+    closeDate: formatDate(jobPost.jobDetails.closeDate),
+    tasks: jobPost.tasks?.descriptions || [],
+    qualifications: jobPost.requiredQualifications?.descriptions || [],
+  };
 
   return (
     <JobDetailBackground>
@@ -110,7 +123,7 @@ export default function JobDetailPage() {
         style={{ margin: 0, padding: 0 }}
       >
         {/* Mobile/Tablet Layout (hidden on lg+) */}
-        <div className="lg:hidden w-full  pb-6">
+        <div className="lg:hidden w-full pb-6">
           {/* Back Button */}
           <div className="mb-5 mt-12">
             <BackButton />
@@ -136,34 +149,47 @@ export default function JobDetailPage() {
           {/* Tasks Section */}
           <div className="flex flex-col gap-5 mb-12 px-6">
             <p className="font-['Space_Mono',sans-serif] font-bold text-[13px] leading-none text-[rgba(255,255,255,0.9)] uppercase">
-              Tasks to be Performed
+              {jobPost.tasks?.title || "Tasks to be Performed"}
             </p>
             <ul className="list-disc pl-[25.5px] text-[rgba(255,255,255,0.9)]">
-              {job.tasks.map((task, index) => (
-                <li
-                  key={index}
-                  className="font-['DM_Sans',sans-serif] font-normal text-[17px] leading-[1.2] mb-0"
-                >
-                  {task}
+              {job.tasks.length > 0 ? (
+                job.tasks.map((task, index) => (
+                  <li
+                    key={index}
+                    className="font-['DM_Sans',sans-serif] font-normal text-[17px] leading-[1.2] mb-0"
+                  >
+                    {task}
+                  </li>
+                ))
+              ) : (
+                <li className="font-['DM_Sans',sans-serif] font-normal text-[17px] leading-[1.2]">
+                  No tasks specified
                 </li>
-              ))}
+              )}
             </ul>
           </div>
 
           {/* Qualifications Section */}
           <div className="flex flex-col gap-5 px-6">
             <p className="font-['Space_Mono',sans-serif] font-bold text-[13px] leading-none text-[rgba(255,255,255,0.9)] uppercase">
-              Required Qualifications
+              {jobPost.requiredQualifications?.title ||
+                "Required Qualifications"}
             </p>
             <ul className="list-disc pl-[25.5px] text-[rgba(255,255,255,0.9)]">
-              {job.qualifications.map((qualification, index) => (
-                <li
-                  key={index}
-                  className="font-['DM_Sans',sans-serif] font-normal text-[17px] leading-[1.2] mb-0"
-                >
-                  {qualification}
+              {job.qualifications.length > 0 ? (
+                job.qualifications.map((qualification, index) => (
+                  <li
+                    key={index}
+                    className="font-['DM_Sans',sans-serif] font-normal text-[17px] leading-[1.2] mb-0"
+                  >
+                    {qualification}
+                  </li>
+                ))
+              ) : (
+                <li className="font-['DM_Sans',sans-serif] font-normal text-[17px] leading-[1.2]">
+                  No qualifications specified
                 </li>
-              ))}
+              )}
             </ul>
           </div>
         </div>
